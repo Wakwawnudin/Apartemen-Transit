@@ -656,6 +656,13 @@ const UnitDetailPage = () => {
     // Buat slot per 30 menit dari jam 00:00 sampai 23:30
     for(let h = 0; h < 24; h++) {
        for(let m = 0; m < 60; m+=30) {
+          // 👇 LOGIKA BARU: Batasi Fullday hanya boleh mulai dari jam 20:00
+          const isFulldayPackage = selectedPkg.label.includes('Fullday') || selectedPkg.label.includes('Weekday') || selectedPkg.label.includes('Weekend');
+          
+          if (isFulldayPackage && h < 20) {
+             continue; // Melewati proses pembuatan slot waktu jika masih di bawah jam 20:00
+          }
+
           const hh = h.toString().padStart(2, '0');
           const mm = m.toString().padStart(2, '0');
           const timeStr = `${hh}:${mm}`;
@@ -666,9 +673,9 @@ const UnitDetailPage = () => {
           
           // Timestamp Check-out yang Diajukan
           const proposedOutDate = new Date(proposedInTime);
-          if (selectedPkg.label.includes('Fullday') || selectedPkg.label.includes('Weekday') || selectedPkg.label.includes('Weekend')) {
+          if (isFulldayPackage) {
              proposedOutDate.setDate(proposedOutDate.getDate() + 1);
-             proposedOutDate.setHours(12, 0, 0, 0); // Checkout jam 12 besok
+             proposedOutDate.setHours(12, 0, 0, 0); // Checkout jam 12 besok siang
           } else {
              proposedOutDate.setHours(proposedOutDate.getHours() + durationHours);
           }
@@ -699,11 +706,11 @@ const UnitDetailPage = () => {
     return (
        <div className="grid grid-cols-4 md:grid-cols-5 gap-3 mt-4 animate-slide-up">
           {slots}
-          {slots.length === 0 && <p className="col-span-full text-center text-xs font-bold text-slate-400 py-4">Waktu hari ini sudah berlalu.</p>}
+          {slots.length === 0 && <p className="col-span-full text-center text-xs font-bold text-slate-400 py-4">Slot waktu tidak tersedia (Fullday hanya mulai dari 20:00).</p>}
        </div>
     );
   };
-
+  
   if (!selectedRoom) return null;
 
   return (
