@@ -248,17 +248,23 @@ const HomePage = () => {
     setPage(1); 
   };
 
-  const handleWaClick = (messageType = "general") => {
+  const handleWaClick = (messageType = "general", roomName = "") => {
     let text = "";
     const refTag = refCode ? `\n\n(Info by ${refCode})` : "";
+    
     switch (messageType) {
-      case "chat": text = `Halo, saya mau tanya-tanya tentang sewa Apartemen Sentul Tower.${refTag}`; break;
-      case "key": text = `Halo, saya sudah sampai di lokasi dan ingin AMBIL KUNCI.${refTag}`; break;
-      case "payment": text = `Halo, saya ingin melakukan PEMBAYARAN DI TEMPAT.${refTag}`; break;
+      case "booking": 
+        if(selectedPkg && selectedDate && selectedTime) {
+           text = `Halo admin, saya ingin booking:\n*Unit:* ${roomName}\n*Paket:* ${selectedPkg.label}\n*Tanggal:* ${selectedDate}\n*Jam Masuk:* ${selectedTime}\n\nIni bukti transfer DP QRIS saya. Minta tolong dicek ya Kak. 🙏${refTag}`;
+        } else {
+           text = `Halo, saya tertarik dengan unit ${roomName} di Apartemen Sentul Tower.${refTag}`; 
+        }
+        break;
+      case "chat": text = `Halo, saya mau tanya-tanya tentang sewa unit *${selectedRoom?.name}* di Apartemen Sentul Tower.${refTag}`; break;
+      case "key": text = `Halo, saya sudah sampai di lokasi dan ingin AMBIL KUNCI untuk unit *${selectedRoom?.name}*.${refTag}`; break;
+      case "payment": text = `Halo, saya ingin melakukan PEMBAYARAN DI TEMPAT untuk unit *${selectedRoom?.name}*.${refTag}`; break;
       case "carikan_kamar": text = `Halo Admin, saya bingung cari jadwal yang kosong. Boleh tolong dicarikan unit yang masih *ready* untuk hari ini?${refTag}`; break;
-      case "tanya_transit": text = `Halo Admin, saya mau tanya untuk sewa *Transit (3/6/9/12 Jam)* hari ini apakah masih ada unit yang kosong?${refTag}`; break;
-      case "tanya_fullday": text = `Halo Admin, saya mau tanya untuk sewa *Fullday* apakah masih ada unit yang kosong?${refTag}`; break;
-      default: text = `Halo, saya mau tanya sewa Apartemen Sentul Tower.${refTag}`;
+      default: text = `Halo, saya mau tanya sewa unit *${selectedRoom?.name}* di Apartemen Sentul Tower.${refTag}`;
     }
     window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank');
   };
