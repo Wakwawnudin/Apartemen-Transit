@@ -897,7 +897,7 @@ const UnitDetailPage = () => {
                       <h4 className="text-[11px] md:text-xs font-black text-slate-400 uppercase tracking-[0.3em]">Cara Order Mudah</h4>
                       <div className="h-[2px] bg-slate-100 flex-1 md:hidden"></div>
                    </div>
-                   <div className="grid grid-cols-2 gap-4 md:grid-cols-4 pointer-events-none">
+                   <div className="grid grid-cols-2 gap-4 md:grid-cols-4 pointer-events-none mb-8">
                       <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center">
                          <ShoppingBag className="text-[#D4AF37] mb-2" size={24} />
                          <span className="text-[10px] font-bold text-slate-300 uppercase text-center">1. Pilih Paket</span>
@@ -915,6 +915,11 @@ const UnitDetailPage = () => {
                          <span className="text-[10px] font-bold text-slate-300 uppercase text-center">4. Info ke WA</span>
                       </div>
                    </div>
+
+                   {/* TOMBOL WA KEMBALI DI BAWAH GRID (TIDAK MELAYANG) */}
+                   <button onClick={() => handleWaClick("chat", selectedRoom.name)} className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-black py-5 md:py-6 rounded-[24px] flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-all uppercase tracking-widest text-xs md:text-sm block">
+                     <MessageCircle size={20} className="md:w-6 md:h-6" /> Hubungi Lewat WhatsApp
+                   </button>
                 </div>
               )}
             </div>
