@@ -837,7 +837,7 @@ const UnitDetailPage = () => {
 
                    {bookingFlow === 'time' && (
                      <>
-                       <label className="text-[10px] font-black text-[#D4AF37] uppercase tracking-[0.2em] mb-2 block">Pilih Waktu (Kelipatan 30 Menit)</label>
+                       <label className="text-[10px] font-black text-[#D4AF37] uppercase tracking-[0.2em] mb-2 block">Pilih Waktu Check-in</label>
                        {renderTimeSlots()}
                      </>
                    )}
