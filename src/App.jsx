@@ -891,22 +891,22 @@ const UnitDetailPage = () => {
                       <h4 className="text-[11px] md:text-xs font-black text-slate-400 uppercase tracking-[0.3em]">Cara Order Mudah</h4>
                       <div className="h-[2px] bg-slate-100 flex-1 md:hidden"></div>
                    </div>
-                   <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                      <div onClick={() => handleWaClick("chat")} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
-                         <MessageCircle className="text-[#D4AF37] mb-2" size={24} />
-                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">1. Chat WA</span>
+                   <div className="grid grid-cols-2 gap-4 md:grid-cols-4 pointer-events-none">
+                      <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center">
+                         <ShoppingBag className="text-[#D4AF37] mb-2" size={24} />
+                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">1. Pilih Paket</span>
                       </div>
-                      <a href={mapsLink} target="_blank" rel="noopener noreferrer" className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
-                         <MapPin className="text-[#D4AF37] mb-2" size={24} />
-                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">2. Ke Lokasi</span>
-                      </a>
-                      <div onClick={() => handleWaClick("key")} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
-                         <Key className="text-[#D4AF37] mb-2" size={24} />
-                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">3. Ambil Kunci</span>
+                      <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center">
+                         <Calendar className="text-[#D4AF37] mb-2" size={24} />
+                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">2. Tentukan Jam</span>
                       </div>
-                      <div onClick={() => handleWaClick("payment")} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
+                      <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center">
                          <Wallet className="text-[#D4AF37] mb-2" size={24} />
-                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">4. Bayar Tujuan</span>
+                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">3. DP via QRIS</span>
+                      </div>
+                      <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center">
+                         <MessageCircle className="text-[#D4AF37] mb-2" size={24} />
+                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">4. Info ke WA</span>
                       </div>
                    </div>
                 </div>
