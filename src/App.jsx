@@ -270,6 +270,8 @@ const HomePage = () => {
     if (isLoadingMore) return;
     if (observer.current) observer.current.disconnect();
     
+    // 👇 Penambahan rootMargin: '600px' bertindak sebagai Radar Awal
+    // Sistem akan memuat data SEBELUM user menabrak footer
     observer.current = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting && hasMore) {
         setIsLoadingMore(true);
@@ -278,7 +280,7 @@ const HomePage = () => {
             setIsLoadingMore(false);
         }, 400); 
       }
-    });
+    }, { rootMargin: '600px' });
     
     if (node) observer.current.observe(node);
   }, [hasMore, isLoadingMore]);
