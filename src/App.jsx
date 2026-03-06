@@ -34,11 +34,9 @@ const calculateBufferEnd = (timestamp) => {
   const totalMins = hours * 60 + minutes;
 
   let newTotalMins;
-  // Jika checkout pas menit 30 atau 00, tambah full 30 menit (Contoh: 15:30 -> 16:00)
   if (totalMins % 30 === 0) {
       newTotalMins = totalMins + 30;
   } else {
-      // Jika menit gantung, bulatkan ke atas kelipatan 30 (Contoh: 15:25 -> 15:30, 15:58 -> 16:00)
       newTotalMins = Math.ceil(totalMins / 30) * 30;
   }
 
@@ -55,7 +53,6 @@ const isSlotAvailable = (roomId, proposedIn, proposedOut) => {
   const bufferEnd = calculateBufferEnd(proposedOut);
 
   for (let b of roomBookings) {
-    // Bentrok terjadi jika jadwal baru memotong/tumpang tindih dengan [CheckIn s/d Waktu Cleaning Selesai]
     if (proposedIn < b.bufferEnd && bufferEnd > b.checkIn) {
       return false;
     }
@@ -248,23 +245,18 @@ const HomePage = () => {
     setPage(1); 
   };
 
-  const handleWaClick = (messageType = "general", roomName = "") => {
+  // 👇 handleWaClick KHUSUS HALAMAN UTAMA
+  const handleWaClick = (messageType = "general") => {
     let text = "";
     const refTag = refCode ? `\n\n(Info by ${refCode})` : "";
-    
     switch (messageType) {
-      case "booking": 
-        if(selectedPkg && selectedDate && selectedTime) {
-           text = `Halo admin, saya ingin booking:\n*Unit:* ${roomName}\n*Paket:* ${selectedPkg.label}\n*Tanggal:* ${selectedDate}\n*Jam Masuk:* ${selectedTime}\n\nIni bukti transfer DP QRIS saya. Minta tolong dicek ya Kak. 🙏${refTag}`;
-        } else {
-           text = `Halo, saya tertarik dengan unit ${roomName} di Apartemen Sentul Tower.${refTag}`; 
-        }
-        break;
-      case "chat": text = `Halo, saya mau tanya-tanya tentang sewa unit *${selectedRoom?.name}* di Apartemen Sentul Tower.${refTag}`; break;
-      case "key": text = `Halo, saya sudah sampai di lokasi dan ingin AMBIL KUNCI untuk unit *${selectedRoom?.name}*.${refTag}`; break;
-      case "payment": text = `Halo, saya ingin melakukan PEMBAYARAN DI TEMPAT untuk unit *${selectedRoom?.name}*.${refTag}`; break;
+      case "chat": text = `Halo, saya mau tanya-tanya tentang sewa Apartemen Sentul Tower.${refTag}`; break;
+      case "key": text = `Halo, saya sudah sampai di lokasi dan ingin AMBIL KUNCI.${refTag}`; break;
+      case "payment": text = `Halo, saya ingin melakukan PEMBAYARAN DI TEMPAT.${refTag}`; break;
       case "carikan_kamar": text = `Halo Admin, saya bingung cari jadwal yang kosong. Boleh tolong dicarikan unit yang masih *ready* untuk hari ini?${refTag}`; break;
-      default: text = `Halo, saya mau tanya sewa unit *${selectedRoom?.name}* di Apartemen Sentul Tower.${refTag}`;
+      case "tanya_transit": text = `Halo Admin, saya mau tanya untuk sewa *Transit (3/6/9/12 Jam)* hari ini apakah masih ada unit yang kosong?${refTag}`; break;
+      case "tanya_fullday": text = `Halo Admin, saya mau tanya untuk sewa *Fullday* apakah masih ada unit yang kosong?${refTag}`; break;
+      default: text = `Halo, saya mau tanya sewa Apartemen Sentul Tower.${refTag}`;
     }
     window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank');
   };
@@ -490,22 +482,22 @@ const HomePage = () => {
              <p className="text-slate-400 text-[10px] md:text-sm mb-8 italic">"Privasi & Kenyamanan Prioritas Kami"</p>
              
              <h4 className="text-[10px] md:text-xs font-black text-[#D4AF37] uppercase tracking-[0.2em] mb-4">Cara Order Mudah</h4>
-             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-                <div onClick={() => handleWaClick("chat")} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
-                   <MessageCircle className="text-[#D4AF37] mb-2" size={24} />
-                   <span className="text-[10px] font-bold text-slate-300 uppercase text-center">1. Chat WA</span>
+             <div className="grid grid-cols-2 gap-4 md:grid-cols-4 pointer-events-none">
+                <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center">
+                   <ShoppingBag className="text-[#D4AF37] mb-2" size={24} />
+                   <span className="text-[10px] font-bold text-slate-300 uppercase text-center">1. Pilih Paket</span>
                 </div>
-                <a href={mapsLink} target="_blank" rel="noopener noreferrer" className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
-                   <MapPin className="text-[#D4AF37] mb-2" size={24} />
-                   <span className="text-[10px] font-bold text-slate-300 uppercase text-center">2. Ke Lokasi</span>
-                </a>
-                <div onClick={() => handleWaClick("key")} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
-                   <Key className="text-[#D4AF37] mb-2" size={24} />
-                   <span className="text-[10px] font-bold text-slate-300 uppercase text-center">3. Ambil Kunci</span>
+                <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center">
+                   <Calendar className="text-[#D4AF37] mb-2" size={24} />
+                   <span className="text-[10px] font-bold text-slate-300 uppercase text-center">2. Tentukan Jam</span>
                 </div>
-                <div onClick={() => handleWaClick("payment")} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
+                <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center">
                    <Wallet className="text-[#D4AF37] mb-2" size={24} />
-                   <span className="text-[10px] font-bold text-slate-300 uppercase text-center">4. Bayar Tujuan</span>
+                   <span className="text-[10px] font-bold text-slate-300 uppercase text-center">3. DP via QRIS</span>
+                </div>
+                <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center">
+                   <MessageCircle className="text-[#D4AF37] mb-2" size={24} />
+                   <span className="text-[10px] font-bold text-slate-300 uppercase text-center">4. Info ke WA</span>
                 </div>
              </div>
 
@@ -638,19 +630,27 @@ const UnitDetailPage = () => {
     setTouchStart(null);
   };
 
-  const handleWaClick = (messageType = "general") => {
+  // 👇 handleWaClick KHUSUS HALAMAN DETAIL (DENGAN LOGIKA BOOKING)
+  const handleWaClick = (messageType = "general", roomName = "") => {
     let text = "";
     const refTag = refCode ? `\n\n(Info by ${refCode})` : "";
+    
     switch (messageType) {
-      case "chat": text = `Halo, saya mau tanya-tanya tentang sewa Apartemen Sentul Tower.${refTag}`; break;
-      case "key": text = `Halo, saya sudah sampai di lokasi dan ingin AMBIL KUNCI.${refTag}`; break;
-      case "payment": text = `Halo, saya ingin melakukan PEMBAYARAN DI TEMPAT.${refTag}`; break;
+      case "booking": 
+        if(selectedPkg && selectedDate && selectedTime) {
+           text = `Halo admin, saya ingin booking:\n*Unit:* ${roomName}\n*Paket:* ${selectedPkg.label}\n*Tanggal:* ${selectedDate}\n*Jam Masuk:* ${selectedTime}\n\nIni bukti transfer DP QRIS saya. Minta tolong dicek ya Kak. 🙏${refTag}`;
+        } else {
+           text = `Halo, saya tertarik dengan unit ${roomName} di Apartemen Sentul Tower.${refTag}`; 
+        }
+        break;
+      case "chat": text = `Halo, saya mau tanya-tanya tentang sewa unit *${selectedRoom?.name}* di Apartemen Sentul Tower.${refTag}`; break;
+      case "key": text = `Halo, saya sudah sampai di lokasi dan ingin AMBIL KUNCI untuk unit *${selectedRoom?.name}*.${refTag}`; break;
+      case "payment": text = `Halo, saya ingin melakukan PEMBAYARAN DI TEMPAT untuk unit *${selectedRoom?.name}*.${refTag}`; break;
       case "carikan_kamar": text = `Halo Admin, saya bingung cari jadwal yang kosong. Boleh tolong dicarikan unit yang masih *ready* untuk hari ini?${refTag}`; break;
-      default: text = `Halo, saya mau tanya sewa Apartemen Sentul Tower.${refTag}`;
+      default: text = `Halo, saya mau tanya sewa unit *${selectedRoom?.name}* di Apartemen Sentul Tower.${refTag}`;
     }
     window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank');
   };
-
 
   // ⚙️ LOGIKA RENDER JADWAL KOSONG (HYBRID CEK)
   const renderTimeSlots = () => {
