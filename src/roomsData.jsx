@@ -79,6 +79,25 @@ export const baseTemplates = {
 
 // --- REAL UNIT DATA ---
 export const realUnits = [
+  // 👇 INI UNIT BARU YANG DITAMBAHKAN PALING ATAS
+  {
+    type: '1BR', floor: 'Lantai 06',
+    images: [
+      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%206/IMG-20260308-WA0033.jpg?updatedAt=1773209739864',
+      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%206/IMG-20260308-WA0036.jpg?updatedAt=1773209739891',
+      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%206/IMG-20260308-WA0034.jpg?updatedAt=1773209739823',
+      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%206/IMG-20260308-WA0035.jpg?updatedAt=1773209739888'
+    ]
+  },
+  {
+    type: 'Studio', floor: 'Lantai 08',
+    images: [
+      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%208../IMG-20260311-WA0013.jpg?updatedAt=1773209812905',
+      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%208../IMG-20260311-WA0014.jpg?updatedAt=1773209812713',
+      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%208../IMG-20260311-WA0010.jpg?updatedAt=1773209812799'
+    ]
+  },
+  // --- MULAI DATA LAMA DI BAWAH INI ---
   // --- STUDIO ---
   {
     type: 'Studio', floor: 'Lantai 12',
