@@ -372,7 +372,7 @@ const HomePage = () => {
       </section>
 
       {/* KATALOG UNIT DENGAN INFINITE SCROLL */}
-      <section className="px-4 py-8 md:max-w-6xl md:mx-auto md:px-6 md:py-16" aria-label="Daftar Unit Apartemen">
+      <section id="katalog-apartemen" className="px-4 py-8 md:max-w-6xl md:mx-auto md:px-6 md:py-16" aria-label="Daftar Unit Apartemen">
         <div className="flex flex-col gap-4 mb-8 md:mb-12 md:flex-row md:justify-between md:items-end">
           <div>
             <h2 className="text-lg md:text-3xl font-black text-slate-800 uppercase tracking-widest md:tracking-tighter md:mb-2">KATALOG APARTEMEN</h2>
@@ -484,20 +484,20 @@ const HomePage = () => {
              <p className="text-slate-400 text-[10px] md:text-sm mb-8 italic">"Privasi & Kenyamanan Prioritas Kami"</p>
              
              <h4 className="text-[10px] md:text-xs font-black text-[#D4AF37] uppercase tracking-[0.2em] mb-4">Cara Order Mudah</h4>
-             <div className="grid grid-cols-2 gap-4 md:grid-cols-4 pointer-events-none">
-                <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center">
+             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                <div onClick={() => document.getElementById('katalog-apartemen')?.scrollIntoView({behavior: 'smooth'})} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
                    <ShoppingBag className="text-[#D4AF37] mb-2" size={24} />
                    <span className="text-[10px] font-bold text-slate-300 uppercase text-center">1. Pilih Paket</span>
                 </div>
-                <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center">
+                <div onClick={() => { alert("Silakan Pilih Unit & Paket di Katalog terlebih dahulu."); document.getElementById('katalog-apartemen')?.scrollIntoView({behavior: 'smooth'}); }} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
                    <Calendar className="text-[#D4AF37] mb-2" size={24} />
                    <span className="text-[10px] font-bold text-slate-300 uppercase text-center">2. Tentukan Jam</span>
                 </div>
-                <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center">
+                <div onClick={() => { alert("Silakan Pilih Unit, Paket, & Jam di Katalog terlebih dahulu."); document.getElementById('katalog-apartemen')?.scrollIntoView({behavior: 'smooth'}); }} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
                    <Wallet className="text-[#D4AF37] mb-2" size={24} />
                    <span className="text-[10px] font-bold text-slate-300 uppercase text-center">3. DP via QRIS</span>
                 </div>
-                <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center">
+                <div onClick={() => handleWaClick("chat")} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
                    <MessageCircle className="text-[#D4AF37] mb-2" size={24} />
                    <span className="text-[10px] font-bold text-slate-300 uppercase text-center">4. Info ke WA</span>
                 </div>
@@ -742,6 +742,7 @@ const UnitDetailPage = () => {
         ></div>
         
         <div 
+          id="modal-scroll-container"
           className="bg-white w-full max-w-md rounded-t-[40px] relative z-10 p-7 animate-slide-up overflow-y-auto max-h-[95vh] h-[95vh] no-scrollbar shadow-2xl transition-transform duration-200 ease-out md:max-w-6xl md:h-auto md:max-h-[90vh] md:rounded-[48px] md:p-10 md:shadow-2xl"
           style={{ transform: `translateY(${pullY}px)` }} 
           onTouchStart={onTouchStart}
@@ -899,20 +900,20 @@ const UnitDetailPage = () => {
                       <h4 className="text-[11px] md:text-xs font-black text-slate-400 uppercase tracking-[0.3em]">Cara Order Mudah</h4>
                       <div className="h-[2px] bg-slate-100 flex-1 md:hidden"></div>
                    </div>
-                   <div className="grid grid-cols-2 gap-4 md:grid-cols-4 pointer-events-none mb-8">
-                      <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center">
+                   <div className="grid grid-cols-2 gap-4 md:grid-cols-4 mb-8">
+                      <div onClick={() => document.getElementById('modal-scroll-container')?.scrollTo({ top: 0, behavior: 'smooth' })} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
                          <ShoppingBag className="text-[#D4AF37] mb-2" size={24} />
                          <span className="text-[10px] font-bold text-slate-300 uppercase text-center">1. Pilih Paket</span>
                       </div>
-                      <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center">
+                      <div onClick={() => { alert("Silakan pilih salah satu Paket Harga di atas terlebih dahulu."); document.getElementById('modal-scroll-container')?.scrollTo({ top: 0, behavior: 'smooth' }); }} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
                          <Calendar className="text-[#D4AF37] mb-2" size={24} />
                          <span className="text-[10px] font-bold text-slate-300 uppercase text-center">2. Tentukan Jam</span>
                       </div>
-                      <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center">
+                      <div onClick={() => { alert("Silakan selesaikan pemilihan paket dan jadwal di atas terlebih dahulu."); document.getElementById('modal-scroll-container')?.scrollTo({ top: 0, behavior: 'smooth' }); }} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
                          <Wallet className="text-[#D4AF37] mb-2" size={24} />
                          <span className="text-[10px] font-bold text-slate-300 uppercase text-center">3. DP via QRIS</span>
                       </div>
-                      <div className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center">
+                      <div onClick={() => handleWaClick("chat", selectedRoom.name)} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
                          <MessageCircle className="text-[#D4AF37] mb-2" size={24} />
                          <span className="text-[10px] font-bold text-slate-300 uppercase text-center">4. Info ke WA</span>
                       </div>
