@@ -137,7 +137,7 @@ const ImageSlider = ({ images, heightClass = "h-56", roundedClass = "rounded-[32
           <img 
             key={idx}
             src={optimizeImg(img)} 
-            onClick={() => onImageClick && onImageClick(img)}
+            onClick={() => onImageClick && onImageClick(idx)}
             loading={priority && idx === 0 ? "eager" : "lazy"} 
             fetchpriority={priority && idx === 0 ? "high" : "auto"}
             className={`w-full h-full object-cover shrink-0 snap-center transition-transform ${onImageClick ? 'cursor-pointer active:scale-[0.98]' : ''}`} 
@@ -581,7 +581,8 @@ const UnitDetailPage = () => {
   const [pullY, setPullY] = useState(0);
 
   // ⚙️ STATE FULLSCREEN IMAGE (LIGHTBOX)
-  const [lightboxImg, setLightboxImg] = useState(null);
+  const [lightboxIndex, setLightboxIndex] = useState(null);
+  const [lbTouchStart, setLbTouchStart] = useState(null); // Tambahan untuk mendeteksi usapan jari (swipe)
 
   // ⚙️ STATE BOOKING SYSTEM 
   const [bookingFlow, setBookingFlow] = useState('details'); // details | date | time | qris
@@ -793,7 +794,7 @@ const UnitDetailPage = () => {
                  heightClass="h-72 md:h-[450px]" 
                  roundedClass="rounded-[32px] md:rounded-[40px]" 
                  altPrefix={`Detail ${selectedRoom.name} - ${selectedRoom.floorLevel}`} 
-                 onImageClick={(img) => setLightboxImg(img)} 
+                 onImageClick={(idx) => setLightboxIndex(idx)} 
                />
                
                {/* INDIKATOR ZOOM (Hanya muncul di modal detail) */}
@@ -959,23 +960,55 @@ const UnitDetailPage = () => {
           </div>
         </div>
 
-        {/* POPUP FULLSCREEN GAMBAR (LIGHTBOX) */}
-        {lightboxImg && (
-          <div className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-slide-up" onClick={() => setLightboxImg(null)}>
-            <button 
-              onClick={() => setLightboxImg(null)} 
-              className="absolute top-6 right-6 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all active:scale-90 z-50"
-            >
+        {/* POPUP FULLSCREEN GAMBAR (LIGHTBOX) DENGAN FITUR SWIPE */}
+        {lightboxIndex !== null && selectedRoom && (
+          <div 
+            className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-slide-up" 
+            onClick={() => setLightboxIndex(null)}
+            onTouchStart={(e) => setLbTouchStart(e.targetTouches[0].clientX)}
+            onTouchEnd={(e) => {
+              if (lbTouchStart === null) return;
+              const touchEnd = e.changedTouches[0].clientX;
+              const diff = lbTouchStart - touchEnd;
+              if (diff > 50) setLightboxIndex((prev) => (prev + 1) % selectedRoom.images.length); // Usap ke kiri (Next)
+              if (diff < -50) setLightboxIndex((prev) => (prev === 0 ? selectedRoom.images.length - 1 : prev - 1)); // Usap ke kanan (Prev)
+              setLbTouchStart(null);
+            }}
+          >
+            {/* Tombol Close */}
+            <button onClick={() => setLightboxIndex(null)} className="absolute top-6 right-6 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all active:scale-90 z-50">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
             </button>
-            <div className="relative w-full h-full flex items-center justify-center p-4 md:p-12">
+
+            {/* Tombol Prev (Muncul di layar besar) */}
+            <button 
+              onClick={(e) => { e.stopPropagation(); setLightboxIndex((prev) => (prev === 0 ? selectedRoom.images.length - 1 : prev - 1)); }} 
+              className="absolute left-4 md:left-10 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all active:scale-90 z-50 hidden md:block"
+            >
+              <ChevronLeft size={24} />
+            </button>
+
+            {/* Gambar yang ditampilkan */}
+            <div className="relative w-full h-full flex flex-col items-center justify-center p-4 md:p-12">
                <img 
-                 src={lightboxImg} 
-                 alt="Fullscreen Zoom" 
-                 className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl" 
+                 src={selectedRoom.images[lightboxIndex]} 
+                 alt={`Fullscreen Zoom ${lightboxIndex + 1}`} 
+                 className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl transition-all duration-300" 
                  onClick={(e) => e.stopPropagation()} 
                />
+               {/* Indikator Nomor Halaman */}
+               <div className="absolute bottom-10 bg-black/50 backdrop-blur-md text-[#D4AF37] text-xs font-black px-4 py-2 rounded-full border border-white/10 tracking-widest uppercase shadow-lg">
+                 {lightboxIndex + 1} / {selectedRoom.images.length}
+               </div>
             </div>
+
+            {/* Tombol Next (Muncul di layar besar) */}
+            <button 
+              onClick={(e) => { e.stopPropagation(); setLightboxIndex((prev) => (prev + 1) % selectedRoom.images.length); }} 
+              className="absolute right-4 md:right-10 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all active:scale-90 z-50 hidden md:block"
+            >
+              <ChevronRight size={24} />
+            </button>
           </div>
         )}
 
