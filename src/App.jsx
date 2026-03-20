@@ -74,7 +74,7 @@ const ScrollToTop = () => {
 };
 
 // --- KOMPONEN IMAGE SLIDER ---
-const ImageSlider = ({ images, heightClass = "h-56", roundedClass = "rounded-[32px]", altPrefix = "Apartemen Sentul Tower", priority = false }) => {
+const ImageSlider = ({ images, heightClass = "h-56", roundedClass = "rounded-[32px]", altPrefix = "Apartemen Sentul Tower", priority = false, onImageClick }) => {
 
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef(null);
@@ -137,9 +137,10 @@ const ImageSlider = ({ images, heightClass = "h-56", roundedClass = "rounded-[32
           <img 
             key={idx}
             src={optimizeImg(img)} 
+            onClick={() => onImageClick && onImageClick(img)}
             loading={priority && idx === 0 ? "eager" : "lazy"} 
             fetchpriority={priority && idx === 0 ? "high" : "auto"}
-            className="w-full h-full object-cover shrink-0 snap-center" 
+            className={`w-full h-full object-cover shrink-0 snap-center transition-transform ${onImageClick ? 'cursor-pointer active:scale-[0.98]' : ''}`} 
             alt={`${dynamicAlt} - ${idx + 1}`} 
           />
         ))}
@@ -579,6 +580,9 @@ const UnitDetailPage = () => {
   const [touchStart, setTouchStart] = useState(null);
   const [pullY, setPullY] = useState(0);
 
+  // ⚙️ STATE FULLSCREEN IMAGE (LIGHTBOX)
+  const [lightboxImg, setLightboxImg] = useState(null);
+
   // ⚙️ STATE BOOKING SYSTEM 
   const [bookingFlow, setBookingFlow] = useState('details'); // details | date | time | qris
   const [selectedPkg, setSelectedPkg] = useState(null);
@@ -783,10 +787,21 @@ const UnitDetailPage = () => {
           <div className="md:grid md:grid-cols-2 md:gap-12 md:items-start">
             
             {/* KOLOM KIRI (GAMBAR) */}
-            <div className="relative mb-6 md:mb-0 md:sticky md:top-0">
-               <ImageSlider images={selectedRoom.images} heightClass="h-72 md:h-[450px]" roundedClass="rounded-[32px] md:rounded-[40px]" altPrefix={`Detail ${selectedRoom.name} - ${selectedRoom.floorLevel}`} />
+            <div className="relative mb-6 md:mb-0 md:sticky md:top-0 group">
+               <ImageSlider 
+                 images={selectedRoom.images} 
+                 heightClass="h-72 md:h-[450px]" 
+                 roundedClass="rounded-[32px] md:rounded-[40px]" 
+                 altPrefix={`Detail ${selectedRoom.name} - ${selectedRoom.floorLevel}`} 
+                 onImageClick={(img) => setLightboxImg(img)} 
+               />
+               
+               {/* INDIKATOR ZOOM (Hanya muncul di modal detail) */}
+               <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-sm z-20 pointer-events-none flex items-center gap-1.5 text-white/90">
+                  <Maximize size={12} className="text-[#D4AF37]" /> <span className="text-[10px] font-bold uppercase tracking-widest">Ketuk Foto</span>
+               </div>
 
-               <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-3 py-1.5 md:px-5 md:py-2.5 rounded-xl shadow-sm z-20">
+               <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-3 py-1.5 md:px-5 md:py-2.5 rounded-xl shadow-sm z-20 pointer-events-none">
                   <p className="text-[10px] md:text-xs font-black text-[#D4AF37] uppercase tracking-widest">Pilihan {selectedRoom.type}</p>
                </div>
             </div>
@@ -944,8 +959,26 @@ const UnitDetailPage = () => {
           </div>
         </div>
 
-        {/* Global Styles for Animations */}
-        <style dangerouslySetInnerHTML={{ __html: `
+        {/* POPUP FULLSCREEN GAMBAR (LIGHTBOX) */}
+        {lightboxImg && (
+          <div className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-slide-up" onClick={() => setLightboxImg(null)}>
+            <button 
+              onClick={() => setLightboxImg(null)} 
+              className="absolute top-6 right-6 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all active:scale-90 z-50"
+            >
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <div className="relative w-full h-full flex items-center justify-center p-4 md:p-12">
+               <img 
+                 src={lightboxImg} 
+                 alt="Fullscreen Zoom" 
+                 className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl" 
+                 onClick={(e) => e.stopPropagation()} 
+               />
+            </div>
+          </div>
+        )}
+
           @keyframes slide-up { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
           @keyframes bounce-subtle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
           .animate-slide-up { animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
