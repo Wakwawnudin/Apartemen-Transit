@@ -582,8 +582,7 @@ const HomePage = () => {
     </div>
   );
 };
-
-// --- HALAMAN DETAIL KAMAR (DIPERBARUI DENGAN SISTEM BOOKING/QRIS) ---
+// --- HALAMAN DETAIL KAMAR (DIPERBARUI DENGAN DESAIN EDGE-TO-EDGE & FIX LIGHTBOX) ---
 const UnitDetailPage = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -597,10 +596,10 @@ const UnitDetailPage = () => {
 
   // ⚙️ STATE FULLSCREEN IMAGE (LIGHTBOX)
   const [lightboxIndex, setLightboxIndex] = useState(null);
-  const [lbTouchStart, setLbTouchStart] = useState(null); // Tambahan untuk mendeteksi usapan jari (swipe)
+  const [lbTouchStart, setLbTouchStart] = useState(null);
 
   // ⚙️ STATE BOOKING SYSTEM 
-  const [bookingFlow, setBookingFlow] = useState('details'); // details | date | time | qris
+  const [bookingFlow, setBookingFlow] = useState('details'); 
   const [selectedPkg, setSelectedPkg] = useState(null);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedTime, setSelectedTime] = useState('');
@@ -642,8 +641,7 @@ const UnitDetailPage = () => {
   };
   const onTouchMove = (e) => {
     if (!touchStart) return;
-    const touchY = e.targetTouches[0].clientY;
-    const diff = touchY - touchStart;
+    const diff = e.targetTouches[0].clientY - touchStart;
     if (diff > 0) setPullY(diff);
   };
   const onTouchEnd = () => {
@@ -652,7 +650,6 @@ const UnitDetailPage = () => {
     setTouchStart(null);
   };
 
-  // 👇 handleWaClick KHUSUS HALAMAN DETAIL (DENGAN LOGIKA BOOKING)
   const handleWaClick = (messageType = "general", roomName = "") => {
     let text = "";
     const refTag = refCode ? `\n\n(Info by ${refCode})` : "";
@@ -674,49 +671,40 @@ const UnitDetailPage = () => {
     window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
-  // ⚙️ LOGIKA RENDER JADWAL KOSONG (HYBRID CEK)
   const renderTimeSlots = () => {
     if (!selectedDate || !selectedPkg) return null;
     
-    // Asumsi: Paket Transit dihitung dari angkanya, misal "3 Jam" -> 3
-    let durationHours = 12; // default fullday check
+    let durationHours = 12; 
     if (selectedPkg.label.includes('Jam')) {
        durationHours = parseInt(selectedPkg.label.replace(/\D/g, ''), 10);
     }
 
     const slots = [];
-    // Buat slot per 30 menit dari jam 00:00 sampai 23:30
     for(let h = 0; h < 24; h++) {
        for(let m = 0; m < 60; m+=30) {
-          // 👇 LOGIKA BARU: Batasi Fullday hanya boleh mulai dari jam 20:00
           const isFulldayPackage = selectedPkg.label.includes('Fullday') || selectedPkg.label.includes('Weekday') || selectedPkg.label.includes('Weekend');
           
           if (isFulldayPackage && h < 20) {
-             continue; // Melewati proses pembuatan slot waktu jika masih di bawah jam 20:00
+             continue; 
           }
 
           const hh = h.toString().padStart(2, '0');
           const mm = m.toString().padStart(2, '0');
           const timeStr = `${hh}:${mm}`;
           
-          // Timestamp Check-in yang Diajukan
           const proposedInDate = new Date(`${selectedDate}T${timeStr}:00`);
           const proposedInTime = proposedInDate.getTime();
           
-          // Timestamp Check-out yang Diajukan
           const proposedOutDate = new Date(proposedInTime);
           if (isFulldayPackage) {
              proposedOutDate.setDate(proposedOutDate.getDate() + 1);
-             proposedOutDate.setHours(12, 0, 0, 0); // Checkout jam 12 besok siang
+             proposedOutDate.setHours(12, 0, 0, 0); 
           } else {
              proposedOutDate.setHours(proposedOutDate.getHours() + durationHours);
           }
           const proposedOutTime = proposedOutDate.getTime();
 
-          // Cek ketersediaan di local storage (termasuk buffer cleaning)
           const isAvail = isSlotAvailable(selectedRoom.slug, proposedInTime, proposedOutTime);
-
-          // Jangan tampilkan slot yang sudah lewat untuk hari ini
           const now = new Date();
           const isPast = proposedInDate < now;
 
@@ -763,30 +751,31 @@ const UnitDetailPage = () => {
         
         <div 
           id="modal-scroll-container"
-          className="bg-white w-full max-w-md rounded-t-[40px] relative z-10 p-7 animate-slide-up overflow-y-auto overflow-x-hidden max-h-[95vh] h-[95vh] no-scrollbar shadow-2xl transition-transform duration-200 ease-out md:max-w-6xl md:h-auto md:max-h-[90vh] md:rounded-[48px] md:p-10 md:shadow-2xl"
+          // 👇 FIX: pb-7 di mobile agar gambar bisa menyentuh ujung atas, kiri, dan kanan 👇
+          className="bg-white w-full max-w-md rounded-t-[40px] relative z-10 pb-7 animate-slide-up overflow-y-auto overflow-x-hidden max-h-[95vh] h-[95vh] no-scrollbar shadow-2xl transition-transform duration-200 ease-out md:max-w-6xl md:h-auto md:max-h-[90vh] md:rounded-[48px] md:p-10 md:shadow-2xl"
           style={{ transform: `translateY(${pullY}px)` }} 
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
         >
           
-          {/* EFEK SHAPE BACKGROUND MODERN (TEMA SENTUL) */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/15 to-transparent rounded-full blur-3xl pointer-events-none translate-x-1/3 -translate-y-1/4"></div>
-          <div className="absolute top-40 left-0 w-72 h-72 bg-gradient-to-tr from-slate-200/60 to-transparent rounded-full blur-3xl pointer-events-none -translate-x-1/3"></div>
+          {/* EFEK SHAPE BACKGROUND (Hanya Desktop yang butuh ini) */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/15 to-transparent rounded-full blur-3xl pointer-events-none translate-x-1/3 -translate-y-1/4 hidden md:block"></div>
 
-          <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6 md:hidden relative z-20"></div>
+          {/* Garis Usap (Pull indicator) di atas gambar khusus Mobile */}
+          <div className="w-12 h-1.5 bg-white/60 backdrop-blur-md rounded-full mx-auto mb-4 absolute top-3 left-1/2 -translate-x-1/2 z-50 md:hidden"></div>
 
-          {/* Header Navigasi & Logo Brand */}
-          <div className="flex items-center justify-between mb-6 md:mb-10 relative z-20">
+          {/* 👇 FIX: Header Navigasi Melayang di atas gambar (Mobile) & Normal di Desktop 👇 */}
+          <div className="absolute top-8 left-4 right-4 flex items-center justify-between z-40 md:relative md:top-auto md:left-auto md:right-auto md:mb-10">
             <button 
               onClick={handleBack} 
-              className="flex items-center gap-1.5 text-slate-800 font-black text-[11px] md:text-sm uppercase tracking-widest bg-white/70 backdrop-blur-md px-4 py-2.5 md:px-6 md:py-3 rounded-2xl active:scale-95 transition-all shadow-sm border border-slate-100 hover:bg-slate-50 hover:border-[#D4AF37]/40"
+              className="flex items-center gap-1.5 text-slate-800 font-black text-[11px] md:text-sm uppercase tracking-widest bg-white/90 backdrop-blur-md px-4 py-2.5 md:px-6 md:py-3 rounded-2xl active:scale-95 transition-all shadow-lg border border-white/50 hover:bg-slate-50 hover:border-[#D4AF37]/40"
             >
               <ChevronLeft size={18} className="md:w-5 md:h-5 text-[#D4AF37]" /> Kembali
             </button>
             
-            {/* LOGO & NAMA BRAND */}
-            <div className="flex items-center gap-2 md:gap-3 bg-white/60 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+            {/* LOGO BRAND */}
+            <div className="flex items-center gap-2 md:gap-3 bg-white/90 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-2xl border border-white/50 shadow-lg">
               <img 
                 src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
                 alt="Logo Brand Sentul Tower" 
@@ -799,28 +788,28 @@ const UnitDetailPage = () => {
             </div>
           </div>
           
-          {/* PEMBAGIAN LAYOUT DESKTOP */}
           <div className="md:grid md:grid-cols-2 md:gap-12 md:items-start">
             
-            {/* KOLOM KIRI (GAMBAR) */}
-            <div className="relative mb-6 md:mb-0 md:sticky md:top-0 group rounded-[32px] md:rounded-[40px] overflow-hidden shadow-sm border border-slate-100">
+            {/* KOLOM KIRI (GAMBAR EDGE TO EDGE DI MOBILE) */}
+            <div className="relative mb-6 md:mb-0 md:sticky md:top-0 group rounded-t-[40px] md:rounded-[40px] overflow-hidden md:shadow-sm md:border md:border-slate-100">
                <ImageSlider 
                  images={selectedRoom.images} 
-                 heightClass="h-80 md:h-[450px]" 
-                 roundedClass="rounded-[32px] md:rounded-[40px]" 
+                 heightClass="h-[45vh] md:h-[450px]" 
+                 roundedClass="rounded-t-[40px] md:rounded-[40px]" 
                  altPrefix={`Detail ${selectedRoom.name} - ${selectedRoom.floorLevel}`} 
                  onImageClick={(idx) => setLightboxIndex(idx)} 
                />
                
-               <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-sm z-20 pointer-events-none flex items-center gap-1.5 text-white/90">
+               {/* INDIKATOR ZOOM (Turun sedikit agar tidak tertutup tombol kembali di mobile) */}
+               <div className="absolute top-24 right-4 md:top-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-sm z-20 pointer-events-none flex items-center gap-1.5 text-white/90">
                   <Maximize size={12} className="text-[#D4AF37]" /> <span className="text-[10px] font-bold uppercase tracking-widest">Ketuk Foto</span>
                </div>
 
-               {/* Gradient hitam di bawah gambar untuk memperjelas lencana */}
-               <div className="absolute bottom-0 left-0 right-0 h-24 md:h-32 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none rounded-b-[32px] md:rounded-b-[40px]"></div>
+               {/* GRADIENT SHADOW BAWAH GAMBAR */}
+               <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none rounded-b-[32px] md:rounded-b-[40px]"></div>
 
-               {/* 👇 FIX: Lencana Fasilitas di Modal Detail juga diperbarui (Max-Width-Fit) 👇 */}
-               <div className="absolute bottom-5 left-4 right-4 z-20 flex flex-nowrap justify-between items-end pointer-events-none overflow-hidden">
+               {/* LENCANA FASILITAS MELAYANG (Seperti Bali Rentals) */}
+               <div className="absolute bottom-5 left-4 right-4 md:bottom-6 z-20 flex flex-nowrap justify-between items-end pointer-events-none overflow-hidden">
                    <div className="flex gap-1.5 overflow-hidden">
                        <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-xl border border-white/20 shrink-0 max-w-fit">
                           <Maximize size={12} className="text-[#D4AF37]" />
@@ -837,8 +826,8 @@ const UnitDetailPage = () => {
                </div>
             </div>
             
-            {/* KOLOM KANAN (DINAMIS BERDASARKAN BOOKING FLOW) */}
-            <div className="flex flex-col md:pb-8">
+            {/* KOLOM KANAN (KONTEN) - DI MOBILE DIBUNGKUS px-6 AGAR TEKS TIDAK MENABRAK TEPI */}
+            <div className="flex flex-col px-6 md:px-0 md:pb-8">
               
               {/* FLOW 1: DETAIL KAMAR */}
               {bookingFlow === 'details' && (
@@ -980,7 +969,6 @@ const UnitDetailPage = () => {
                       </div>
                    </div>
 
-                   {/* TOMBOL WA KEMBALI DI BAWAH GRID (TIDAK MELAYANG) */}
                    <button onClick={() => handleWaClick("chat", selectedRoom.name)} className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-black py-5 md:py-6 rounded-[24px] flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-all uppercase tracking-widest text-xs md:text-sm block">
                      <MessageCircle size={20} className="md:w-6 md:h-6" /> Hubungi Lewat WhatsApp
                    </button>
@@ -990,7 +978,7 @@ const UnitDetailPage = () => {
           </div>
         </div>
 
-        {/* POPUP FULLSCREEN GAMBAR (LIGHTBOX) DENGAN FITUR SWIPE */}
+        {/* 👇 FIX BUG LIGHTBOX: FORMAT URL GAMBAR DIPASTIKAN VALID 👇 */}
         {lightboxIndex !== null && selectedRoom && (
           <div 
             className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-slide-up" 
@@ -1000,17 +988,15 @@ const UnitDetailPage = () => {
               if (lbTouchStart === null) return;
               const touchEnd = e.changedTouches[0].clientX;
               const diff = lbTouchStart - touchEnd;
-              if (diff > 50) setLightboxIndex((prev) => (prev + 1) % selectedRoom.images.length); // Usap ke kiri (Next)
-              if (diff < -50) setLightboxIndex((prev) => (prev === 0 ? selectedRoom.images.length - 1 : prev - 1)); // Usap ke kanan (Prev)
+              if (diff > 50) setLightboxIndex((prev) => (prev + 1) % selectedRoom.images.length); 
+              if (diff < -50) setLightboxIndex((prev) => (prev === 0 ? selectedRoom.images.length - 1 : prev - 1)); 
               setLbTouchStart(null);
             }}
           >
-            {/* Tombol Close */}
             <button onClick={() => setLightboxIndex(null)} className="absolute top-6 right-6 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all active:scale-90 z-50">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
             </button>
 
-            {/* Tombol Prev (Muncul di layar besar) */}
             <button 
               onClick={(e) => { e.stopPropagation(); setLightboxIndex((prev) => (prev === 0 ? selectedRoom.images.length - 1 : prev - 1)); }} 
               className="absolute left-4 md:left-10 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all active:scale-90 z-50 hidden md:block"
@@ -1018,21 +1004,19 @@ const UnitDetailPage = () => {
               <ChevronLeft size={24} />
             </button>
 
-            {/* Gambar yang ditampilkan */}
             <div className="relative w-full h-full flex flex-col items-center justify-center p-4 md:p-12">
                <img 
-                 src={selectedRoom.images[lightboxIndex]} 
+                 src={selectedRoom.images[lightboxIndex].includes('imagekit.io') ? `${selectedRoom.images[lightboxIndex].split('?')[0]}?tr=w-1200,f-webp,q-95` : selectedRoom.images[lightboxIndex]} 
                  alt={`Fullscreen Zoom ${lightboxIndex + 1}`} 
-                 className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl transition-all duration-300" 
+                 className="max-w-full max-h-[80vh] md:max-h-full object-contain rounded-2xl shadow-2xl transition-all duration-300 z-50 relative" 
                  onClick={(e) => e.stopPropagation()} 
+                 loading="lazy"
                />
-               {/* Indikator Nomor Halaman */}
-               <div className="absolute bottom-10 bg-black/50 backdrop-blur-md text-[#D4AF37] text-xs font-black px-4 py-2 rounded-full border border-white/10 tracking-widest uppercase shadow-lg">
+               <div className="absolute bottom-10 bg-black/50 backdrop-blur-md text-[#D4AF37] text-xs font-black px-4 py-2 rounded-full border border-white/10 tracking-widest uppercase shadow-lg z-50">
                  {lightboxIndex + 1} / {selectedRoom.images.length}
                </div>
             </div>
 
-            {/* Tombol Next (Muncul di layar besar) */}
             <button 
               onClick={(e) => { e.stopPropagation(); setLightboxIndex((prev) => (prev + 1) % selectedRoom.images.length); }} 
               className="absolute right-4 md:right-10 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all active:scale-90 z-50 hidden md:block"
@@ -1042,7 +1026,6 @@ const UnitDetailPage = () => {
           </div>
         )}
 
-        {/* Global Styles for Animations */}
         <style dangerouslySetInnerHTML={{ __html: `
           @keyframes slide-up { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
           @keyframes bounce-subtle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
