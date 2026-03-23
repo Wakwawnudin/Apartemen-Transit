@@ -762,47 +762,57 @@ const UnitDetailPage = () => {
           {/* EFEK SHAPE BACKGROUND (Hanya Desktop yang butuh ini) */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/15 to-transparent rounded-full blur-3xl pointer-events-none translate-x-1/3 -translate-y-1/4 hidden md:block"></div>
 
-          {/* Garis Usap (Pull indicator) di atas header khusus Mobile */}
-          <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mt-4 mb-4 md:hidden relative z-20"></div>
-
-          {/* 👇 FIX: Header Navigasi Terpisah dari Gambar, Simetris, dan Logo Bisa Diklik 👇 */}
-          <div className="flex items-center justify-between px-5 mb-5 md:px-0 md:mb-10 relative z-20">
+          {/* 👇 FIX: Header Navigasi Melayang di atas Gambar (Mobile Edge-to-Edge) & Normal di Desktop 👇 */}
+          <div className="absolute top-8 left-4 right-4 flex items-center justify-between z-40 md:relative md:top-auto md:left-auto md:right-auto md:mb-10 md:px-0">
             <button 
               onClick={handleBack} 
-              className="flex items-center gap-1.5 text-slate-800 font-black text-[11px] md:text-sm uppercase tracking-widest bg-white px-4 py-2.5 md:px-6 md:py-3 rounded-2xl active:scale-95 transition-all shadow-sm border border-slate-200 hover:bg-slate-50 hover:border-[#D4AF37]/40"
+              className="flex items-center justify-center w-10 h-10 md:w-auto md:h-auto md:gap-1.5 text-slate-800 font-black text-[11px] md:text-sm uppercase tracking-widest bg-white/90 backdrop-blur-md md:px-6 md:py-3 rounded-full md:rounded-2xl active:scale-95 transition-all shadow-lg border border-white/50 hover:bg-slate-50 hover:border-[#D4AF37]/40"
             >
-              <ChevronLeft size={18} className="md:w-5 md:h-5 text-[#D4AF37]" /> Kembali
+              <ChevronLeft size={20} className="text-slate-600 md:text-[#D4AF37]" /> 
+              <span className="hidden md:inline">Kembali</span>
             </button>
             
-            {/* LOGO BRAND (Bisa diklik untuk ke halaman utama) */}
+            {/* LOGO BRAND BISA DIKLIK (Desain Pill di Mobile, Normal di Desktop) */}
             <div 
               onClick={() => { navigate('/', { replace: true }); }}
-              className="flex items-center gap-2 md:gap-3 bg-white px-3 py-1.5 md:px-4 md:py-2 rounded-2xl border border-slate-200 shadow-sm cursor-pointer active:scale-95 transition-all hover:border-[#D4AF37]/40"
+              className="flex items-center gap-2 md:gap-3 bg-white/90 backdrop-blur-md px-4 py-2.5 md:px-4 md:py-2 rounded-full md:rounded-2xl border border-white/50 shadow-lg cursor-pointer active:scale-95 transition-all hover:border-[#D4AF37]/40"
             >
+              <Home size={14} className="text-slate-600 md:hidden" />
               <img 
                 src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
                 alt="Logo Brand Sentul Tower" 
-                className="h-7 w-auto md:h-9 object-contain drop-shadow-sm" 
+                className="h-7 w-auto md:h-9 object-contain drop-shadow-sm hidden md:block" 
               />
               <div className="flex flex-col justify-center text-left">
-                <span className="font-black text-[8px] md:text-[10px] tracking-[0.2em] leading-tight uppercase text-slate-400">Apartemen</span>
-                <span className="font-black text-[10px] md:text-xs text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-sm">Sentul Tower</span>
+                <span className="font-black text-[10px] text-slate-600 tracking-widest leading-tight uppercase drop-shadow-sm md:hidden">Home</span>
+                <div className="hidden md:flex flex-col">
+                  <span className="font-black text-[8px] md:text-[10px] tracking-[0.2em] leading-tight uppercase text-slate-400">Apartemen</span>
+                  <span className="font-black text-[10px] md:text-xs text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-sm">Sentul Tower</span>
+                </div>
               </div>
             </div>
           </div>
           
           <div className="md:grid md:grid-cols-2 md:gap-12 md:items-start">
             
-            {/* KOLOM KIRI (GAMBAR EDGE TO EDGE HORIZONTAL DI MOBILE) */}
-            <div className="relative mb-6 md:mb-0 md:sticky md:top-0 group md:rounded-[40px] overflow-hidden md:shadow-sm md:border md:border-slate-100">
+            {/* KOLOM KIRI (GAMBAR EDGE TO EDGE DI MOBILE) */}
+            <div className="relative mb-6 md:mb-0 md:sticky md:top-0 group rounded-t-[40px] md:rounded-[40px] overflow-hidden md:shadow-sm md:border md:border-slate-100">
+               {/* Garis Usap (Pull indicator) melayang di atas gambar khusus Mobile */}
+               <div className="absolute top-3 left-1/2 -translate-x-1/2 w-12 h-1.5 bg-white/60 backdrop-blur-md rounded-full z-50 md:hidden"></div>
+
                <ImageSlider 
                  images={selectedRoom.images} 
-                 heightClass="h-[40vh] md:h-[450px]" 
-                 roundedClass="rounded-none md:rounded-[40px]" 
+                 heightClass="h-[45vh] md:h-[450px]" 
+                 roundedClass="rounded-t-[40px] md:rounded-[40px]" 
                  altPrefix={`Detail ${selectedRoom.name} - ${selectedRoom.floorLevel}`} 
                  onImageClick={(idx) => setLightboxIndex(idx)} 
                />
-
+               
+               {/* INDIKATOR ZOOM (Hanya Muncul di Desktop, di Mobile dihapus agar bersih) */}
+               <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-sm z-20 pointer-events-none hidden md:flex items-center gap-1.5 text-white/90">
+                  <Maximize size={12} className="text-[#D4AF37]" /> <span className="text-[10px] font-bold uppercase tracking-widest">Ketuk Foto</span>
+               </div>
+    
                {/* GRADIENT SHADOW BAWAH GAMBAR */}
                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none rounded-b-[32px] md:rounded-b-[40px]"></div>
 
