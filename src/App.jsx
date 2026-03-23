@@ -751,8 +751,8 @@ const UnitDetailPage = () => {
         
         <div 
           id="modal-scroll-container"
-          // 👇 FIX: pb-7 di mobile agar gambar bisa menyentuh ujung atas, kiri, dan kanan 👇
-          className="bg-white w-full max-w-md rounded-t-[40px] relative z-10 pb-7 animate-slide-up overflow-y-auto overflow-x-hidden max-h-[95vh] h-[95vh] no-scrollbar shadow-2xl transition-transform duration-200 ease-out md:max-w-6xl md:h-auto md:max-h-[90vh] md:rounded-[48px] md:p-10 md:shadow-2xl"
+          // 👇 FIX: Mengubah tinggi menjadi 100dvh dan menghapus rounded atas di mobile agar fullscreen edge-to-edge 👇
+          className="bg-white w-full max-w-md relative z-10 pb-7 animate-slide-up overflow-y-auto overflow-x-hidden max-h-[100dvh] h-[100dvh] no-scrollbar shadow-2xl transition-transform duration-200 ease-out md:max-w-6xl md:h-auto md:max-h-[90vh] md:rounded-[48px] md:p-10 md:shadow-2xl"
           style={{ transform: `translateY(${pullY}px)` }} 
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
@@ -762,42 +762,40 @@ const UnitDetailPage = () => {
           {/* EFEK SHAPE BACKGROUND (Hanya Desktop yang butuh ini) */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/15 to-transparent rounded-full blur-3xl pointer-events-none translate-x-1/3 -translate-y-1/4 hidden md:block"></div>
 
-          {/* Garis Usap (Pull indicator) di atas header khusus Mobile */}
-          <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mt-4 mb-4 md:hidden relative z-20"></div>
-
-          {/* 👇 FIX: Header Navigasi Terpisah dari Gambar, Simetris, dan Logo Bisa Diklik 👇 */}
-          <div className="flex items-center justify-between px-5 mb-5 md:px-0 md:mb-10 relative z-20">
-            <button 
-              onClick={handleBack} 
-              className="flex items-center gap-1.5 text-slate-800 font-black text-[11px] md:text-sm uppercase tracking-widest bg-white px-4 py-2.5 md:px-6 md:py-3 rounded-2xl active:scale-95 transition-all shadow-sm border border-slate-200 hover:bg-slate-50 hover:border-[#D4AF37]/40"
-            >
-              <ChevronLeft size={18} className="md:w-5 md:h-5 text-[#D4AF37]" /> Kembali
-            </button>
-            
-            {/* LOGO BRAND (Bisa diklik untuk ke halaman utama) */}
-            <div 
-              onClick={() => { navigate('/', { replace: true }); }}
-              className="flex items-center gap-2 md:gap-3 bg-white px-3 py-1.5 md:px-4 md:py-2 rounded-2xl border border-slate-200 shadow-sm cursor-pointer active:scale-95 transition-all hover:border-[#D4AF37]/40"
-            >
-              <img 
-                src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
-                alt="Logo Brand Sentul Tower" 
-                className="h-7 w-auto md:h-9 object-contain drop-shadow-sm" 
-              />
-              <div className="flex flex-col justify-center text-left">
-                <span className="font-black text-[8px] md:text-[10px] tracking-[0.2em] leading-tight uppercase text-slate-400">Apartemen</span>
-                <span className="font-black text-[10px] md:text-xs text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-sm">Sentul Tower</span>
-              </div>
-            </div>
-          </div>
-          
           <div className="md:grid md:grid-cols-2 md:gap-12 md:items-start">
             
-            {/* KOLOM KIRI (GAMBAR EDGE TO EDGE HORIZONTAL DI MOBILE) */}
+            {/* KOLOM KIRI (GAMBAR EDGE TO EDGE HORIZONTAL & VERTIKAL DI MOBILE) */}
             <div className="relative mb-6 md:mb-0 md:sticky md:top-0 group md:rounded-[40px] overflow-hidden md:shadow-sm md:border md:border-slate-100">
+
+               {/* 👇 FIX: Header Navigasi dipindah ke dalam Kolom Kiri dan dibuat absolute melayang 👇 */}
+               <div className="absolute top-4 left-0 right-0 flex items-center justify-between px-4 z-30 md:static md:mb-6 md:px-0 md:bg-transparent">
+                 <button 
+                   onClick={handleBack} 
+                   className="flex items-center gap-1.5 text-slate-800 font-black text-[11px] md:text-sm uppercase tracking-widest bg-white/90 backdrop-blur-md md:bg-white w-10 h-10 md:w-auto md:h-auto justify-center md:px-6 md:py-3 rounded-full md:rounded-2xl active:scale-95 transition-all shadow-md border border-slate-200 hover:bg-slate-50 hover:border-[#D4AF37]/40"
+                 >
+                   <ChevronLeft size={20} className="md:w-5 md:h-5 text-[#D4AF37]" /> <span className="hidden md:inline">Kembali</span>
+                 </button>
+                 
+                 {/* LOGO BRAND (Bisa diklik untuk ke halaman utama) */}
+                 <div 
+                   onClick={() => { navigate('/', { replace: true }); }}
+                   className="flex items-center gap-2 md:gap-3 bg-white/90 backdrop-blur-md md:bg-white px-3 py-1.5 md:px-4 md:py-2 rounded-full md:rounded-2xl border border-slate-200 shadow-md cursor-pointer active:scale-95 transition-all hover:border-[#D4AF37]/40"
+                 >
+                   <img 
+                     src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
+                     alt="Logo Brand Sentul Tower" 
+                     className="h-7 w-auto md:h-9 object-contain drop-shadow-sm" 
+                   />
+                   <div className="flex flex-col justify-center text-left">
+                     <span className="font-black text-[8px] md:text-[10px] tracking-[0.2em] leading-tight uppercase text-slate-400">Apartemen</span>
+                     <span className="font-black text-[10px] md:text-xs text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-sm">Sentul Tower</span>
+                   </div>
+                 </div>
+               </div>
+
                <ImageSlider 
                  images={selectedRoom.images} 
-                 heightClass="h-[40vh] md:h-[450px]" 
+                 heightClass="h-[45vh] md:h-[450px]" 
                  roundedClass="rounded-none md:rounded-[40px]" 
                  altPrefix={`Detail ${selectedRoom.name} - ${selectedRoom.floorLevel}`} 
                  onImageClick={(idx) => setLightboxIndex(idx)} 
