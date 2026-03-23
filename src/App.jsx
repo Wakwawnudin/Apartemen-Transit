@@ -825,21 +825,19 @@ const UnitDetailPage = () => {
             {/* KOLOM KANAN (KONTEN) - DI MOBILE DIBUNGKUS px-6 AGAR TEKS TIDAK MENABRAK TEPI */}
             <div className="flex flex-col px-6 md:px-0 md:pb-8">
               
-              {/* 👇 FIX: Sabuk Logo Khusus Mobile yang Lebih Eksklusif Tema Emas 👇 */}
+              {/* 👇 PERUBAHAN DESAIN EKSKLUSIF: Sabuk Logo Gelap di Bawah Gambar 👇 */}
               <div 
                 onClick={() => { navigate('/', { replace: true }); }}
-                // Ganti class lama dengan class baru tema emas:
-                className="md:hidden -mx-6 mb-6 bg-gradient-to-r from-[#D4AF37]/20 via-[#B5952F]/40 to-[#D4AF37]/20 border-b-2 border-[#D4AF37]/40 py-4 flex items-center justify-center gap-3 cursor-pointer shadow-xl shadow-[#D4AF37]/20 active:scale-[0.98] transition-all"
+                className="md:hidden -mx-6 mb-6 bg-slate-900/95 backdrop-blur-md border-y border-[#D4AF37]/20 py-4 flex items-center justify-center gap-4 cursor-pointer shadow-2xl shadow-black/30"
               >
-                 <img 
-                   src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
-                   alt="Logo Brand Sentul Tower" 
-                   className="h-9 w-auto object-contain drop-shadow-md" 
-                 />
+                 {/* Ikon Rumah Emas Kecil */}
+                 <div className="w-8 h-8 rounded-full bg-slate-800 border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] shadow-inner">
+                   <Building size={16} />
+                 </div>
+                 
                  <div className="flex flex-col justify-center text-left">
-                   {/* Sesuaikan warna teks abu-abu menjadi emas lebih pucat agar senada */}
-                   <span className="font-black text-[10px] tracking-[0.2em] leading-tight uppercase text-[#E6C35F]">Apartemen</span>
-                   <span className="font-black text-sm text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-lg">Sentul Tower</span>
+                   <span className="font-black text-[9px] tracking-[0.2em] leading-tight uppercase text-[#D4AF37]/60">Apartemen</span>
+                   <span className="font-black text-xs text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-lg">Sentul Tower</span>
                  </div>
               </div>
 
