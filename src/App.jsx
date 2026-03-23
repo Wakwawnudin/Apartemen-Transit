@@ -566,19 +566,6 @@ const HomePage = () => {
         </div>
       </footer>
 
-      {/* TOMBOL WA MELAYANG */}
-      <div className="fixed bottom-6 left-0 right-0 px-6 z-40 md:left-auto md:right-6 md:w-96 md:px-0">
-        <div onClick={() => handleWaClick("carikan_kamar")} className="bg-[#25D366] hover:bg-[#20bd5a] text-white shadow-2xl rounded-[24px] p-5 flex justify-between items-center max-w-sm mx-auto md:max-w-none md:mx-0 animate-bounce-subtle cursor-pointer active:scale-95 transition-transform border border-white/20">
-          <div className="flex items-center gap-4">
-            <div className="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center backdrop-blur-md shadow-inner"><MessageCircle size={24} /></div>
-            <div>
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] opacity-90 text-yellow-200">BINGUNG CARI JADWAL?</p>
-              <p className="text-sm font-black tracking-tight">Minta Dicarikan Admin</p>
-            </div>
-          </div>
-          <ChevronRight size={24} />
-        </div>
-      </div>
     </div>
   );
 };
