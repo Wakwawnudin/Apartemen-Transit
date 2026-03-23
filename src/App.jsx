@@ -331,7 +331,10 @@ const HomePage = () => {
             <span className="font-black text-[11px] md:text-base text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-md">SENTUL TOWER</span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 md:gap-3">
+          <button onClick={() => handleWaClick("chat")} aria-label="Chat WhatsApp" className="p-2.5 rounded-full border shadow-lg active:scale-90 transition-all flex items-center justify-center bg-[#25D366]/90 backdrop-blur-md border-white/30 text-white hover:bg-[#25D366]">
+             <MessageCircle size={20} />
+          </button>
           <a href={mapsLink} target="_blank" rel="noopener noreferrer" aria-label="Lokasi Google Maps" className="p-2.5 rounded-full border shadow-lg active:scale-90 transition-all flex items-center justify-center bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/30">
              <GoogleMapsLogo />
           </a>
