@@ -765,9 +765,9 @@ const UnitDetailPage = () => {
           <div className="md:grid md:grid-cols-2 md:gap-12 md:items-start">
             
             {/* KOLOM KIRI (GAMBAR EDGE TO EDGE HORIZONTAL & VERTIKAL DI MOBILE) */}
-            <div className="relative mb-6 md:mb-0 md:sticky md:top-0 group md:rounded-[40px] overflow-hidden md:shadow-sm md:border md:border-slate-100">
+            {/* 👇 FIX: Hapus mb-6 di mobile agar sabuk menempel sempurna ke gambar 👇 */}
+            <div className="relative mb-0 md:sticky md:top-0 group md:rounded-[40px] overflow-hidden md:shadow-sm md:border md:border-slate-100">
 
-               {/* 👇 FIX: Header Navigasi dipindah ke dalam Kolom Kiri dan dibuat absolute melayang 👇 */}
                <div className="absolute top-4 left-0 right-0 flex items-center justify-between px-4 z-30 md:static md:mb-6 md:px-0 md:bg-transparent">
                  <button 
                    onClick={handleBack} 
@@ -776,10 +776,10 @@ const UnitDetailPage = () => {
                    <ChevronLeft size={20} className="md:w-5 md:h-5 text-[#D4AF37]" /> <span className="hidden md:inline">Kembali</span>
                  </button>
                  
-                 {/* LOGO BRAND (Bisa diklik untuk ke halaman utama) */}
+                 {/* LOGO BRAND MELAYANG (DISEMBUNYIKAN DI MOBILE -> hidden md:flex) */}
                  <div 
                    onClick={() => { navigate('/', { replace: true }); }}
-                   className="flex items-center gap-2 md:gap-3 bg-white/90 backdrop-blur-md md:bg-white px-3 py-1.5 md:px-4 md:py-2 rounded-full md:rounded-2xl border border-slate-200 shadow-md cursor-pointer active:scale-95 transition-all hover:border-[#D4AF37]/40"
+                   className="hidden md:flex items-center gap-2 md:gap-3 bg-white/90 backdrop-blur-md md:bg-white px-3 py-1.5 md:px-4 md:py-2 rounded-full md:rounded-2xl border border-slate-200 shadow-md cursor-pointer active:scale-95 transition-all hover:border-[#D4AF37]/40"
                  >
                    <img 
                      src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
@@ -825,6 +825,22 @@ const UnitDetailPage = () => {
             {/* KOLOM KANAN (KONTEN) - DI MOBILE DIBUNGKUS px-6 AGAR TEKS TIDAK MENABRAK TEPI */}
             <div className="flex flex-col px-6 md:px-0 md:pb-8">
               
+              {/* 👇 FIX: Sabuk Logo Khusus Mobile Tepat di Bawah Gambar Edge-to-Edge 👇 */}
+              <div 
+                onClick={() => { navigate('/', { replace: true }); }}
+                className="md:hidden -mx-6 mb-6 bg-slate-50 border-b border-slate-200 py-3.5 flex items-center justify-center gap-3 cursor-pointer shadow-sm"
+              >
+                 <img 
+                   src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
+                   alt="Logo Brand Sentul Tower" 
+                   className="h-8 w-auto object-contain drop-shadow-sm" 
+                 />
+                 <div className="flex flex-col justify-center text-left">
+                   <span className="font-black text-[9px] tracking-[0.2em] leading-tight uppercase text-slate-400">Apartemen</span>
+                   <span className="font-black text-xs text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-sm">Sentul Tower</span>
+                 </div>
+              </div>
+
               {/* FLOW 1: DETAIL KAMAR */}
               {bookingFlow === 'details' && (
               <>
