@@ -405,7 +405,7 @@ const HomePage = () => {
                   className="block bg-white rounded-[32px] md:rounded-[40px] overflow-hidden shadow-sm border border-slate-100 active:scale-[0.98] transition-all duration-500 cursor-pointer group md:hover:shadow-2xl md:hover:-translate-y-2 animate-slide-up relative flex flex-col"
                 >
                   <div className="relative">
-                    {/* Gambar Edge-to-Edge dengan tinggi portrait ala Bali Rentals */}
+                    {/* 👇 FIX: Desain Edge-to-Edge ala Bali Rentals 👇 */}
                     <ImageSlider images={room.images} heightClass="h-80 md:h-96" roundedClass="rounded-t-[32px] md:rounded-t-[40px]" altPrefix={room.altPrefix} />
                     
                     <div className="absolute top-5 left-5 md:top-6 md:left-6 flex gap-2 pointer-events-none z-20">
@@ -418,10 +418,10 @@ const HomePage = () => {
                       </span>
                     </div>
 
-                    {/* Gradient hitam di bawah gambar untuk memperjelas lencana */}
+                    {/* Gradient Hitam untuk Memperjelas Lencana Fasilitas */}
                     <div className="absolute bottom-0 left-0 right-0 h-24 md:h-32 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none"></div>
 
-                    {/* Lencana Fasilitas melayang di dalam gambar */}
+                    {/* 👇 FIX: Lencana Fasilitas Melayang (Tahan Bug Memelar/Rata Kiri) 👇 */}
                     <div className="absolute bottom-5 left-4 right-4 md:bottom-6 z-20 flex flex-nowrap justify-start items-center gap-1.5 text-white pointer-events-none overflow-hidden">
                        <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-xl border border-white/20 shrink-0 max-w-fit">
                           <Maximize size={12} className="text-[#D4AF37]" />
@@ -431,7 +431,7 @@ const HomePage = () => {
                           <Bed size={12} className="text-[#D4AF37]" />
                           <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest">{room.beds} Bed</span>
                        </div>
-                       <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-xl border border-white/20 shrink-0 max-w-fit min-w-0">
+                       <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-xl border border-white/20 shrink max-w-fit min-w-0">
                           <Shield size={12} className="text-[#D4AF37] shrink-0" />
                           <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest truncate">24/7 Aman</span>
                        </div>
@@ -443,7 +443,7 @@ const HomePage = () => {
                     
                     <div className="flex items-center gap-1.5 mb-4 md:mb-6">
                       <CheckCircle2 size={14} className="text-green-500" fill="currentColor" color="white" />
-                      <span className="text-[10px] md:text-xs font-bold text-slate-500 tracking-tight">Verified • Higienis • Nyaman</span>
+                      <span className="text-[10px] md:text-xs font-bold text-slate-500 tracking-tight">Verified • Higienis • Aman</span>
                     </div>
 
                     <div className="flex justify-between items-end mt-auto pt-6 border-t border-slate-50">
@@ -582,8 +582,7 @@ const HomePage = () => {
     </div>
   );
 };
-
-// --- HALAMAN DETAIL KAMAR (DIPERBARUI DENGAN SISTEM BOOKING/QRIS) ---
+// --- HALAMAN DETAIL KAMAR (DIPERBARUI DENGAN DESAIN EDGE-TO-EDGE & FIX LIGHTBOX) ---
 const UnitDetailPage = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -752,6 +751,7 @@ const UnitDetailPage = () => {
         
         <div 
           id="modal-scroll-container"
+          // 👇 FIX: pb-7 di mobile agar gambar bisa menyentuh ujung atas, kiri, dan kanan 👇
           className="bg-white w-full max-w-md rounded-t-[40px] relative z-10 pb-7 animate-slide-up overflow-y-auto overflow-x-hidden max-h-[95vh] h-[95vh] no-scrollbar shadow-2xl transition-transform duration-200 ease-out md:max-w-6xl md:h-auto md:max-h-[90vh] md:rounded-[48px] md:p-10 md:shadow-2xl"
           style={{ transform: `translateY(${pullY}px)` }} 
           onTouchStart={onTouchStart}
@@ -762,48 +762,46 @@ const UnitDetailPage = () => {
           {/* EFEK SHAPE BACKGROUND (Hanya Desktop yang butuh ini) */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/15 to-transparent rounded-full blur-3xl pointer-events-none translate-x-1/3 -translate-y-1/4 hidden md:block"></div>
 
-          {/* Garis Usap (Pull indicator) di atas gambar khusus Mobile */}
-          <div className="w-12 h-1.5 bg-white/60 backdrop-blur-md rounded-full mx-auto mb-4 absolute top-3 left-1/2 -translate-x-1/2 z-50 md:hidden"></div>
+          {/* Garis Usap (Pull indicator) di atas header khusus Mobile */}
+          <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mt-4 mb-4 md:hidden relative z-20"></div>
 
-          {/* 👇 Header Navigasi di atas gambar, terpisah, simetris, dan Logo dapat diklik ke Home 👇 */}
-          <div className="w-full px-6 flex items-center justify-between mb-8 md:mb-10">
+          {/* 👇 FIX: Header Navigasi Terpisah dari Gambar, Simetris, dan Logo Bisa Diklik 👇 */}
+          <div className="flex items-center justify-between px-5 mb-5 md:px-0 md:mb-10 relative z-20">
             <button 
               onClick={handleBack} 
-              className="flex items-center gap-1.5 text-slate-800 font-black text-[11px] md:text-sm uppercase tracking-widest bg-white/70 backdrop-blur-md px-4 py-2.5 md:px-6 md:py-3 rounded-2xl active:scale-95 transition-all shadow-sm border border-slate-100 hover:bg-slate-50 hover:border-[#D4AF37]/40"
+              className="flex items-center gap-1.5 text-slate-800 font-black text-[11px] md:text-sm uppercase tracking-widest bg-white px-4 py-2.5 md:px-6 md:py-3 rounded-2xl active:scale-95 transition-all shadow-sm border border-slate-200 hover:bg-slate-50 hover:border-[#D4AF37]/40"
             >
               <ChevronLeft size={18} className="md:w-5 md:h-5 text-[#D4AF37]" /> Kembali
             </button>
             
-            {/* 👇 Logo Brand yang dapat diklik untuk kembali ke Home 👇 */}
-            <Link to="/" className="flex items-center gap-2 md:gap-3 bg-white/60 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-2xl border border-slate-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] active:scale-95 transition-all">
+            {/* LOGO BRAND (Bisa diklik untuk ke halaman utama) */}
+            <div 
+              onClick={() => { navigate('/', { replace: true }); }}
+              className="flex items-center gap-2 md:gap-3 bg-white px-3 py-1.5 md:px-4 md:py-2 rounded-2xl border border-slate-200 shadow-sm cursor-pointer active:scale-95 transition-all hover:border-[#D4AF37]/40"
+            >
               <img 
                 src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
                 alt="Logo Brand Sentul Tower" 
                 className="h-7 w-auto md:h-9 object-contain drop-shadow-sm" 
               />
-              <div className="flex flex-col justify-center">
+              <div className="flex flex-col justify-center text-left">
                 <span className="font-black text-[8px] md:text-[10px] tracking-[0.2em] leading-tight uppercase text-slate-400">Apartemen</span>
                 <span className="font-black text-[10px] md:text-xs text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-sm">Sentul Tower</span>
               </div>
-            </Link>
+            </div>
           </div>
           
           <div className="md:grid md:grid-cols-2 md:gap-12 md:items-start">
             
-            {/* KOLOM KIRI (GAMBAR EDGE TO EDGE DI MOBILE) */}
-            <div className="relative mb-6 md:mb-0 md:sticky md:top-0 group rounded-t-[40px] md:rounded-[40px] overflow-hidden md:shadow-sm md:border md:border-slate-100">
+            {/* KOLOM KIRI (GAMBAR EDGE TO EDGE HORIZONTAL DI MOBILE) */}
+            <div className="relative mb-6 md:mb-0 md:sticky md:top-0 group md:rounded-[40px] overflow-hidden md:shadow-sm md:border md:border-slate-100">
                <ImageSlider 
                  images={selectedRoom.images} 
-                 heightClass="h-[45vh] md:h-[450px]" 
-                 roundedClass="rounded-t-[40px] md:rounded-[40px]" 
+                 heightClass="h-[40vh] md:h-[450px]" 
+                 roundedClass="rounded-none md:rounded-[40px]" 
                  altPrefix={`Detail ${selectedRoom.name} - ${selectedRoom.floorLevel}`} 
                  onImageClick={(idx) => setLightboxIndex(idx)} 
                />
-               
-               {/* INDIKATOR ZOOM DIPINDAHKAN DAN TULISAN DIHAPUS - Hanya icon Maximize */}
-               <div className="absolute top-24 right-4 md:top-4 bg-black/60 backdrop-blur-md px-3 py-3 rounded-xl shadow-sm z-20 pointer-events-none flex items-center justify-center text-white/90">
-                  <Maximize size={16} className="text-[#D4AF37]" />
-               </div>
 
                {/* GRADIENT SHADOW BAWAH GAMBAR */}
                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none rounded-b-[32px] md:rounded-b-[40px]"></div>
@@ -1040,3 +1038,161 @@ const UnitDetailPage = () => {
     </>
   );
 };
+
+// --- ⚙️ HALAMAN PANEL ADMIN RAHASIA ---
+const AdminPanel = () => {
+  const navigate = useNavigate();
+  const [bookings, setBookings] = useState([]);
+  const [selectedRoom, setSelectedRoom] = useState(roomsData[0].slug);
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [checkInTime, setCheckInTime] = useState('');
+  const [checkOutTime, setCheckOutTime] = useState('');
+  const [guestName, setGuestName] = useState('');
+
+  useEffect(() => {
+    setBookings(getBookings());
+  }, []);
+
+  const handleAddBooking = (e) => {
+    e.preventDefault();
+    if (!checkInTime || !checkOutTime) return alert("Jam masuk dan keluar wajib diisi!");
+
+    // Konversi jam ke timestamp
+    const inDate = new Date(`${selectedDate}T${checkInTime}:00`).getTime();
+    const outDate = new Date(`${selectedDate}T${checkOutTime}:00`).getTime();
+
+    if (outDate <= inDate) return alert("Jam keluar harus lebih besar dari jam masuk!");
+
+    const newBooking = {
+      id: Date.now().toString(),
+      roomId: selectedRoom,
+      date: selectedDate,
+      guestName: guestName || "Walk-in Guest",
+      checkInStr: checkInTime,
+      checkOutStr: checkOutTime,
+      checkIn: inDate,
+      checkOut: outDate,
+      bufferEnd: calculateBufferEnd(outDate)
+    };
+
+    const newBookingsList = [...bookings, newBooking];
+    saveBookings(newBookingsList);
+    setBookings(newBookingsList);
+    setCheckInTime('');
+    setCheckOutTime('');
+    setGuestName('');
+  };
+
+  const handleRemoveBooking = (id) => {
+    const updated = bookings.filter(b => b.id !== id);
+    saveBookings(updated);
+    setBookings(updated);
+  };
+
+  // Filter booking untuk hari dan ruangan yang dipilih
+  const filteredBookings = bookings.filter(b => b.roomId === selectedRoom && b.date === selectedDate).sort((a,b) => a.checkIn - b.checkIn);
+
+  return (
+    <div className="min-h-screen bg-slate-900 font-sans text-slate-100 p-6 md:p-12">
+      <div className="max-w-4xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+           <h1 className="text-2xl font-black text-[#D4AF37] uppercase tracking-widest flex items-center gap-2"><Lock size={24}/> Admin Panel</h1>
+           <button onClick={() => navigate('/')} className="bg-slate-800 text-slate-300 text-xs font-bold px-4 py-2 rounded-full border border-slate-700 hover:bg-slate-700">Tutup Panel</button>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8">
+           {/* FORM BLOKIR MANUAL */}
+           <div className="bg-slate-800 rounded-[32px] p-6 border border-slate-700 shadow-2xl">
+              <h2 className="text-sm font-black text-white uppercase tracking-widest mb-6 border-b border-slate-700 pb-4">Tandai Jadwal (Blokir Manual)</h2>
+              <form onSubmit={handleAddBooking} className="space-y-4">
+                 <div>
+                   <label className="text-[10px] font-black text-[#D4AF37] uppercase tracking-widest mb-1 block">Pilih Unit</label>
+                   <select value={selectedRoom} onChange={(e) => setSelectedRoom(e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm font-bold text-white outline-none focus:border-[#D4AF37]">
+                     {roomsData.map(r => <option key={r.id} value={r.slug}>{r.name} ({r.type})</option>)}
+                   </select>
+                 </div>
+                 <div>
+                   <label className="text-[10px] font-black text-[#D4AF37] uppercase tracking-widest mb-1 block">Tanggal</label>
+                   <input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm font-bold text-white outline-none focus:border-[#D4AF37]" />
+                 </div>
+                 <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="text-[10px] font-black text-[#D4AF37] uppercase tracking-widest mb-1 block">Jam Check-In</label>
+                      <input type="time" required value={checkInTime} onChange={(e) => setCheckInTime(e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm font-bold text-white outline-none focus:border-[#D4AF37]" />
+                    </div>
+                    <div>
+                      <label className="text-[10px] font-black text-[#D4AF37] uppercase tracking-widest mb-1 block">Jam Check-Out</label>
+                      <input type="time" required value={checkOutTime} onChange={(e) => setCheckOutTime(e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm font-bold text-white outline-none focus:border-[#D4AF37]" />
+                    </div>
+                 </div>
+                 <div>
+                   <label className="text-[10px] font-black text-[#D4AF37] uppercase tracking-widest mb-1 block">Nama Tamu / Catatan</label>
+                   <input type="text" placeholder="Tamu Walk-in (Opsional)" value={guestName} onChange={(e) => setGuestName(e.target.value)} className="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-sm font-bold text-white outline-none focus:border-[#D4AF37]" />
+                 </div>
+                 <button type="submit" className="w-full bg-[#D4AF37] hover:bg-[#b5952f] text-slate-900 font-black py-4 rounded-xl uppercase tracking-widest text-xs mt-4 transition-colors">
+                    Tandai Booked (+ Auto Cleaning Buffer)
+                 </button>
+              </form>
+           </div>
+
+           {/* DAFTAR JADWAL TERBLOKIR */}
+           <div className="bg-slate-800 rounded-[32px] p-6 border border-slate-700 shadow-2xl flex flex-col">
+              <h2 className="text-sm font-black text-white uppercase tracking-widest mb-6 border-b border-slate-700 pb-4">Status Kalender Web (Hari Ini)</h2>
+              
+              <div className="flex-1 overflow-y-auto space-y-3 no-scrollbar pr-2">
+                 {filteredBookings.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center h-full text-slate-500 opacity-50 py-10">
+                       <Calendar size={48} className="mb-4" />
+                       <p className="text-xs font-bold uppercase tracking-widest">Belum Ada Booking</p>
+                    </div>
+                 ) : (
+                    filteredBookings.map(b => {
+                       const bufferDate = new Date(b.bufferEnd);
+                       const bufferStr = `${bufferDate.getHours().toString().padStart(2, '0')}:${bufferDate.getMinutes().toString().padStart(2, '0')}`;
+                       return (
+                         <div key={b.id} className="bg-slate-900 border border-slate-700 rounded-2xl p-4 flex justify-between items-center group hover:border-[#D4AF37] transition-colors">
+                            <div>
+                               <p className="text-xs font-black text-[#D4AF37] mb-1">{b.guestName}</p>
+                               <div className="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                  <span>{b.checkInStr}</span> <ChevronRight size={10} /> <span>{b.checkOutStr}</span>
+                               </div>
+                               <div className="mt-2 text-[9px] font-bold bg-amber-900/30 text-amber-500 px-2 py-1 rounded inline-block">
+                                  Terkunci di Web s/d {bufferStr}
+                               </div>
+                            </div>
+                            <button onClick={() => handleRemoveBooking(b.id)} className="bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white p-3 rounded-xl transition-colors">
+                               <Trash2 size={16} />
+                            </button>
+                         </div>
+                       )
+                    })
+                 )}
+              </div>
+           </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
+// --- APP UTAMA ---
+const App = () => {
+  return (
+    <HelmetProvider>
+      <ScrollToTop />
+      {/* Panggil SEO Home di sini agar dibaca Google */}
+      <SEOStructuredDataHome /> 
+      
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/unit/:slug" element={<UnitDetailPage />} />
+        <Route path="/admin" element={<AdminPanel />} />
+        <Route path="/:seoSlug" element={<DynamicLandingPage />} />
+      </Routes>
+      <Analytics />
+    </HelmetProvider>
+  );
+};
+
+export default App;
