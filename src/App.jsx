@@ -830,14 +830,14 @@ const UnitDetailPage = () => {
                 onClick={() => { navigate('/', { replace: true }); }}
                 className="md:hidden -mx-6 mb-6 bg-slate-900/95 backdrop-blur-md border-y border-[#D4AF37]/20 py-4 flex items-center justify-center gap-4 cursor-pointer shadow-2xl shadow-black/30"
               >
-                 {/* Ikon Rumah Emas Kecil */}
-                 <div className="w-8 h-8 rounded-full bg-slate-800 border border-[#D4AF37]/30 flex items-center justify-center text-[#D4AF37] shadow-inner">
-                   <Building size={16} />
-                 </div>
-                 
+                 <img 
+                   src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
+                   alt="Logo Brand Sentul Tower" 
+                   className="h-8 w-auto object-contain drop-shadow-sm" 
+                 />
                  <div className="flex flex-col justify-center text-left">
-                   <span className="font-black text-[9px] tracking-[0.2em] leading-tight uppercase text-[#D4AF37]/60">Apartemen</span>
-                   <span className="font-black text-xs text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-lg">Sentul Tower</span>
+                   <span className="font-black text-[9px] tracking-[0.2em] leading-tight uppercase text-slate-400">Apartemen</span>
+                   <span className="font-black text-xs text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-sm">Sentul Tower</span>
                  </div>
               </div>
 
