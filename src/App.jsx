@@ -246,7 +246,6 @@ const HomePage = () => {
     setPage(1); 
   };
 
-  // 👇 handleWaClick KHUSUS HALAMAN UTAMA
   const handleWaClick = (messageType = "general") => {
     let text = "";
     const refTag = refCode ? `\n\n(Info by ${refCode})` : "";
@@ -271,8 +270,6 @@ const HomePage = () => {
     if (isLoadingMore) return;
     if (observer.current) observer.current.disconnect();
     
-    // 👇 Penambahan rootMargin: '600px' bertindak sebagai Radar Awal
-    // Sistem akan memuat data SEBELUM user menabrak footer
     observer.current = new IntersectionObserver(entries => {
       if (entries[0].isIntersecting && hasMore) {
         setIsLoadingMore(true);
@@ -408,7 +405,7 @@ const HomePage = () => {
                   className="block bg-white rounded-[32px] md:rounded-[40px] overflow-hidden shadow-sm border border-slate-100 active:scale-[0.98] transition-all duration-500 cursor-pointer group md:hover:shadow-2xl md:hover:-translate-y-2 animate-slide-up relative flex flex-col"
                 >
                   <div className="relative">
-                    {/* Gambar Edge-to-Edge dengan tinggi portrait ala Bali Rentals */}
+                    {/* 👇 FIX: Desain Edge-to-Edge ala Bali Rentals 👇 */}
                     <ImageSlider images={room.images} heightClass="h-80 md:h-96" roundedClass="rounded-t-[32px] md:rounded-t-[40px]" altPrefix={room.altPrefix} />
                     
                     <div className="absolute top-5 left-5 md:top-6 md:left-6 flex gap-2 pointer-events-none z-20">
@@ -421,20 +418,20 @@ const HomePage = () => {
                       </span>
                     </div>
 
-                    {/* Gradient hitam di bawah gambar untuk memperjelas lencana */}
+                    {/* Gradient Hitam untuk Memperjelas Lencana Fasilitas */}
                     <div className="absolute bottom-0 left-0 right-0 h-24 md:h-32 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none"></div>
 
-                    {/* Lencana Fasilitas melayang (Lebih kecil dan rapat, anti-memelar) */}
+                    {/* 👇 FIX: Lencana Fasilitas Melayang (Tahan Bug Memelar/Rata Kiri) 👇 */}
                     <div className="absolute bottom-5 left-4 right-4 md:bottom-6 z-20 flex flex-nowrap justify-start items-center gap-1.5 text-white pointer-events-none overflow-hidden">
-                       <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-lg border border-white/20 shrink-0 max-w-fit">
+                       <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-xl border border-white/20 shrink-0 max-w-fit">
                           <Maximize size={12} className="text-[#D4AF37]" />
                           <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest">{room.size}</span>
                        </div>
-                       <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-lg border border-white/20 shrink-0 max-w-fit">
+                       <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-xl border border-white/20 shrink-0 max-w-fit">
                           <Bed size={12} className="text-[#D4AF37]" />
                           <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest">{room.beds} Bed</span>
                        </div>
-                       <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-lg border border-white/20 shrink-0 max-w-fit min-w-0">
+                       <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-xl border border-white/20 shrink max-w-fit min-w-0">
                           <Shield size={12} className="text-[#D4AF37] shrink-0" />
                           <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest truncate">24/7 Aman</span>
                        </div>
@@ -446,7 +443,7 @@ const HomePage = () => {
                     
                     <div className="flex items-center gap-1.5 mb-4 md:mb-6">
                       <CheckCircle2 size={14} className="text-green-500" fill="currentColor" color="white" />
-                      <span className="text-[10px] md:text-xs font-bold text-slate-500 tracking-tight">Verified • Higienis • Nyaman</span>
+                      <span className="text-[10px] md:text-xs font-bold text-slate-500 tracking-tight">Verified • Higienis • Aman</span>
                     </div>
 
                     <div className="flex justify-between items-end mt-auto pt-6 border-t border-slate-50">
@@ -588,454 +585,6 @@ const HomePage = () => {
 
 // --- HALAMAN DETAIL KAMAR (DIPERBARUI DENGAN SISTEM BOOKING/QRIS) ---
 const UnitDetailPage = () => {
-  const { slug } = useParams();
-  const navigate = useNavigate();
-  const [selectedRoom, setSelectedRoom] = useState(null);
-  const waNumber = "6283830033717";
-  const mapsLink = "https://share.google/490MII2W8A99899m7";
-  const [refCode, setRefCode] = useState("");
-
-  const [touchStart, setTouchStart] = useState(null);
-  const [pullY, setPullY] = useState(0);
-
-  // ⚙️ STATE FULLSCREEN IMAGE (LIGHTBOX)
-  const [lightboxIndex, setLightboxIndex] = useState(null);
-  const [lbTouchStart, setLbTouchStart] = useState(null); 
-
-  // ⚙️ STATE BOOKING SYSTEM 
-  const [bookingFlow, setBookingFlow] = useState('details'); // details | date | time | qris
-  const [selectedPkg, setSelectedPkg] = useState(null);
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
-
-  useEffect(() => {
-    const room = roomsData.find(r => r.slug === slug);
-    if (room) {
-      setSelectedRoom(room);
-    } else {
-      navigate('/', { replace: true });
-    }
-  }, [slug, navigate]);
-
-  useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const ref = queryParams.get('ref');
-    if (ref) setRefCode(ref);
-  }, []);
-
-  const handleBack = () => {
-    if (bookingFlow !== 'details') {
-      setBookingFlow('details');
-      return;
-    }
-    if (window.history.state && window.history.state.idx > 0) {
-      navigate(-1);
-    } else {
-      navigate('/', { replace: true });
-    }
-  };
-
-  const onTouchStart = (e) => {
-    const scrollTop = e.currentTarget.scrollTop;
-    if (scrollTop === 0) setTouchStart(e.targetTouches[0].clientY);
-  };
-  const onTouchMove = (e) => {
-    if (!touchStart) return;
-    const touchY = e.targetTouches[0].clientY;
-    const diff = touchY - touchStart;
-    if (diff > 0) setPullY(diff);
-  };
-  const onTouchEnd = () => {
-    if (pullY > 150) handleBack(); 
-    else setPullY(0); 
-    setTouchStart(null);
-  };
-
-  const handleWaClick = (messageType = "general", roomName = "") => {
-    let text = "";
-    const refTag = refCode ? `\n\n(Info by ${refCode})` : "";
-    
-    switch (messageType) {
-      case "booking": 
-        if(selectedPkg && selectedDate && selectedTime) {
-           text = `Halo admin, saya ingin booking:\n*Unit:* ${roomName}\n*Paket:* ${selectedPkg.label}\n*Tanggal:* ${selectedDate}\n*Jam Masuk:* ${selectedTime}\n\nIni bukti transfer DP QRIS saya. Minta tolong dicek ya Kak. 🙏${refTag}`;
-        } else {
-           text = `Halo, saya tertarik dengan unit ${roomName} di Apartemen Sentul Tower.${refTag}`; 
-        }
-        break;
-      case "chat": text = `Halo, saya mau tanya-tanya tentang sewa unit *${selectedRoom?.name}* di Apartemen Sentul Tower.${refTag}`; break;
-      case "key": text = `Halo, saya sudah sampai di lokasi dan ingin AMBIL KUNCI untuk unit *${selectedRoom?.name}*.${refTag}`; break;
-      case "payment": text = `Halo, saya ingin melakukan PEMBAYARAN DI TEMPAT untuk unit *${selectedRoom?.name}*.${refTag}`; break;
-      case "carikan_kamar": text = `Halo Admin, saya bingung cari jadwal yang kosong. Boleh tolong dicarikan unit yang masih *ready* untuk hari ini?${refTag}`; break;
-      default: text = `Halo, saya mau tanya sewa unit *${selectedRoom?.name}* di Apartemen Sentul Tower.${refTag}`;
-    }
-    window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank');
-  };
-
-  const renderTimeSlots = () => {
-    if (!selectedDate || !selectedPkg) return null;
-    
-    let durationHours = 12; 
-    if (selectedPkg.label.includes('Jam')) {
-       durationHours = parseInt(selectedPkg.label.replace(/\D/g, ''), 10);
-    }
-
-    const slots = [];
-    for(let h = 0; h < 24; h++) {
-       for(let m = 0; m < 60; m+=30) {
-          const isFulldayPackage = selectedPkg.label.includes('Fullday') || selectedPkg.label.includes('Weekday') || selectedPkg.label.includes('Weekend');
-          
-          if (isFulldayPackage && h < 20) continue; 
-
-          const hh = h.toString().padStart(2, '0');
-          const mm = m.toString().padStart(2, '0');
-          const timeStr = `${hh}:${mm}`;
-          
-          const proposedInDate = new Date(`${selectedDate}T${timeStr}:00`);
-          const proposedInTime = proposedInDate.getTime();
-          
-          const proposedOutDate = new Date(proposedInTime);
-          if (isFulldayPackage) {
-             proposedOutDate.setDate(proposedOutDate.getDate() + 1);
-             proposedOutDate.setHours(12, 0, 0, 0); 
-          } else {
-             proposedOutDate.setHours(proposedOutDate.getHours() + durationHours);
-          }
-          const proposedOutTime = proposedOutDate.getTime();
-
-          const isAvail = isSlotAvailable(selectedRoom.slug, proposedInTime, proposedOutTime);
-          const now = new Date();
-          const isPast = proposedInDate < now;
-
-          if (!isPast) {
-             slots.push(
-               <button 
-                 key={timeStr} 
-                 disabled={!isAvail}
-                 onClick={() => { setSelectedTime(timeStr); setBookingFlow('qris'); }}
-                 className={`py-3 px-2 rounded-xl text-center font-bold text-sm border transition-all ${isAvail ? 'bg-white border-slate-200 text-slate-800 hover:border-[#D4AF37] hover:shadow-md' : 'bg-slate-100 border-slate-100 text-slate-400 opacity-50 cursor-not-allowed'}`}
-               >
-                 {timeStr}
-               </button>
-             );
-          }
-       }
-    }
-
-    return (
-       <div className="grid grid-cols-4 md:grid-cols-5 gap-3 mt-4 animate-slide-up">
-          {slots}
-          {slots.length === 0 && <p className="col-span-full text-center text-xs font-bold text-slate-400 py-4">Slot waktu tidak tersedia (Fullday hanya mulai dari 20:00).</p>}
-       </div>
-    );
-  };
-  
-  if (!selectedRoom) return null;
-
-  return (
-    <>
-      <SEOStructuredData room={selectedRoom} />
-      <Helmet>
-        <title>{selectedRoom.name} - Sewa Harian Sentul Tower</title>
-        <meta name="description" content={`Sewa ${selectedRoom.name} Sentul Tower. Fasilitas: ${selectedRoom.specs.map(s=>s.text).join(', ')}. Harga mulai ${selectedRoom.startFrom}.`} />
-      </Helmet>
-
-      {/* MODAL WRAPPER ALA BALI RENTALS */}
-      <div className="fixed inset-0 z-[100] flex items-end md:items-center justify-center sm:p-4" onClick={() => { if (bookingFlow === 'details') handleBack(); }}>
-        <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-fade-in" onClick={handleBack}></div>
-        
-        <div 
-          id="modal-scroll-container"
-          className="bg-white w-full max-w-2xl rounded-t-[48px] md:rounded-[48px] relative z-10 animate-slide-up overflow-hidden h-[95vh] md:h-[90vh] shadow-2xl transition-transform duration-200 ease-out flex flex-col"
-          style={{ transform: `translateY(${pullY}px)` }} 
-          onTouchStart={onTouchStart}
-          onTouchMove={onTouchMove}
-          onTouchEnd={onTouchEnd}
-          onClick={(e) => e.stopPropagation()}
-        >
-          
-          {/* HEADER MENGAMBANG (FLOATING NAV) */}
-          <div className="absolute top-4 left-4 right-4 md:top-6 md:left-6 md:right-6 flex items-center justify-between z-50 pointer-events-none">
-            <button 
-              onClick={handleBack} 
-              className="pointer-events-auto flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-white/70 backdrop-blur-md rounded-full shadow-sm border border-white/20 text-slate-800 hover:bg-white transition-all active:scale-95"
-            >
-              <ChevronLeft size={24} className="text-[#D4AF37]" />
-            </button>
-            
-            <div className="pointer-events-auto flex items-center gap-2 md:gap-3 bg-white/70 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-2xl border border-white/20 shadow-sm">
-              <img 
-                src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
-                alt="Logo Brand Sentul Tower" 
-                className="h-6 md:h-8 w-auto object-contain drop-shadow-sm" 
-              />
-              <div className="flex flex-col justify-center">
-                <span className="font-black text-[8px] md:text-[10px] tracking-[0.2em] leading-none uppercase text-slate-600">Apartemen</span>
-                <span className="font-black text-[10px] md:text-xs text-[#D4AF37] tracking-widest leading-none uppercase mt-0.5 drop-shadow-sm">Sentul Tower</span>
-              </div>
-            </div>
-          </div>
-          
-          {/* SCROLLABLE AREA */}
-          <div className="flex-1 overflow-y-auto no-scrollbar pb-32">
-            
-            {/* GAMBAR EDGE-TO-EDGE */}
-            <div className="relative w-full h-[40vh] md:h-[50vh] shrink-0 group">
-               <ImageSlider 
-                 images={selectedRoom.images} 
-                 heightClass="h-full" 
-                 roundedClass="rounded-none" 
-                 altPrefix={`Detail ${selectedRoom.name} - ${selectedRoom.floorLevel}`} 
-                 onImageClick={(idx) => setLightboxIndex(idx)} 
-               />
-               
-               {/* INDIKATOR ZOOM */}
-               <div className="absolute top-20 right-4 md:top-24 md:right-6 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-sm z-20 pointer-events-none flex items-center gap-1.5 text-white/90">
-                  <Maximize size={12} className="text-[#D4AF37]" /> <span className="text-[10px] font-bold uppercase tracking-widest">Ketuk Foto</span>
-               </div>
-
-               {/* GRADIENT GELAP DI BAWAH GAMBAR */}
-               <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-900/90 to-transparent z-10 pointer-events-none"></div>
-
-               {/* LENCANA MELAYANG (FLOATING BADGES) */}
-               <div className="absolute bottom-6 left-6 right-6 z-20 flex justify-between items-end pointer-events-none">
-                  <div className="flex gap-2">
-                     <span className="bg-black/60 backdrop-blur-md text-[#D4AF37] text-[10px] font-bold px-3 py-1.5 rounded-xl uppercase tracking-widest shadow-sm border border-white/10">{selectedRoom.type}</span>
-                     {selectedRoom.type === '2BR' && <span className="bg-[#D4AF37] text-white text-[10px] font-bold px-3 py-1.5 rounded-xl shadow-lg border border-[#D4AF37]/50">PREMIUM</span>}
-                  </div>
-                  <div className="bg-black/60 backdrop-blur-md text-white text-[10px] font-black px-3 py-1.5 rounded-xl shadow-sm border border-white/10 uppercase tracking-wider">
-                     {selectedRoom.floorLevel}
-                  </div>
-               </div>
-            </div>
-            
-            {/* KONTEN DINAMIS BERDASARKAN BOOKING FLOW */}
-            <div className="px-6 md:px-8 py-8 relative z-10 bg-white rounded-t-[32px] md:rounded-t-[40px] -mt-6 shadow-[0_-10px_20px_rgba(0,0,0,0.05)]">
-              
-              {/* FLOW 1: DETAIL KAMAR */}
-              {bookingFlow === 'details' && (
-              <>
-                <h1 className="text-2xl md:text-4xl lg:text-4xl font-black text-slate-900 uppercase tracking-tighter mb-2">{selectedRoom.name}</h1>
-                <p className="text-slate-500 text-sm md:text-base mb-8 leading-relaxed font-medium">{selectedRoom.description}</p>
-
-                <div className="space-y-6 mb-8 md:space-y-8">
-                  {/* Harga Transit */}
-                  <div className="bg-slate-50 p-5 md:p-8 rounded-[32px] border border-slate-100 shadow-inner">
-                    <h4 className="text-[10px] md:text-xs font-black text-slate-400 flex items-center gap-2 mb-5 md:mb-6 uppercase tracking-[0.2em]"><Clock size={14} className="text-[#D4AF37] md:w-5 md:h-5"/> Paket Harga Transit</h4>
-                    <div className="grid grid-cols-2 gap-3 md:gap-4">
-                      {selectedRoom.transit.map((p, i) => (
-                        <div key={i} onClick={() => { setSelectedPkg(p); setBookingFlow('date'); }} className="bg-white p-4 md:p-5 rounded-2xl md:rounded-3xl border border-slate-200/50 shadow-sm flex flex-col items-center hover:border-[#D4AF37] hover:shadow-md cursor-pointer transition-all active:scale-95">
-                          <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase mb-1">{p.label}</p>
-                          <p className="text-sm md:text-xl font-black text-slate-800 tracking-tight">{p.price}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Harga Fullday */}
-                  <div className="bg-[#D4AF37]/10 p-5 md:p-8 rounded-[32px] border border-[#D4AF37]/20 shadow-sm">
-                    <h4 className="text-[10px] md:text-xs font-black text-[#D4AF37] flex items-center gap-2 mb-5 md:mb-6 uppercase tracking-[0.2em]"><Calendar size={14} className="md:w-5 md:h-5"/> Paket Harga Fullday</h4>
-                    <div className="space-y-3 md:space-y-4">
-                      {selectedRoom.fullday.map((p, i) => (
-                        <div key={i} onClick={() => { setSelectedPkg(p); setBookingFlow('date'); }} className="flex justify-between items-center bg-white p-4 md:p-5 rounded-2xl md:rounded-3xl border border-[#D4AF37]/10 shadow-sm hover:border-[#D4AF37] hover:shadow-md cursor-pointer transition-all active:scale-95">
-                          <p className="text-[10px] md:text-xs font-black text-slate-600 uppercase tracking-tight">{p.label}</p>
-                          <p className="text-sm md:text-xl font-black text-slate-900 tracking-tight">{p.price}</p>
-                        </div>
-                      ))}
-                      <div className="pt-2 md:pt-4 pointer-events-none">
-                         <div className="bg-amber-50 p-3 md:p-4 rounded-xl md:rounded-2xl border border-amber-100 flex items-center justify-center gap-2">
-                            <Clock size={14} className="text-amber-600 md:w-5 md:h-5" />
-                            <p className="text-[10px] md:text-xs text-amber-700 font-black uppercase tracking-tighter">Checkout Fullday jam 12 Siang</p>
-                         </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Spesifikasi Unit */}
-                <div className="mb-10">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="h-[2px] bg-slate-100 flex-1"></div>
-                    <h4 className="text-[11px] md:text-xs font-black text-slate-400 uppercase tracking-[0.3em]">Spesifikasi Unit</h4>
-                    <div className="h-[2px] bg-slate-100 flex-1 md:hidden"></div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-y-5 gap-x-4 md:gap-y-6">
-                    {selectedRoom.specs.map((spec, i) => (
-                      <div key={i} className="flex items-center gap-3 md:gap-4">
-                        <div className="w-9 h-9 md:w-12 md:h-12 bg-slate-50 rounded-xl md:rounded-2xl flex items-center justify-center text-[#D4AF37] shadow-sm border border-slate-100">
-                          {spec.icon}
-                        </div>
-                        <span className="text-[11px] md:text-xs font-bold text-slate-700 leading-tight tracking-tight uppercase">{spec.text}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* TATA CARA CHECK-IN / ORDER MUDAH */}
-                <div className="mb-8 mt-10">
-                   <div className="flex items-center gap-3 mb-6">
-                      <div className="h-[2px] bg-slate-100 flex-1"></div>
-                      <h4 className="text-[11px] md:text-xs font-black text-slate-400 uppercase tracking-[0.3em]">Cara Order Mudah</h4>
-                      <div className="h-[2px] bg-slate-100 flex-1 md:hidden"></div>
-                   </div>
-                   <div className="grid grid-cols-2 gap-4 md:grid-cols-4 mb-8">
-                      <div onClick={() => document.getElementById('modal-scroll-container')?.scrollTo({ top: 400, behavior: 'smooth' })} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
-                         <ShoppingBag className="text-[#D4AF37] mb-2" size={24} />
-                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">1. Pilih Paket</span>
-                      </div>
-                      <div onClick={() => { alert("Silakan pilih salah satu Paket Harga di atas terlebih dahulu."); document.getElementById('modal-scroll-container')?.scrollTo({ top: 400, behavior: 'smooth' }); }} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
-                         <Calendar className="text-[#D4AF37] mb-2" size={24} />
-                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">2. Tentukan Jam</span>
-                      </div>
-                      <div onClick={() => { alert("Silakan selesaikan pemilihan paket dan jadwal di atas terlebih dahulu."); document.getElementById('modal-scroll-container')?.scrollTo({ top: 400, behavior: 'smooth' }); }} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
-                         <Wallet className="text-[#D4AF37] mb-2" size={24} />
-                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">3. DP via QRIS</span>
-                      </div>
-                      <div onClick={() => handleWaClick("chat", selectedRoom.name)} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
-                         <MessageCircle className="text-[#D4AF37] mb-2" size={24} />
-                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">4. Info ke WA</span>
-                      </div>
-                   </div>
-
-                   <button onClick={() => handleWaClick("chat", selectedRoom.name)} className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-black py-5 md:py-6 rounded-[24px] flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-all uppercase tracking-widest text-xs md:text-sm block">
-                     <MessageCircle size={20} className="md:w-6 md:h-6" /> Hubungi Lewat WhatsApp
-                   </button>
-                </div>
-              </>
-              )}
-
-              {/* FLOW 2: PILIH TANGGAL & WAKTU */}
-              {(bookingFlow === 'date' || bookingFlow === 'time') && (
-                <div className="animate-fade-in flex-1 flex flex-col">
-                   <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter mb-2 text-slate-900">Pilih Jadwal Check-in</h2>
-                   <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-100 pb-4">Paket: {selectedPkg.label} ({selectedPkg.price})</p>
-                   
-                   <label className="text-[10px] font-black text-[#D4AF37] uppercase tracking-[0.2em] mb-2 block">Pilih Tanggal</label>
-                   <input 
-                      type="date" 
-                      min={new Date().toISOString().split('T')[0]}
-                      value={selectedDate}
-                      onChange={(e) => { setSelectedDate(e.target.value); setBookingFlow('time'); }}
-                      className="w-full bg-slate-50 border border-slate-200 text-slate-800 font-bold p-4 rounded-2xl mb-6 outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
-                   />
-
-                   {bookingFlow === 'time' && (
-                     <>
-                       <label className="text-[10px] font-black text-[#D4AF37] uppercase tracking-[0.2em] mb-2 block">Pilih Waktu Check-in</label>
-                       {renderTimeSlots()}
-                     </>
-                   )}
-                </div>
-              )}
-
-              {/* FLOW 3: QRIS & PEMBAYARAN */}
-              {bookingFlow === 'qris' && (
-                <div className="animate-fade-in text-center flex-1 flex flex-col items-center">
-                   <div className="bg-slate-900 text-[#D4AF37] text-xs font-black px-4 py-2 rounded-full uppercase tracking-widest mb-4 inline-block shadow-lg">Pembayaran DP</div>
-                   <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter mb-2">Scan QRIS Berikut</h2>
-                   <div className="bg-red-50 text-red-600 border border-red-200 text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl mb-6">DP 50K • TELAT 1 JAM HANGUS</div>
-                   
-                   <div className="relative w-48 h-48 md:w-56 md:h-56 bg-slate-100 rounded-[24px] mb-6 shadow-inner p-2 border border-slate-200 mx-auto group">
-                      <img src="https://ik.imagekit.io/x06namgbin/QRIS/20260306_110148.jpg?updatedAt=1772770929378" alt="QRIS DP Apartemen" className="w-full h-full object-cover rounded-[16px]" />
-                      <a href="https://ik.imagekit.io/x06namgbin/QRIS/20260306_110148.jpg?updatedAt=1772770929378" download="QRIS-DP-Sentul" className="absolute inset-0 bg-black/60 rounded-[16px] flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white backdrop-blur-sm cursor-pointer">
-                         <Download size={32} className="mb-2" />
-                         <span className="text-[10px] font-bold uppercase tracking-widest">Simpan Gambar</span>
-                      </a>
-                   </div>
-
-                   <div className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-left mb-8 shadow-sm">
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 border-b border-slate-200 pb-2">Ringkasan Booking</p>
-                      <p className="text-xs font-bold text-slate-700 flex justify-between mb-1"><span>Tgl:</span> <span>{selectedDate}</span></p>
-                      <p className="text-xs font-bold text-slate-700 flex justify-between mb-1"><span>Jam Masuk:</span> <span>{selectedTime}</span></p>
-                      <p className="text-xs font-bold text-slate-700 flex justify-between"><span>Paket:</span> <span>{selectedPkg.label}</span></p>
-                   </div>
-
-                   <button onClick={() => handleWaClick("booking", selectedRoom.name)} className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-black py-5 md:py-6 rounded-[24px] flex items-center justify-center gap-3 shadow-2xl shadow-green-200 active:scale-95 transition-all uppercase tracking-widest text-xs md:text-sm mt-auto">
-                     <MessageCircle size={20} className="md:w-6 md:h-6" /> Kirim Bukti via WA
-                   </button>
-                </div>
-              )}
-
-            </div>
-          </div>
-          
-          {/* STICKY BOTTOM BAR MENGAMBANG DI BAWAH LAYAR */}
-          <div className="absolute bottom-0 left-0 right-0 bg-white/95 backdrop-blur-xl border-t border-slate-100 p-5 md:p-6 z-50 shadow-[0_-10px_40px_rgba(0,0,0,0.05)] flex items-center justify-between">
-             <div className="flex flex-col">
-                 <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Harga Mulai Dari</p>
-                 <p className="text-xl md:text-2xl font-black text-[#D4AF37] tracking-tighter leading-none">Rp {selectedRoom.startFrom}</p>
-             </div>
-             {bookingFlow === 'details' && (
-                 <button onClick={() => document.getElementById('modal-scroll-container').scrollTo({ top: 400, behavior: 'smooth' })} className="bg-slate-900 hover:bg-[#D4AF37] text-white px-6 py-3.5 rounded-2xl text-[10px] md:text-xs font-black uppercase tracking-widest transition-colors shadow-lg shadow-slate-200">
-                     Pilih Jadwal
-                 </button>
-             )}
-          </div>
-
-        </div>
-      </div>
-
-      {/* LIGHTBOX (TIDAK ADA PERUBAHAN) */}
-      {lightboxIndex !== null && selectedRoom && (
-        <div 
-          className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-slide-up" 
-          onClick={() => setLightboxIndex(null)}
-          onTouchStart={(e) => setLbTouchStart(e.targetTouches[0].clientX)}
-          onTouchEnd={(e) => {
-            if (lbTouchStart === null) return;
-            const touchEnd = e.changedTouches[0].clientX;
-            const diff = lbTouchStart - touchEnd;
-            if (diff > 50) setLightboxIndex((prev) => (prev + 1) % selectedRoom.images.length); 
-            if (diff < -50) setLightboxIndex((prev) => (prev === 0 ? selectedRoom.images.length - 1 : prev - 1)); 
-            setLbTouchStart(null);
-          }}
-        >
-          <button onClick={() => setLightboxIndex(null)} className="absolute top-6 right-6 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all active:scale-90 z-50">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
-          </button>
-
-          <button 
-            onClick={(e) => { e.stopPropagation(); setLightboxIndex((prev) => (prev === 0 ? selectedRoom.images.length - 1 : prev - 1)); }} 
-            className="absolute left-4 md:left-10 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all active:scale-90 z-50 hidden md:block"
-          >
-            <ChevronLeft size={24} />
-          </button>
-
-          <div className="relative w-full h-full flex flex-col items-center justify-center p-4 md:p-12">
-             <img 
-               src={selectedRoom.images[lightboxIndex]} 
-               alt={`Fullscreen Zoom ${lightboxIndex + 1}`} 
-               className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl transition-all duration-300" 
-               onClick={(e) => e.stopPropagation()} 
-             />
-             <div className="absolute bottom-10 bg-black/50 backdrop-blur-md text-[#D4AF37] text-xs font-black px-4 py-2 rounded-full border border-white/10 tracking-widest uppercase shadow-lg">
-               {lightboxIndex + 1} / {selectedRoom.images.length}
-             </div>
-          </div>
-
-          <button 
-            onClick={(e) => { e.stopPropagation(); setLightboxIndex((prev) => (prev + 1) % selectedRoom.images.length); }} 
-            className="absolute right-4 md:right-10 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all active:scale-90 z-50 hidden md:block"
-          >
-            <ChevronRight size={24} />
-          </button>
-        </div>
-      )}
-
-      {/* Global Styles for Animations */}
-      <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes slide-up { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes bounce-subtle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-        .animate-slide-up { animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
-        .animate-bounce-subtle { animation: bounce-subtle 4s infinite ease-in-out; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        .snap-mandatory { scroll-snap-type: x mandatory; }
-        .snap-center { scroll-snap-align: center; }
-      `}} />
-    </div>
-  );
-};
   const { slug } = useParams();
   const navigate = useNavigate();
   const [selectedRoom, setSelectedRoom] = useState(null);
@@ -1254,22 +803,37 @@ const UnitDetailPage = () => {
           <div className="md:grid md:grid-cols-2 md:gap-12 md:items-start">
             
             {/* KOLOM KIRI (GAMBAR) */}
-            <div className="relative mb-6 md:mb-0 md:sticky md:top-0 group">
+            <div className="relative mb-6 md:mb-0 md:sticky md:top-0 group rounded-[32px] md:rounded-[40px] overflow-hidden shadow-sm border border-slate-100">
                <ImageSlider 
                  images={selectedRoom.images} 
-                 heightClass="h-72 md:h-[450px]" 
+                 heightClass="h-80 md:h-[450px]" 
                  roundedClass="rounded-[32px] md:rounded-[40px]" 
                  altPrefix={`Detail ${selectedRoom.name} - ${selectedRoom.floorLevel}`} 
                  onImageClick={(idx) => setLightboxIndex(idx)} 
                />
                
-               {/* INDIKATOR ZOOM (Hanya muncul di modal detail) */}
                <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl shadow-sm z-20 pointer-events-none flex items-center gap-1.5 text-white/90">
                   <Maximize size={12} className="text-[#D4AF37]" /> <span className="text-[10px] font-bold uppercase tracking-widest">Ketuk Foto</span>
                </div>
 
-               <div className="absolute bottom-4 right-4 bg-white/90 backdrop-blur px-3 py-1.5 md:px-5 md:py-2.5 rounded-xl shadow-sm z-20 pointer-events-none">
-                  <p className="text-[10px] md:text-xs font-black text-[#D4AF37] uppercase tracking-widest">Pilihan {selectedRoom.type}</p>
+               {/* Gradient hitam di bawah gambar untuk memperjelas lencana */}
+               <div className="absolute bottom-0 left-0 right-0 h-24 md:h-32 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none rounded-b-[32px] md:rounded-b-[40px]"></div>
+
+               {/* 👇 FIX: Lencana Fasilitas di Modal Detail juga diperbarui (Max-Width-Fit) 👇 */}
+               <div className="absolute bottom-5 left-4 right-4 z-20 flex flex-nowrap justify-between items-end pointer-events-none overflow-hidden">
+                   <div className="flex gap-1.5 overflow-hidden">
+                       <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-xl border border-white/20 shrink-0 max-w-fit">
+                          <Maximize size={12} className="text-[#D4AF37]" />
+                          <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-white">{selectedRoom.size}</span>
+                       </div>
+                       <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-xl border border-white/20 shrink-0 max-w-fit">
+                          <Bed size={12} className="text-[#D4AF37]" />
+                          <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest text-white">{selectedRoom.beds} Bed</span>
+                       </div>
+                   </div>
+                   <div className="bg-white/90 backdrop-blur-md px-3 py-1.5 md:px-4 md:py-2 rounded-xl shadow-sm border border-white/20 shrink-0 max-w-fit">
+                      <p className="text-[10px] md:text-xs font-black text-slate-800 uppercase tracking-widest">Pilihan {selectedRoom.type}</p>
+                   </div>
                </div>
             </div>
             
@@ -1650,181 +1214,4 @@ const App = () => {
   );
 };
 
-export default App;import React, { useState } from 'react';
-import { ShieldCheck, Map, ExternalLink, Lock, MessageCircle, Facebook, ShieldAlert, Shield, Crown, ChevronRight } from 'lucide-react';
-
-const PropertyDetailActions = ({ room, user, handleGoogleLogin, isVerifiedAdmin, setShowEscrowModal }) => {
-  const [isLocallyUnlocked, setIsLocallyUnlocked] = useState(false);
-  const [showBotModal, setShowBotModal] = useState(false);
-
-  const handleContactClick = (e) => {
-      const now = Date.now();
-      let clicks = JSON.parse(sessionStorage.getItem('baliRentals_botClicks') || '[]');
-      
-      clicks = clicks.filter(t => now - t < 10000);
-      clicks.push(now);
-      sessionStorage.setItem('baliRentals_botClicks', JSON.stringify(clicks));
-      
-      if (clicks.length > 5) {
-          e.preventDefault();
-          setShowBotModal(true);
-          return;
-      }
-
-      if (!isLocallyUnlocked) {
-          e.preventDefault();
-          setIsLocallyUnlocked(true);
-      }
-  };
-
-  const contactData = room?.contact_link || room?.whatsapp || '';
-  const hasWA = contactData.includes('wa.me') || contactData.replace(/\D/g, '').length >= 10;
-  const hasFB = room?.fbLink || contactData.includes('facebook.com') || contactData.includes('fb.me');
-
-  let waHref = '';
-  if (hasWA) {
-      waHref = contactData.includes('wa.me') ? contactData : `https://wa.me/${contactData.replace(/\D/g, '')}`;
-      if (!waHref.startsWith('http')) waHref = 'https://' + waHref;
-  }
-
-  let fbHref = room?.fbLink || (hasFB ? contactData : '');
-  if (fbHref && !fbHref.startsWith('http')) fbHref = 'https://' + fbHref;
-
-  const isPropertyElite = room?.is_elite === true || (Array.isArray(room?.features) && (room.features.includes('Elite_Agent') || room.features.includes('Premium Agent Subscription')));
-  const isDbVerified = room?.is_verified === true || isVerifiedAdmin || (Array.isArray(room?.features) && room.features.includes('Verified_Admin_Badge_Special'));
-
-  return (
-    <div className="mb-8 space-y-4">
-        {room?.gmaps_link && (
-            <button onClick={(e) => {e.stopPropagation(); window.open(room.gmaps_link, '_blank')}} className="w-full bg-slate-50 border border-slate-200 p-4 md:p-5 rounded-[24px] flex items-center justify-between hover:border-emerald-500 hover:shadow-lg transition-all group">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 md:w-12 md:h-12 bg-white rounded-xl flex items-center justify-center group-hover:bg-emerald-50 transition-colors shadow-sm"><Map size={24} className="text-slate-400 group-hover:text-emerald-500 transition-colors" /></div>
-                <div className="text-left">
-                  <p className="text-sm md:text-base font-black text-slate-900 leading-tight mb-0.5 group-hover:text-emerald-600 transition-colors">View on Google Maps</p>
-                  <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest">Verify Location</p>
-                </div>
-              </div>
-              <ExternalLink size={20} className="text-slate-300 group-hover:text-emerald-500 transition-colors" />
-            </button>
-        )}
-
-        <div className="bg-slate-900 rounded-[24px] p-6 md:p-8 relative overflow-hidden shadow-xl border border-slate-800">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500/10 rounded-full blur-[30px] pointer-events-none"></div>
-            
-            <div className="flex items-center gap-3 mb-6 relative z-10">
-                <div className="w-12 h-12 bg-emerald-500/20 text-emerald-400 rounded-2xl flex items-center justify-center border border-emerald-500/30">
-                    <MessageCircle size={24} />
-                </div>
-                <div>
-                    <h3 className="text-white font-black text-lg md:text-xl uppercase tracking-tight">Contact Owner</h3>
-                    <p className="text-slate-400 text-[10px] md:text-xs font-bold uppercase tracking-widest">Direct & 0% Commission</p>
-                </div>
-            </div>
-
-            {!user ? (
-                <button onClick={handleGoogleLogin} className="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-black text-xs uppercase tracking-widest py-4 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.3)] transition-all flex items-center justify-center gap-2 relative z-10">
-                    <Lock size={16}/> Sign In to Reveal Contact
-                </button>
-            ) : (
-                <div className="space-y-3 relative z-10">
-                    {hasWA && (
-                        <a href={waHref} target="_blank" rel="noopener noreferrer" onClick={handleContactClick} className="w-full flex items-center justify-between bg-emerald-500 hover:bg-emerald-400 text-slate-900 p-4 rounded-xl transition-all shadow-lg group cursor-pointer">
-                        <div className="flex items-center gap-3">
-                            {!isLocallyUnlocked ? <Lock size={20} className="group-hover:scale-110 transition-transform text-emerald-900/50"/> : <MessageCircle size={20} className="group-hover:scale-110 transition-transform"/>}
-                            <div className="text-left">
-                            <p className="text-[10px] md:text-xs font-black uppercase tracking-widest text-emerald-900/70">{!isLocallyUnlocked ? 'Protected Contact' : 'WhatsApp'}</p>
-                            <p className="text-[11px] md:text-sm font-black uppercase tracking-tight text-slate-900">{!isLocallyUnlocked ? 'Reveal Number' : 'Chat Now'}</p>
-                            </div>
-                        </div>
-                        <div className="w-8 h-8 rounded-full bg-slate-900/10 flex items-center justify-center"><ExternalLink size={14} /></div>
-                        </a>
-                    )}
-                    {hasFB && (
-                        <a href={fbHref} target="_blank" rel="noopener noreferrer" onClick={handleContactClick} className="w-full flex items-center justify-between bg-[#1877F2] hover:bg-[#1877F2]/90 text-white p-4 rounded-xl transition-all shadow-lg group cursor-pointer">
-                        <div className="flex items-center gap-3">
-                            {!isLocallyUnlocked ? <Lock size={20} className="group-hover:scale-110 transition-transform text-blue-100/50"/> : <Facebook size={20} className="group-hover:scale-110 transition-transform"/>}
-                            <div className="text-left">
-                            <p className="text-[10px] md:text-xs font-black uppercase tracking-widest text-blue-100">{!isLocallyUnlocked ? 'Protected Contact' : 'Owner Facebook'}</p>
-                            <p className="text-[11px] md:text-sm font-black uppercase tracking-tight text-white">{!isLocallyUnlocked ? 'Reveal Profile' : 'Open Messenger'}</p>
-                            </div>
-                        </div>
-                        <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white"><ExternalLink size={14} /></div>
-                        </a>
-                    )}
-                    {!hasWA && !hasFB && (
-                        <div className="bg-slate-800 text-slate-400 p-4 rounded-xl text-center text-xs font-bold uppercase tracking-widest border border-slate-700">
-                            No Contact Provided
-                        </div>
-                    )}
-                </div>
-            )}
-        </div>
-
-        {/* 👇 BADGE AGENT / OWNER 👇 */}
-        {isPropertyElite ? (
-            <div className="bg-slate-900 border border-blue-500/30 rounded-[24px] p-4 flex items-center gap-3 shadow-[0_5px_15px_rgba(59,130,246,0.15)] relative overflow-hidden mb-4">
-                <div className="absolute top-0 right-0 w-16 h-16 bg-blue-500/10 rounded-full blur-[20px] pointer-events-none"></div>
-                <div className="w-10 h-10 bg-blue-500/10 text-blue-400 border border-blue-500/30 rounded-full flex items-center justify-center shrink-0 shadow-md relative z-10"><Shield size={18}/></div>
-                <div className="relative z-10">
-                    <p className="text-[10px] font-black uppercase tracking-widest text-blue-400">Premium Agent</p>
-                    <p className="text-[10px] font-medium text-slate-300 mt-0.5 leading-tight">This is an Elite Agent with a flawless track record on Bali Rentals.</p>
-                </div>
-            </div>
-        ) : isDbVerified ? (
-            <div className="bg-emerald-50 border border-emerald-200 rounded-[24px] p-4 flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center shrink-0"><ShieldCheck size={18}/></div>
-                <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-emerald-800">Verified Owner</p>
-                    <p className="text-[10px] font-medium text-emerald-600 mt-0.5 leading-tight">This owner's identity has been fully verified by the Bali Rentals team.</p>
-                </div>
-            </div>
-        ) : null}
-
-        {/* 👇 SAFEPAY ESCROW DENGAN KOMBINASI COPYWRITING 👇 */}
-        <div onClick={() => setShowEscrowModal(true)} className="w-full bg-gradient-to-br from-emerald-500 to-emerald-600 p-6 rounded-[24px] shadow-xl hover:shadow-2xl hover:scale-[1.02] transition-all cursor-pointer relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full blur-[30px] pointer-events-none group-hover:bg-white/20 transition-all"></div>
-            <div className="flex flex-col gap-4 relative z-10">
-                <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-white/20 text-white rounded-2xl flex items-center justify-center shrink-0 border border-white/30 shadow-inner">
-                        <ShieldCheck size={28}/>
-                    </div>
-                    <div>
-                        <div className="flex items-center gap-1.5 mb-1">
-                            <span className="bg-rose-500 text-white text-[8px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full animate-pulse shadow-sm">Highly Recommended</span>
-                        </div>
-                        <h3 className="text-lg md:text-xl font-black text-white uppercase tracking-tight mb-0.5">Bali Rentals Escrow</h3>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-emerald-100">Protect From Fake Owners</p>
-                    </div>
-                </div>
-                <div>
-                    <p className="text-[11px] md:text-xs font-medium text-emerald-50 leading-relaxed mb-4">Smart tenants don't transfer blindly. Use <strong className="text-white font-black">BaliRentals.id</strong> as your trusted middleman. We hold your deposit securely in our vault and only release it to the owner on your arrival day. No fake listings, no lost money, zero stress.</p>
-                    <button className="bg-slate-900 text-emerald-400 w-full py-4 rounded-xl text-[10px] md:text-xs font-black uppercase tracking-widest flex justify-center items-center gap-2 shadow-lg group-hover:bg-slate-800 transition-colors">
-                        Secure My Deposit Now <ChevronRight size={16}/>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        {/* MODAL JEBAKAN BATMAN */}
-        {showBotModal && (
-            <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4">
-                <div className="absolute inset-0 bg-slate-900/90 backdrop-blur-sm" onClick={() => setShowBotModal(false)}></div>
-                <div className="bg-white w-full max-w-sm rounded-[32px] overflow-hidden relative z-10 shadow-2xl animate-slide-up p-8 text-center border border-amber-200">
-                    <div className="w-20 h-20 bg-amber-100 text-amber-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <ShieldAlert size={32}/>
-                    </div>
-                    <h3 className="text-2xl font-black text-slate-900 uppercase tracking-tighter mb-2">Wow, slow down!</h3>
-                    <p className="text-sm font-medium text-slate-500 mb-6">You look like a pro agent! You are opening contacts too fast. Let's collaborate, we have the database, you have the network.</p>
-                    
-                    <button onClick={() => window.open('https://wa.me/6283146289435?text=Hi%20Bali%20Rentals,%20I%20am%20an%20agent%20and%20I%20want%20to%20collaborate.', '_blank')} className="w-full bg-slate-900 hover:bg-emerald-500 text-white font-black text-xs uppercase tracking-widest py-4 rounded-xl shadow-lg transition-all flex justify-center items-center gap-2">
-                        <MessageCircle size={16}/> Let's Make Money
-                    </button>
-                    <button onClick={() => setShowBotModal(false)} className="mt-4 text-[10px] font-bold text-slate-400 hover:text-slate-900 uppercase tracking-widest transition-colors">Close</button>
-                </div>
-            </div>
-        )}
-    </div>
-  );
-};
-
-export default PropertyDetailActions;
+export default App;
