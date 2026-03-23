@@ -825,19 +825,21 @@ const UnitDetailPage = () => {
             {/* KOLOM KANAN (KONTEN) - DI MOBILE DIBUNGKUS px-6 AGAR TEKS TIDAK MENABRAK TEPI */}
             <div className="flex flex-col px-6 md:px-0 md:pb-8">
               
-              {/* 👇 FIX: Sabuk Logo Khusus Mobile Tepat di Bawah Gambar Edge-to-Edge 👇 */}
+              {/* 👇 FIX: Sabuk Logo Khusus Mobile yang Lebih Eksklusif Tema Emas 👇 */}
               <div 
                 onClick={() => { navigate('/', { replace: true }); }}
-                className="md:hidden -mx-6 mb-6 bg-slate-50 border-b border-slate-200 py-3.5 flex items-center justify-center gap-3 cursor-pointer shadow-sm"
+                // Ganti class lama dengan class baru tema emas:
+                className="md:hidden -mx-6 mb-6 bg-gradient-to-r from-[#D4AF37]/20 via-[#B5952F]/40 to-[#D4AF37]/20 border-b-2 border-[#D4AF37]/40 py-4 flex items-center justify-center gap-3 cursor-pointer shadow-xl shadow-[#D4AF37]/20 active:scale-[0.98] transition-all"
               >
                  <img 
                    src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
                    alt="Logo Brand Sentul Tower" 
-                   className="h-8 w-auto object-contain drop-shadow-sm" 
+                   className="h-9 w-auto object-contain drop-shadow-md" 
                  />
                  <div className="flex flex-col justify-center text-left">
-                   <span className="font-black text-[9px] tracking-[0.2em] leading-tight uppercase text-slate-400">Apartemen</span>
-                   <span className="font-black text-xs text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-sm">Sentul Tower</span>
+                   {/* Sesuaikan warna teks abu-abu menjadi emas lebih pucat agar senada */}
+                   <span className="font-black text-[10px] tracking-[0.2em] leading-tight uppercase text-[#E6C35F]">Apartemen</span>
+                   <span className="font-black text-sm text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-lg">Sentul Tower</span>
                  </div>
               </div>
 
