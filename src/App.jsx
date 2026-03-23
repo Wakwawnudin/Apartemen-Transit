@@ -825,10 +825,10 @@ const UnitDetailPage = () => {
             {/* KOLOM KANAN (KONTEN) - DI MOBILE DIBUNGKUS px-6 AGAR TEKS TIDAK MENABRAK TEPI */}
             <div className="flex flex-col px-6 md:px-0 md:pb-8">
               
-              {/* 👇 PERUBAHAN DESAIN EKSKLUSIF: Sabuk Logo Gelap di Bawah Gambar 👇 */}
+              {/* 👇 FIX: Sabuk Logo Khusus Mobile Tepat di Bawah Gambar Edge-to-Edge 👇 */}
               <div 
                 onClick={() => { navigate('/', { replace: true }); }}
-                className="md:hidden -mx-6 mb-6 bg-slate-900/95 backdrop-blur-md border-y border-[#D4AF37]/20 py-4 flex items-center justify-center gap-4 cursor-pointer shadow-2xl shadow-black/30"
+                className="md:hidden -mx-6 mb-6 bg-slate-50 border-b border-slate-200 py-3.5 flex items-center justify-center gap-3 cursor-pointer shadow-sm"
               >
                  <img 
                    src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
