@@ -405,38 +405,56 @@ const HomePage = () => {
                   to={`/unit/${room.slug}`} 
                   key={room.id} 
                   ref={isLastItem ? lastElementRef : null} 
-                  className="block bg-white rounded-[32px] md:rounded-[40px] p-3 md:p-4 shadow-sm border border-slate-100 active:scale-[0.98] transition-all duration-500 cursor-pointer group md:hover:shadow-2xl md:hover:-translate-y-2 animate-slide-up"
+                  className="block bg-white rounded-[32px] md:rounded-[40px] overflow-hidden shadow-sm border border-slate-100 active:scale-[0.98] transition-all duration-500 cursor-pointer group md:hover:shadow-2xl md:hover:-translate-y-2 animate-slide-up relative flex flex-col"
                 >
                   <div className="relative">
-                    <ImageSlider images={room.images} heightClass="h-72 md:h-64" roundedClass="rounded-[24px] md:rounded-[32px]" altPrefix={room.altPrefix} />
-                    <div className="absolute top-4 left-4 flex gap-2 pointer-events-none z-20">
-                      <span className="bg-black/70 backdrop-blur-md text-[#D4AF37] text-[10px] font-bold px-3 py-1.5 rounded-xl uppercase tracking-widest">{room.type}</span>
+                    {/* Gambar Edge-to-Edge dengan tinggi portrait ala Bali Rentals */}
+                    <ImageSlider images={room.images} heightClass="h-80 md:h-96" roundedClass="rounded-t-[32px] md:rounded-t-[40px]" altPrefix={room.altPrefix} />
+                    
+                    <div className="absolute top-5 left-5 md:top-6 md:left-6 flex gap-2 pointer-events-none z-20">
+                      <span className="bg-black/70 backdrop-blur-md text-[#D4AF37] text-[10px] font-bold px-3 py-1.5 rounded-xl uppercase tracking-widest shadow-sm">{room.type}</span>
                       {room.type === '2BR' && <span className="bg-[#D4AF37] text-white text-[10px] font-bold px-3 py-1.5 rounded-xl shadow-lg">PREMIUM</span>}
                     </div>
-                    <div className="absolute top-4 right-4 pointer-events-none z-20">
-                      <span className="bg-white/90 backdrop-blur text-slate-800 text-[10px] font-black px-3 py-1.5 rounded-xl shadow-lg border border-slate-100 uppercase tracking-wider">
+                    <div className="absolute top-5 right-5 md:top-6 md:right-6 pointer-events-none z-20">
+                      <span className="bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-black px-3 py-1.5 rounded-xl shadow-sm border border-slate-100 uppercase tracking-wider">
                         {room.floorLevel}
                       </span>
                     </div>
+
+                    {/* Gradient hitam di bawah gambar untuk memperjelas lencana */}
+                    <div className="absolute bottom-0 left-0 right-0 h-24 md:h-32 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none"></div>
+
+                    {/* Lencana Fasilitas melayang (Lebih kecil dan rapat, anti-memelar) */}
+                    <div className="absolute bottom-5 left-4 right-4 md:bottom-6 z-20 flex flex-nowrap justify-start items-center gap-1.5 text-white pointer-events-none overflow-hidden">
+                       <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-lg border border-white/20 shrink-0 max-w-fit">
+                          <Maximize size={12} className="text-[#D4AF37]" />
+                          <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest">{room.size}</span>
+                       </div>
+                       <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-lg border border-white/20 shrink-0 max-w-fit">
+                          <Bed size={12} className="text-[#D4AF37]" />
+                          <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest">{room.beds} Bed</span>
+                       </div>
+                       <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-lg border border-white/20 shrink-0 max-w-fit min-w-0">
+                          <Shield size={12} className="text-[#D4AF37] shrink-0" />
+                          <span className="text-[8px] md:text-[10px] font-black uppercase tracking-widest truncate">24/7 Aman</span>
+                       </div>
+                    </div>
                   </div>
 
-                  <div className="pt-5 px-3 pb-3 md:p-6">
-                    <h3 className="text-xl md:text-2xl font-black text-slate-900 mb-1.5 uppercase tracking-tight group-hover:text-[#D4AF37] transition-colors">{room.name}</h3>
-                    <div className="flex items-center gap-4 text-slate-400 text-[11px] font-bold mb-4 uppercase tracking-wide">
-                      <div className="flex items-center gap-1.5"><Maximize size={14} className="md:text-[#D4AF37]/50"/> {room.size}</div>
-                      <div className="flex items-center gap-1.5"><Bed size={14} className="md:text-[#D4AF37]/50"/> {room.beds} Bed</div>
-                      <div className="flex items-center gap-1.5"><Shield size={14} className="md:text-[#D4AF37]/50"/> 24/7 Aman</div>
+                  <div className="p-6 md:p-8 flex flex-col flex-1 relative">
+                    <h3 className="text-xl md:text-2xl font-black text-slate-900 mb-2 uppercase tracking-tight group-hover:text-[#D4AF37] transition-colors">{room.name}</h3>
+                    
+                    <div className="flex items-center gap-1.5 mb-4 md:mb-6">
+                      <CheckCircle2 size={14} className="text-green-500" fill="currentColor" color="white" />
+                      <span className="text-[10px] md:text-xs font-bold text-slate-500 tracking-tight">Verified • Higienis • Nyaman</span>
                     </div>
-                    <div className="flex items-center gap-1.5 mb-3 md:mb-6">
-                      <CheckCircle2 size={12} className="text-green-500" fill="currentColor" color="white" />
-                      <span className="text-[10px] font-bold text-slate-500 tracking-tight">Verified • Higienis • Aman</span>
-                    </div>
-                    <div className="flex justify-between items-end pt-4 border-t border-slate-50 md:pt-6">
+
+                    <div className="flex justify-between items-end mt-auto pt-6 border-t border-slate-50">
                       <div>
                         <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1">Harga Mulai</p>
                         <p className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight">Rp {room.startFrom}</p>
                       </div>
-                      <button className="bg-slate-900 text-white font-bold px-6 py-3 md:px-8 md:py-4 rounded-2xl md:rounded-[20px] text-[11px] md:text-xs uppercase tracking-widest shadow-lg shadow-slate-200 group-hover:bg-[#D4AF37] transition-colors">Detail</button>
+                      <button className="bg-slate-900 text-white font-bold px-6 py-3 md:px-8 md:py-4 rounded-2xl text-[10px] md:text-xs uppercase tracking-widest shadow-lg shadow-slate-200 group-hover:bg-[#D4AF37] transition-colors border border-slate-700">Detail</button>
                     </div>
                   </div>
                 </Link>
