@@ -1,4 +1,4 @@
-Import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Analytics } from '@vercel/analytics/react';
 import { Routes, Route, Link, useParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
@@ -343,49 +343,17 @@ const HomePage = () => {
 
       {/* HERO */}
       <header className="relative h-[600px] md:h-[75vh] w-full overflow-hidden">
-        {/* Tambahkan CSS Animasi Pop Up Khusus Hero */}
-        <style dangerouslySetInnerHTML={{ __html: `
-          @keyframes pop-up {
-            0% { transform: scale(0.6); opacity: 0; }
-            60% { transform: scale(1.05); opacity: 1; }
-            100% { transform: scale(1); opacity: 1; }
-          }
-          .animate-pop-up { animation: pop-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
-        `}} />
-
         <div className="absolute inset-0 w-full h-full">
            <ImageSlider images={heroImages} heightClass="h-full" roundedClass="rounded-none" altPrefix="Fasilitas & View Apartemen Sentul Tower" priority={true} />
         </div>
 
-        {/* Overlay Background - Diubah agar sejajar di tengah */}
-        <div className="absolute inset-0 bg-black/40 md:bg-black/30 flex flex-col items-center justify-center p-6 pointer-events-none z-20">
-          
-          {/* Bungkus 1 Paket Logo + Tulisan dengan Animasi */}
-          <div className="flex flex-col items-center justify-center animate-pop-up">
-            
-            {/* Logo Utama Tengah */}
-            <img 
-              src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
-              alt="Logo Besar Apartemen Sentul Tower" 
-              className="h-28 md:h-44 w-auto object-contain drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] mb-3" 
-            />
-            
-            {/* Teks Brand Tengah */}
-            <div className="flex flex-col items-center justify-center text-center mb-6">
-              <span className="font-black text-xl md:text-3xl tracking-[0.35em] leading-tight uppercase drop-shadow-lg text-white">APARTEMEN</span>
-              <span className="font-black text-2xl md:text-5xl text-[#D4AF37] tracking-widest leading-tight uppercase drop-shadow-lg mt-1">SENTUL TOWER</span>
-            </div>
-            
-            {/* Tag Lokasi */}
-            <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md border border-white/10 text-[#D4AF37] text-[10px] md:text-xs font-bold px-4 py-2 md:px-6 md:py-3 rounded-full w-fit shadow-2xl">
-              <MapPin size={12} className="md:w-4 md:h-4" /> DEKAT AEON MALL SENTUL
-            </div>
-
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent md:from-black/60 md:via-black/30 md:to-transparent flex flex-col justify-end p-6 pb-20 md:items-center md:justify-center md:text-center md:pb-0 pointer-events-none z-20">
+          <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md border border-white/10 text-[#D4AF37] text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-5 md:py-2.5 rounded-full w-fit mb-3 md:mb-6 shadow-lg">
+            <MapPin size={10} className="md:w-4 md:h-4" /> DEKAT AEON MALL SENTUL
           </div>
+          <h1 className="text-3xl md:text-6xl lg:text-7xl font-black text-white leading-tight uppercase tracking-tight drop-shadow-lg mb-1 md:mb-4">Apartemen Sentul Tower</h1>
+          <p className="text-slate-200 text-sm md:text-xl italic font-medium drop-shadow-md max-w-2xl">Solusi Staycation Mewah & Nyaman tepat di jantung Sentul City.</p>
         </div>
-
-        {/* Gradient shadow transisi halus dari gambar ke area konten bawah */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-slate-50 to-transparent pointer-events-none z-10"></div>
       </header>
 
       {/* RINGKASAN HARGA */}
