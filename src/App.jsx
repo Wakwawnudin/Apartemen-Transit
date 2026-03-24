@@ -348,12 +348,31 @@ const HomePage = () => {
         </div>
 
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent md:from-black/60 md:via-black/30 md:to-transparent flex flex-col justify-end p-6 pb-20 md:items-center md:justify-center md:text-center md:pb-0 pointer-events-none z-20">
-          <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md border border-white/10 text-[#D4AF37] text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-5 md:py-2.5 rounded-full w-fit mb-3 md:mb-6 shadow-lg">
+          
+          <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md border border-white/10 text-[#D4AF37] text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-5 md:py-2.5 rounded-full w-fit mb-4 md:mb-6 shadow-lg">
             <MapPin size={10} className="md:w-4 md:h-4" /> DEKAT AEON MALL SENTUL
           </div>
-          <h1 className="text-3xl md:text-6xl lg:text-7xl font-black text-white leading-tight uppercase tracking-tight drop-shadow-lg mb-1 md:mb-4">Apartemen Sentul Tower</h1>
-          <p className="text-slate-200 text-sm md:text-xl italic font-medium drop-shadow-md max-w-2xl">Solusi Staycation Mewah & Nyaman tepat di jantung Sentul City.</p>
+          
+          {/* LOGO ANIMASI POP-UP SEBAGAI PENGGANTI TEKS */}
+          <img 
+            src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
+            alt="Logo Apartemen Sentul Tower" 
+            className="w-56 md:w-72 lg:w-96 h-auto object-contain drop-shadow-2xl animate-logo-popup mb-2 md:mb-4" 
+          />
+
         </div>
+
+        {/* CSS KEYFRAMES UNTUK ANIMASI POP-UP */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          @keyframes logo-popup {
+            0% { transform: scale(0.3) translateY(40px); opacity: 0; }
+            60% { transform: scale(1.08) translateY(-10px); opacity: 1; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+          }
+          .animate-logo-popup { 
+            animation: logo-popup 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards; 
+          }
+        `}} />
       </header>
 
       {/* RINGKASAN HARGA */}
