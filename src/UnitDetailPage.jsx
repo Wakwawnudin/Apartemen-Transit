@@ -146,14 +146,20 @@ const UnitDetailPage = () => {
     if (!selectedDate || !selectedPkg) return null;
     
     let durationHours = 12; 
-    if (selectedPkg.label.includes('Jam')) {
+    
+    // 👇 FIX: Logika jam otomatis adaptasi jika paket 24 Jam 👇
+    if (selectedPkg.label.includes('24 Jam')) {
+       durationHours = 24;
+    } else if (selectedPkg.label.includes('Jam')) {
        durationHours = parseInt(selectedPkg.label.replace(/\D/g, ''), 10);
     }
 
     const slots = [];
     for(let h = 0; h < 24; h++) {
        for(let m = 0; m < 60; m+=30) {
-          const isFulldayPackage = selectedPkg.label.includes('Fullday') || selectedPkg.label.includes('Weekday') || selectedPkg.label.includes('Weekend');
+          
+          // 👇 FIX: Paket Fullday dibatasi minimal jam 20:00, namun jika label mengandung "24 Jam" maka DIBEBASKAN 👇
+          const isFulldayPackage = selectedPkg.label.includes('Fullday') || (!selectedPkg.label.includes('24 Jam') && (selectedPkg.label.includes('Weekday') || selectedPkg.label.includes('Weekend')));
           
           if (isFulldayPackage && h < 20) {
              continue; 
@@ -350,6 +356,28 @@ const UnitDetailPage = () => {
                       </div>
                     </div>
                   </div>
+
+                  {/* 👇 TAMBAHAN UI: Harga 24 Jam 👇 */}
+                  {selectedRoom.paket24Jam && selectedRoom.paket24Jam.length > 0 && (
+                  <div className="bg-emerald-50 p-5 md:p-8 rounded-[32px] border border-emerald-100 shadow-sm">
+                    <h4 className="text-[10px] md:text-xs font-black text-emerald-600 flex items-center gap-2 mb-5 md:mb-6 uppercase tracking-[0.2em]"><Clock size={14} className="md:w-5 md:h-5"/> Paket Harga 24 Jam</h4>
+                    <div className="space-y-3 md:space-y-4">
+                      {selectedRoom.paket24Jam.map((p, i) => (
+                        <div key={i} onClick={() => { setSelectedPkg(p); setBookingFlow('date'); }} className="flex justify-between items-center bg-white p-4 md:p-5 rounded-2xl md:rounded-3xl border border-emerald-100 shadow-sm hover:border-emerald-400 hover:shadow-md cursor-pointer transition-all active:scale-95">
+                          <p className="text-[10px] md:text-xs font-black text-slate-600 uppercase tracking-tight">{p.label}</p>
+                          <p className="text-sm md:text-xl font-black text-slate-900 tracking-tight">{p.price}</p>
+                        </div>
+                      ))}
+                      <div className="pt-2 md:pt-4 pointer-events-none">
+                         <div className="bg-emerald-100/50 p-3 md:p-4 rounded-xl md:rounded-2xl border border-emerald-200 flex items-center justify-center gap-2">
+                            <Clock size={14} className="text-emerald-700 md:w-5 md:h-5" />
+                            <p className="text-[10px] md:text-xs text-emerald-800 font-black uppercase tracking-tighter">Bebas Checkout 24 Jam dari jam masuk</p>
+                         </div>
+                      </div>
+                    </div>
+                  </div>
+                  )}
+
                 </div>
 
                 {/* Spesifikasi Unit */}
