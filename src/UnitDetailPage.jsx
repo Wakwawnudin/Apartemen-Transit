@@ -228,7 +228,6 @@ const UnitDetailPage = () => {
         
         <div 
           id="modal-scroll-container"
-          // 👇 FIX: Mengubah tinggi menjadi 100dvh dan menghapus rounded atas di mobile agar fullscreen edge-to-edge 👇
           className="bg-white w-full max-w-md relative z-10 pb-7 animate-slide-up overflow-y-auto overflow-x-hidden max-h-[100dvh] h-[100dvh] no-scrollbar shadow-2xl transition-transform duration-200 ease-out md:max-w-6xl md:h-auto md:max-h-[90vh] md:rounded-[48px] md:p-10 md:shadow-2xl"
           style={{ transform: `translateY(${pullY}px)` }} 
           onTouchStart={onTouchStart}
@@ -242,7 +241,6 @@ const UnitDetailPage = () => {
           <div className="md:grid md:grid-cols-2 md:gap-12 md:items-start">
             
             {/* KOLOM KIRI (GAMBAR EDGE TO EDGE HORIZONTAL & VERTIKAL DI MOBILE) */}
-            {/* 👇 FIX: Hapus mb-6 di mobile agar sabuk menempel sempurna ke gambar 👇 */}
             <div className="relative mb-0 md:sticky md:top-0 group md:rounded-[40px] overflow-hidden md:shadow-sm md:border md:border-slate-100">
 
                <div className="absolute top-4 left-0 right-0 flex items-center justify-between px-4 z-30 md:static md:mb-6 md:px-0 md:bg-transparent">
@@ -281,7 +279,7 @@ const UnitDetailPage = () => {
                {/* GRADIENT SHADOW BAWAH GAMBAR */}
                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none rounded-b-[32px] md:rounded-b-[40px]"></div>
 
-               {/* LENCANA FASILITAS MELAYANG (Seperti Bali Rentals) */}
+               {/* LENCANA FASILITAS MELAYANG */}
                <div className="absolute bottom-5 left-4 right-4 md:bottom-6 z-20 flex flex-nowrap justify-between items-end pointer-events-none overflow-hidden">
                    <div className="flex gap-1.5 overflow-hidden">
                        <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-xl border border-white/20 shrink-0 max-w-fit">
@@ -299,10 +297,10 @@ const UnitDetailPage = () => {
                </div>
             </div>
             
-            {/* KOLOM KANAN (KONTEN) - DI MOBILE DIBUNGKUS px-6 AGAR TEKS TIDAK MENABRAK TEPI */}
+            {/* KOLOM KANAN (KONTEN) */}
             <div className="flex flex-col px-6 md:px-0 md:pb-8">
               
-              {/* 👇 FIX: Sabuk Logo Khusus Mobile Tepat di Bawah Gambar Edge-to-Edge 👇 */}
+              {/* Sabuk Logo Khusus Mobile Tepat di Bawah Gambar Edge-to-Edge */}
               <div 
                 onClick={() => { navigate('/', { replace: true }); }}
                 className="md:hidden -mx-6 mb-6 bg-slate-50 border-b border-slate-200 py-3.5 flex items-center justify-center gap-3 cursor-pointer shadow-sm"
@@ -348,16 +346,19 @@ const UnitDetailPage = () => {
                           <p className="text-sm md:text-xl font-black text-slate-900 tracking-tight">{p.price}</p>
                         </div>
                       ))}
+                      
+                      {/* 👇 INI BAGIAN YANG DIPERJELAS KONTEKSNYA 👇 */}
                       <div className="pt-2 md:pt-4 pointer-events-none">
-                         <div className="bg-amber-50 p-3 md:p-4 rounded-xl md:rounded-2xl border border-amber-100 flex items-center justify-center gap-2">
-                            <Clock size={14} className="text-amber-600 md:w-5 md:h-5" />
-                            <p className="text-[10px] md:text-xs text-amber-700 font-black uppercase tracking-tighter">Checkout Fullday jam 12 Siang</p>
+                         <div className="bg-amber-50 p-3 md:p-4 rounded-xl md:rounded-2xl border border-amber-100 flex items-center justify-center gap-2 text-center">
+                            <Clock size={14} className="text-amber-600 md:w-5 md:h-5 shrink-0" />
+                            <p className="text-[10px] md:text-xs text-amber-700 font-black uppercase tracking-tighter">Check-in Jam 20:00 • Checkout Jam 12:00</p>
                          </div>
                       </div>
+
                     </div>
                   </div>
 
-                  {/* 👇 TAMBAHAN UI: Harga 24 Jam 👇 */}
+                  {/* Harga 24 Jam */}
                   {selectedRoom.paket24Jam && selectedRoom.paket24Jam.length > 0 && (
                   <div className="bg-emerald-50 p-5 md:p-8 rounded-[32px] border border-emerald-100 shadow-sm">
                     <h4 className="text-[10px] md:text-xs font-black text-emerald-600 flex items-center gap-2 mb-5 md:mb-6 uppercase tracking-[0.2em]"><Clock size={14} className="md:w-5 md:h-5"/> Paket Harga 24 Jam</h4>
@@ -370,7 +371,7 @@ const UnitDetailPage = () => {
                       ))}
                       <div className="pt-2 md:pt-4 pointer-events-none">
                          <div className="bg-emerald-100/50 p-3 md:p-4 rounded-xl md:rounded-2xl border border-emerald-200 flex items-center justify-center gap-2">
-                            <Clock size={14} className="text-emerald-700 md:w-5 md:h-5" />
+                            <Clock size={14} className="text-emerald-700 md:w-5 md:h-5 shrink-0" />
                             <p className="text-[10px] md:text-xs text-emerald-800 font-black uppercase tracking-tighter">Bebas Checkout 24 Jam dari jam masuk</p>
                          </div>
                       </div>
@@ -489,7 +490,7 @@ const UnitDetailPage = () => {
           </div>
         </div>
 
-        {/* 👇 FIX BUG LIGHTBOX: FORMAT URL GAMBAR DIPASTIKAN VALID 👇 */}
+        {/* LIGHTBOX UNTUK ZOOM GAMBAR */}
         {lightboxIndex !== null && selectedRoom && (
           <div 
             className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-slide-up" 
