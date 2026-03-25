@@ -1,28 +1,75 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { 
-  Bed, Clock, Calendar, Shield, ChevronLeft, ChevronRight, 
-  CheckCircle2, MessageCircle, Maximize, ShoppingBag, Wallet, Download 
+  Clock, Calendar, Bed, Maximize, ChevronLeft, ChevronRight, 
+  MessageCircle, Download, ShoppingBag, Wallet
 } from 'lucide-react';
 import { roomsData } from './roomsData';
-import { ImageSlider } from './SharedComponents';
 import SEOStructuredData from './SEOStructuredData';
-import { isSlotAvailable } from './bookingUtils';
+import { ImageSlider } from './HomePage';
 
+// --- ⚙️ SISTEM DATABASE LOKAL (LOCALSTORAGE) ⚙️ ---
+export const getBookings = () => {
+  const data = localStorage.getItem('sentul_bookings');
+  return data ? JSON.parse(data) : [];
+};
+
+export const saveBookings = (bookings) => {
+  localStorage.setItem('sentul_bookings', JSON.stringify(bookings));
+};
+
+// Logika Pembulatan Jeda Cleaning Berdasarkan Skenario Bos
+export const calculateBufferEnd = (timestamp) => {
+  const date = new Date(timestamp);
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const totalMins = hours * 60 + minutes;
+
+  let newTotalMins;
+  if (totalMins % 30 === 0) {
+      newTotalMins = totalMins + 30;
+  } else {
+      newTotalMins = Math.ceil(totalMins / 30) * 30;
+  }
+
+  const newDate = new Date(timestamp);
+  newDate.setHours(Math.floor(newTotalMins / 60));
+  newDate.setMinutes(newTotalMins % 60);
+  newDate.setSeconds(0);
+  return newDate.getTime();
+};
+
+export const isSlotAvailable = (roomId, proposedIn, proposedOut) => {
+  const bookings = getBookings();
+  const roomBookings = bookings.filter(b => b.roomId === roomId);
+  const bufferEnd = calculateBufferEnd(proposedOut);
+
+  for (let b of roomBookings) {
+    if (proposedIn < b.bufferEnd && bufferEnd > b.checkIn) {
+      return false;
+    }
+  }
+  return true;
+};
+
+// --- HALAMAN DETAIL KAMAR (DIPERBARUI DENGAN DESAIN EDGE-TO-EDGE & FIX LIGHTBOX) ---
 const UnitDetailPage = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
   const [selectedRoom, setSelectedRoom] = useState(null);
   const waNumber = "6283830033717";
+  const mapsLink = "https://share.google/490MII2W8A99899m7";
   const [refCode, setRefCode] = useState("");
 
   const [touchStart, setTouchStart] = useState(null);
   const [pullY, setPullY] = useState(0);
 
+  // ⚙️ STATE FULLSCREEN IMAGE (LIGHTBOX)
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const [lbTouchStart, setLbTouchStart] = useState(null);
 
+  // ⚙️ STATE BOOKING SYSTEM 
   const [bookingFlow, setBookingFlow] = useState('details'); 
   const [selectedPkg, setSelectedPkg] = useState(null);
   const [selectedDate, setSelectedDate] = useState('');
@@ -87,6 +134,9 @@ const UnitDetailPage = () => {
         }
         break;
       case "chat": text = `Halo, saya mau tanya-tanya tentang sewa unit *${selectedRoom?.name}* di Apartemen Sentul Tower.${refTag}`; break;
+      case "key": text = `Halo, saya sudah sampai di lokasi dan ingin AMBIL KUNCI untuk unit *${selectedRoom?.name}*.${refTag}`; break;
+      case "payment": text = `Halo, saya ingin melakukan PEMBAYARAN DI TEMPAT untuk unit *${selectedRoom?.name}*.${refTag}`; break;
+      case "carikan_kamar": text = `Halo Admin, saya bingung cari jadwal yang kosong. Boleh tolong dicarikan unit yang masih *ready* untuk hari ini?${refTag}`; break;
       default: text = `Halo, saya mau tanya sewa unit *${selectedRoom?.name}* di Apartemen Sentul Tower.${refTag}`;
     }
     window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank');
@@ -94,6 +144,7 @@ const UnitDetailPage = () => {
 
   const renderTimeSlots = () => {
     if (!selectedDate || !selectedPkg) return null;
+    
     let durationHours = 12; 
     if (selectedPkg.label.includes('Jam')) {
        durationHours = parseInt(selectedPkg.label.replace(/\D/g, ''), 10);
@@ -103,7 +154,10 @@ const UnitDetailPage = () => {
     for(let h = 0; h < 24; h++) {
        for(let m = 0; m < 60; m+=30) {
           const isFulldayPackage = selectedPkg.label.includes('Fullday') || selectedPkg.label.includes('Weekday') || selectedPkg.label.includes('Weekend');
-          if (isFulldayPackage && h < 20) continue; 
+          
+          if (isFulldayPackage && h < 20) {
+             continue; 
+          }
 
           const hh = h.toString().padStart(2, '0');
           const mm = m.toString().padStart(2, '0');
@@ -128,7 +182,8 @@ const UnitDetailPage = () => {
           if (!isPast) {
              slots.push(
                <button 
-                 key={timeStr} disabled={!isAvail}
+                 key={timeStr} 
+                 disabled={!isAvail}
                  onClick={() => { setSelectedTime(timeStr); setBookingFlow('qris'); }}
                  className={`py-3 px-2 rounded-xl text-center font-bold text-sm border transition-all ${isAvail ? 'bg-white border-slate-200 text-slate-800 hover:border-[#D4AF37] hover:shadow-md' : 'bg-slate-100 border-slate-100 text-slate-400 opacity-50 cursor-not-allowed'}`}
                >
@@ -157,6 +212,7 @@ const UnitDetailPage = () => {
         <meta name="description" content={`Sewa ${selectedRoom.name} Sentul Tower. Fasilitas: ${selectedRoom.specs.map(s=>s.text).join(', ')}. Harga mulai ${selectedRoom.startFrom}.`} />
       </Helmet>
 
+      {/* MODAL WRAPPER */}
       <div className="fixed inset-0 z-50 flex items-end justify-center bg-slate-50 md:items-center md:bg-slate-900/80 md:backdrop-blur-sm md:p-6">
         <div 
           className="absolute inset-0 bg-black/80 backdrop-blur-md transition-opacity duration-300 md:hidden" 
@@ -166,21 +222,41 @@ const UnitDetailPage = () => {
         
         <div 
           id="modal-scroll-container"
+          // 👇 FIX: Mengubah tinggi menjadi 100dvh dan menghapus rounded atas di mobile agar fullscreen edge-to-edge 👇
           className="bg-white w-full max-w-md relative z-10 pb-7 animate-slide-up overflow-y-auto overflow-x-hidden max-h-[100dvh] h-[100dvh] no-scrollbar shadow-2xl transition-transform duration-200 ease-out md:max-w-6xl md:h-auto md:max-h-[90vh] md:rounded-[48px] md:p-10 md:shadow-2xl"
           style={{ transform: `translateY(${pullY}px)` }} 
-          onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
         >
+          
+          {/* EFEK SHAPE BACKGROUND (Hanya Desktop yang butuh ini) */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/15 to-transparent rounded-full blur-3xl pointer-events-none translate-x-1/3 -translate-y-1/4 hidden md:block"></div>
 
           <div className="md:grid md:grid-cols-2 md:gap-12 md:items-start">
+            
+            {/* KOLOM KIRI (GAMBAR EDGE TO EDGE HORIZONTAL & VERTIKAL DI MOBILE) */}
+            {/* 👇 FIX: Hapus mb-6 di mobile agar sabuk menempel sempurna ke gambar 👇 */}
             <div className="relative mb-0 md:sticky md:top-0 group md:rounded-[40px] overflow-hidden md:shadow-sm md:border md:border-slate-100">
+
                <div className="absolute top-4 left-0 right-0 flex items-center justify-between px-4 z-30 md:static md:mb-6 md:px-0 md:bg-transparent">
-                 <button onClick={handleBack} className="flex items-center gap-1.5 text-slate-800 font-black text-[11px] md:text-sm uppercase tracking-widest bg-white/90 backdrop-blur-md md:bg-white w-10 h-10 md:w-auto md:h-auto justify-center md:px-6 md:py-3 rounded-full md:rounded-2xl active:scale-95 transition-all shadow-md border border-slate-200 hover:bg-slate-50 hover:border-[#D4AF37]/40">
+                 <button 
+                   onClick={handleBack} 
+                   className="flex items-center gap-1.5 text-slate-800 font-black text-[11px] md:text-sm uppercase tracking-widest bg-white/90 backdrop-blur-md md:bg-white w-10 h-10 md:w-auto md:h-auto justify-center md:px-6 md:py-3 rounded-full md:rounded-2xl active:scale-95 transition-all shadow-md border border-slate-200 hover:bg-slate-50 hover:border-[#D4AF37]/40"
+                 >
                    <ChevronLeft size={20} className="md:w-5 md:h-5 text-[#D4AF37]" /> <span className="hidden md:inline">Kembali</span>
                  </button>
                  
-                 <div onClick={() => { navigate('/', { replace: true }); }} className="hidden md:flex items-center gap-2 md:gap-3 bg-white/90 backdrop-blur-md md:bg-white px-3 py-1.5 md:px-4 md:py-2 rounded-full md:rounded-2xl border border-slate-200 shadow-md cursor-pointer active:scale-95 transition-all hover:border-[#D4AF37]/40">
-                   <img src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" alt="Logo" className="h-7 w-auto md:h-9 object-contain drop-shadow-sm" />
+                 {/* LOGO BRAND MELAYANG (DISEMBUNYIKAN DI MOBILE -> hidden md:flex) */}
+                 <div 
+                   onClick={() => { navigate('/', { replace: true }); }}
+                   className="hidden md:flex items-center gap-2 md:gap-3 bg-white/90 backdrop-blur-md md:bg-white px-3 py-1.5 md:px-4 md:py-2 rounded-full md:rounded-2xl border border-slate-200 shadow-md cursor-pointer active:scale-95 transition-all hover:border-[#D4AF37]/40"
+                 >
+                   <img 
+                     src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
+                     alt="Logo Brand Sentul Tower" 
+                     className="h-7 w-auto md:h-9 object-contain drop-shadow-sm" 
+                   />
                    <div className="flex flex-col justify-center text-left">
                      <span className="font-black text-[8px] md:text-[10px] tracking-[0.2em] leading-tight uppercase text-slate-400">Apartemen</span>
                      <span className="font-black text-[10px] md:text-xs text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-sm">Sentul Tower</span>
@@ -188,10 +264,18 @@ const UnitDetailPage = () => {
                  </div>
                </div>
 
-               <ImageSlider images={selectedRoom.images} heightClass="h-[45vh] md:h-[450px]" roundedClass="rounded-none md:rounded-[40px]" altPrefix={`Detail ${selectedRoom.name} - ${selectedRoom.floorLevel}`} onImageClick={(idx) => setLightboxIndex(idx)} />
-               
+               <ImageSlider 
+                 images={selectedRoom.images} 
+                 heightClass="h-[45vh] md:h-[450px]" 
+                 roundedClass="rounded-none md:rounded-[40px]" 
+                 altPrefix={`Detail ${selectedRoom.name} - ${selectedRoom.floorLevel}`} 
+                 onImageClick={(idx) => setLightboxIndex(idx)} 
+               />
+
+               {/* GRADIENT SHADOW BAWAH GAMBAR */}
                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none rounded-b-[32px] md:rounded-b-[40px]"></div>
-               
+
+               {/* LENCANA FASILITAS MELAYANG (Seperti Bali Rentals) */}
                <div className="absolute bottom-5 left-4 right-4 md:bottom-6 z-20 flex flex-nowrap justify-between items-end pointer-events-none overflow-hidden">
                    <div className="flex gap-1.5 overflow-hidden">
                        <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-xl border border-white/20 shrink-0 max-w-fit">
@@ -209,21 +293,33 @@ const UnitDetailPage = () => {
                </div>
             </div>
             
+            {/* KOLOM KANAN (KONTEN) - DI MOBILE DIBUNGKUS px-6 AGAR TEKS TIDAK MENABRAK TEPI */}
             <div className="flex flex-col px-6 md:px-0 md:pb-8">
-              <div onClick={() => { navigate('/', { replace: true }); }} className="md:hidden -mx-6 mb-6 bg-slate-50 border-b border-slate-200 py-3.5 flex items-center justify-center gap-3 cursor-pointer shadow-sm">
-                 <img src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" alt="Logo" className="h-8 w-auto object-contain drop-shadow-sm" />
+              
+              {/* 👇 FIX: Sabuk Logo Khusus Mobile Tepat di Bawah Gambar Edge-to-Edge 👇 */}
+              <div 
+                onClick={() => { navigate('/', { replace: true }); }}
+                className="md:hidden -mx-6 mb-6 bg-slate-50 border-b border-slate-200 py-3.5 flex items-center justify-center gap-3 cursor-pointer shadow-sm"
+              >
+                 <img 
+                   src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
+                   alt="Logo Brand Sentul Tower" 
+                   className="h-8 w-auto object-contain drop-shadow-sm" 
+                 />
                  <div className="flex flex-col justify-center text-left">
                    <span className="font-black text-[9px] tracking-[0.2em] leading-tight uppercase text-slate-400">Apartemen</span>
                    <span className="font-black text-xs text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-sm">Sentul Tower</span>
                  </div>
               </div>
 
+              {/* FLOW 1: DETAIL KAMAR */}
               {bookingFlow === 'details' && (
               <>
                 <h1 className="text-2xl md:text-4xl lg:text-5xl font-black text-slate-900 uppercase tracking-tighter mb-2 tracking-tight">{selectedRoom.name}</h1>
                 <p className="text-slate-500 text-sm md:text-base mb-8 leading-relaxed font-medium md:max-w-md">{selectedRoom.description}</p>
 
                 <div className="space-y-6 mb-8 md:space-y-8">
+                  {/* Harga Transit */}
                   <div className="bg-slate-50 p-5 md:p-8 rounded-[32px] border border-slate-100 shadow-inner">
                     <h4 className="text-[10px] md:text-xs font-black text-slate-400 flex items-center gap-2 mb-5 md:mb-6 uppercase tracking-[0.2em]"><Clock size={14} className="text-[#D4AF37] md:w-5 md:h-5"/> Paket Harga Transit</h4>
                     <div className="grid grid-cols-2 gap-3 md:gap-4">
@@ -236,6 +332,7 @@ const UnitDetailPage = () => {
                     </div>
                   </div>
 
+                  {/* Harga Fullday */}
                   <div className="bg-[#D4AF37]/10 p-5 md:p-8 rounded-[32px] border border-[#D4AF37]/20 shadow-sm">
                     <h4 className="text-[10px] md:text-xs font-black text-[#D4AF37] flex items-center gap-2 mb-5 md:mb-6 uppercase tracking-[0.2em]"><Calendar size={14} className="md:w-5 md:h-5"/> Paket Harga Fullday</h4>
                     <div className="space-y-3 md:space-y-4">
@@ -255,6 +352,7 @@ const UnitDetailPage = () => {
                   </div>
                 </div>
 
+                {/* Spesifikasi Unit */}
                 <div className="mb-10 px-1 md:px-0">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="h-[2px] bg-slate-100 flex-1"></div>
@@ -272,8 +370,63 @@ const UnitDetailPage = () => {
                     ))}
                   </div>
                 </div>
+              </>
+              )}
 
-                {/* 👇 BLOK CARA ORDER YANG KEMBALI DI MASUKKAN 👇 */}
+              {/* FLOW 2: PILIH TANGGAL & WAKTU */}
+              {(bookingFlow === 'date' || bookingFlow === 'time') && (
+                <div className="bg-white rounded-[32px] md:rounded-[40px] shadow-2xl border border-slate-100 p-6 md:p-8 animate-slide-up flex-1 flex flex-col">
+                   <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter mb-2 text-slate-900">Pilih Jadwal Check-in</h2>
+                   <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-100 pb-4">Paket: {selectedPkg.label} ({selectedPkg.price})</p>
+                   
+                   <label className="text-[10px] font-black text-[#D4AF37] uppercase tracking-[0.2em] mb-2 block">Pilih Tanggal</label>
+                   <input 
+                      type="date" 
+                      min={new Date().toISOString().split('T')[0]}
+                      value={selectedDate}
+                      onChange={(e) => { setSelectedDate(e.target.value); setBookingFlow('time'); }}
+                      className="w-full bg-slate-50 border border-slate-200 text-slate-800 font-bold p-4 rounded-2xl mb-6 outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
+                   />
+
+                   {bookingFlow === 'time' && (
+                     <>
+                       <label className="text-[10px] font-black text-[#D4AF37] uppercase tracking-[0.2em] mb-2 block">Pilih Waktu Check-in</label>
+                       {renderTimeSlots()}
+                     </>
+                   )}
+                </div>
+              )}
+
+              {/* FLOW 3: QRIS & PEMBAYARAN */}
+              {bookingFlow === 'qris' && (
+                <div className="bg-white rounded-[32px] md:rounded-[40px] shadow-2xl border border-[#D4AF37]/30 p-6 md:p-8 animate-slide-up text-center flex-1 flex flex-col items-center">
+                   <div className="bg-slate-900 text-[#D4AF37] text-xs font-black px-4 py-2 rounded-full uppercase tracking-widest mb-4 inline-block shadow-lg">Pembayaran DP</div>
+                   <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter mb-2">Scan QRIS Berikut</h2>
+                   <div className="bg-red-50 text-red-600 border border-red-200 text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl mb-6">DP 50K • TELAT 1 JAM HANGUS</div>
+                   
+                   <div className="relative w-48 h-48 md:w-56 md:h-56 bg-slate-100 rounded-[24px] mb-6 shadow-inner p-2 border border-slate-200 mx-auto group">
+                      <img src="https://ik.imagekit.io/x06namgbin/QRIS/20260306_110148.jpg?updatedAt=1772770929378" alt="QRIS DP Apartemen" className="w-full h-full object-cover rounded-[16px]" />
+                      <a href="https://ik.imagekit.io/x06namgbin/QRIS/20260306_110148.jpg?updatedAt=1772770929378" download="QRIS-DP-Sentul" className="absolute inset-0 bg-black/60 rounded-[16px] flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white backdrop-blur-sm cursor-pointer">
+                         <Download size={32} className="mb-2" />
+                         <span className="text-[10px] font-bold uppercase tracking-widest">Simpan Gambar</span>
+                      </a>
+                   </div>
+
+                   <div className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-left mb-8 shadow-sm">
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 border-b border-slate-200 pb-2">Ringkasan Booking</p>
+                      <p className="text-xs font-bold text-slate-700 flex justify-between mb-1"><span>Tgl:</span> <span>{selectedDate}</span></p>
+                      <p className="text-xs font-bold text-slate-700 flex justify-between mb-1"><span>Jam Masuk:</span> <span>{selectedTime}</span></p>
+                      <p className="text-xs font-bold text-slate-700 flex justify-between"><span>Paket:</span> <span>{selectedPkg.label}</span></p>
+                   </div>
+
+                   <button onClick={() => handleWaClick("booking", selectedRoom.name)} className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-black py-5 md:py-6 rounded-[24px] flex items-center justify-center gap-3 shadow-2xl shadow-green-200 active:scale-95 transition-all uppercase tracking-widest text-xs md:text-sm mt-auto">
+                     <MessageCircle size={20} className="md:w-6 md:h-6" /> Kirim Bukti via WA
+                   </button>
+                </div>
+              )}
+
+              {/* TATA CARA CHECK-IN / ORDER MUDAH (HANYA TAMPIL DI DETAIL) */}
+              {bookingFlow === 'details' && (
                 <div className="mb-8 mt-10">
                    <div className="flex items-center gap-3 mb-6">
                       <div className="h-[2px] bg-slate-100 flex-1"></div>
@@ -303,62 +456,12 @@ const UnitDetailPage = () => {
                      <MessageCircle size={20} className="md:w-6 md:h-6" /> Hubungi Lewat WhatsApp
                    </button>
                 </div>
-              </>
-              )}
-
-              {(bookingFlow === 'date' || bookingFlow === 'time') && (
-                <div className="bg-white rounded-[32px] md:rounded-[40px] shadow-2xl border border-slate-100 p-6 md:p-8 animate-slide-up flex-1 flex flex-col">
-                   <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter mb-2 text-slate-900">Pilih Jadwal Check-in</h2>
-                   <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-100 pb-4">Paket: {selectedPkg.label} ({selectedPkg.price})</p>
-                   
-                   <label className="text-[10px] font-black text-[#D4AF37] uppercase tracking-[0.2em] mb-2 block">Pilih Tanggal</label>
-                   <input 
-                      type="date" 
-                      min={new Date().toISOString().split('T')[0]}
-                      value={selectedDate}
-                      onChange={(e) => { setSelectedDate(e.target.value); setBookingFlow('time'); }}
-                      className="w-full bg-slate-50 border border-slate-200 text-slate-800 font-bold p-4 rounded-2xl mb-6 outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
-                   />
-
-                   {bookingFlow === 'time' && (
-                     <>
-                       <label className="text-[10px] font-black text-[#D4AF37] uppercase tracking-[0.2em] mb-2 block">Pilih Waktu Check-in</label>
-                       {renderTimeSlots()}
-                     </>
-                   )}
-                </div>
-              )}
-
-              {bookingFlow === 'qris' && (
-                <div className="bg-white rounded-[32px] md:rounded-[40px] shadow-2xl border border-[#D4AF37]/30 p-6 md:p-8 animate-slide-up text-center flex-1 flex flex-col items-center">
-                   <div className="bg-slate-900 text-[#D4AF37] text-xs font-black px-4 py-2 rounded-full uppercase tracking-widest mb-4 inline-block shadow-lg">Pembayaran DP</div>
-                   <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter mb-2">Scan QRIS Berikut</h2>
-                   <div className="bg-red-50 text-red-600 border border-red-200 text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl mb-6">DP 50K • TELAT 1 JAM HANGUS</div>
-                   
-                   <div className="relative w-48 h-48 md:w-56 md:h-56 bg-slate-100 rounded-[24px] mb-6 shadow-inner p-2 border border-slate-200 mx-auto group">
-                      <img src="https://ik.imagekit.io/x06namgbin/QRIS/20260306_110148.jpg?updatedAt=1772770929378" alt="QRIS DP Apartemen" className="w-full h-full object-cover rounded-[16px]" />
-                      <a href="https://ik.imagekit.io/x06namgbin/QRIS/20260306_110148.jpg?updatedAt=1772770929378" download="QRIS-DP-Sentul" className="absolute inset-0 bg-black/60 rounded-[16px] flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white backdrop-blur-sm cursor-pointer">
-                         <Download size={32} className="mb-2" />
-                         <span className="text-[10px] font-bold uppercase tracking-widest">Simpan Gambar</span>
-                      </a>
-                   </div>
-
-                   <div className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-left mb-8 shadow-sm">
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 border-b border-slate-200 pb-2">Ringkasan Booking</p>
-                      <p className="text-xs font-bold text-slate-700 flex justify-between mb-1"><span>Tgl:</span> <span>{selectedDate}</span></p>
-                      <p className="text-xs font-bold text-slate-700 flex justify-between mb-1"><span>Jam Masuk:</span> <span>{selectedTime}</span></p>
-                      <p className="text-xs font-bold text-slate-700 flex justify-between"><span>Paket:</span> <span>{selectedPkg.label}</span></p>
-                   </div>
-
-                   <button onClick={() => handleWaClick("booking", selectedRoom.name)} className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-black py-5 md:py-6 rounded-[24px] flex items-center justify-center gap-3 shadow-2xl shadow-green-200 active:scale-95 transition-all uppercase tracking-widest text-xs md:text-sm mt-auto">
-                     <MessageCircle size={20} className="md:w-6 md:h-6" /> Kirim Bukti via WA
-                   </button>
-                </div>
               )}
             </div>
           </div>
         </div>
 
+        {/* 👇 FIX BUG LIGHTBOX: FORMAT URL GAMBAR DIPASTIKAN VALID 👇 */}
         {lightboxIndex !== null && selectedRoom && (
           <div 
             className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-slide-up" 
@@ -406,7 +509,6 @@ const UnitDetailPage = () => {
           </div>
         )}
 
-        {/* 👇 BLOK CSS YANG KEMBALI DIMASUKKAN 👇 */}
         <style dangerouslySetInnerHTML={{ __html: `
           @keyframes slide-up { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
           @keyframes bounce-subtle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
