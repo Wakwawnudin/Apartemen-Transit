@@ -1,15 +1,135 @@
-// HomePage.jsx
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { 
-  MapPin, Bed, Clock, Calendar, Shield, Building, 
-  CheckCircle2, MessageCircle, Utensils, HelpCircle,
-  ShoppingBag, Palmtree, Maximize, Search, Loader2, Lock, ChevronRight
+  MapPin, Bed, Clock, Calendar, Shield, Building, ChevronLeft, ChevronRight, 
+  CheckCircle2, MessageCircle, Utensils, HelpCircle, ChevronDown, ChevronUp,
+  ShoppingBag, Palmtree, Maximize, Search, Loader2, Lock
 } from 'lucide-react';
 import { roomsData } from './roomsData';
-import { ImageSlider, FaqItem, GoogleMapsLogo } from './SharedComponents';
 
+// --- KOMPONEN IMAGE SLIDER ---
+export const ImageSlider = ({ images, heightClass = "h-56", roundedClass = "rounded-[32px]", altPrefix = "Apartemen Sentul Tower", priority = false, onImageClick }) => {
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  const scrollRef = useRef(null);
+  const { seoSlug } = useParams(); 
+
+  const optimizeImg = (url) => {
+    if (url.includes('imagekit.io')) {
+      return `${url.split('?')[0]}?tr=w-800,f-webp,q-80`;
+    }
+    return url;
+  };
+
+  const dynamicAlt = seoSlug ? seoSlug.replace(/-/g, ' ') : altPrefix;
+
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const interval = setInterval(() => {
+      if (scrollRef.current) {
+        const { clientWidth } = scrollRef.current;
+        const nextIndex = (activeIndex + 1) % images.length;
+        scrollRef.current.scrollTo({ left: nextIndex * clientWidth, behavior: 'smooth' });
+      }
+    }, 3500); 
+    return () => clearInterval(interval);
+  }, [activeIndex, images.length]);
+
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, clientWidth } = scrollRef.current;
+      const index = Math.round(scrollLeft / clientWidth);
+      setActiveIndex(index);
+    }
+  };
+
+  const scrollNext = (e) => {
+    e.stopPropagation();
+    if (scrollRef.current) {
+      const { clientWidth } = scrollRef.current;
+      scrollRef.current.scrollBy({ left: clientWidth, behavior: 'smooth' });
+    }
+  };
+
+  const scrollPrev = (e) => {
+    e.stopPropagation();
+    if (scrollRef.current) {
+      const { clientWidth } = scrollRef.current;
+      scrollRef.current.scrollBy({ left: -clientWidth, behavior: 'smooth' });
+    }
+  };
+
+  return (
+    <div className={`relative w-full ${heightClass} group`}>
+      <div 
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className={`flex overflow-x-auto snap-x snap-mandatory w-full h-full no-scrollbar ${roundedClass}`}
+        style={{ scrollBehavior: 'smooth' }}
+      >
+        {images.map((img, idx) => (
+          <img 
+            key={idx}
+            src={optimizeImg(img)} 
+            onClick={() => onImageClick && onImageClick(idx)}
+            loading={priority && idx === 0 ? "eager" : "lazy"} 
+            fetchpriority={priority && idx === 0 ? "high" : "auto"}
+            className={`w-full h-full object-cover shrink-0 snap-center transition-transform ${onImageClick ? 'cursor-pointer active:scale-[0.98]' : ''}`} 
+            alt={`${dynamicAlt} - ${idx + 1}`} 
+          />
+        ))}
+      </div>
+      <div className={`absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none ${roundedClass}`}></div>
+      <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-10">
+        {images.map((_, idx) => (
+          <div key={idx} className={`h-1.5 rounded-full transition-all duration-300 shadow-sm ${activeIndex === idx ? 'w-6 bg-white' : 'w-1.5 bg-white/50'}`} />
+        ))}
+      </div>
+      <div className="absolute inset-y-0 left-2 flex items-center opacity-0 group-hover:opacity-100 transition-opacity md:flex hidden">
+        <button onClick={scrollPrev} className="bg-white/30 hover:bg-white/50 backdrop-blur text-white p-1 rounded-full"><ChevronLeft size={20}/></button>
+      </div>
+      <div className="absolute inset-y-0 right-2 flex items-center opacity-0 group-hover:opacity-100 transition-opacity md:flex hidden">
+        <button onClick={scrollNext} className="bg-white/30 hover:bg-white/50 backdrop-blur text-white p-1 rounded-full"><ChevronRight size={20}/></button>
+      </div>
+    </div>
+  );
+};
+
+// --- KOMPONEN FAQ ITEM ---
+const FaqItem = ({ question, answer }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="border-b border-slate-700/50 last:border-0">
+      <button 
+        onClick={() => setIsOpen(!isOpen)} 
+        className="w-full py-4 flex justify-between items-center text-left focus:outline-none group"
+      >
+        <span className={`text-sm font-bold transition-colors ${isOpen ? 'text-[#D4AF37]' : 'text-slate-200'}`}>
+          {question}
+        </span>
+        {isOpen ? <ChevronUp size={18} className="text-[#D4AF37]" /> : <ChevronDown size={18} className="text-slate-500 group-hover:text-[#D4AF37]" />}
+      </button>
+      <div className={`overflow-hidden transition-all duration-300 ease-in-out ${isOpen ? 'max-h-96 opacity-100 mb-4' : 'max-h-0 opacity-0'}`}>
+        <p className="text-xs text-slate-400 leading-relaxed pr-4 font-medium">{answer}</p>
+      </div>
+    </div>
+  );
+};
+
+// --- LOGO MAPS ---
+const GoogleMapsLogo = () => (
+  <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" fill="#4285F4"/>
+    <path d="M12 7c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" fill="#FFFFFF"/>
+    <path d="M12 2c-3.87 0-7 3.13-7 7 0 1.61.41 3.09 1.13 4.43L12 22l5.87-8.57C18.59 12.09 19 10.61 19 9c0-3.87-3.13-7-7-7z" fill="none" stroke="#FFFFFF" strokeWidth="0.5"/>
+    <path d="M7.13 13.43c.72 1.34 3.87 5.57 4.87 8.57.1-.3.1-.3 0 0z" fill="#34A853"/>
+    <path d="M16.87 13.43c-.72 1.34-3.87 5.57-4.87 8.57-.1-.3-.1-.3 0 0z" fill="#FBBC05"/>
+    <path d="M12 2c-.34 0-.67.02-1 .07V9h1V2z" fill="#EA4335"/>
+  </svg>
+);
+
+// --- HALAMAN UTAMA (HOME) ---
 const HomePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const filterParam = searchParams.get('filter');
@@ -18,6 +138,7 @@ const HomePage = () => {
   const [activeFilter, setActiveFilter] = useState(initialFilter);
   const [refCode, setRefCode] = useState("");
   
+  // ⚙️ STATE UNTUK INFINITE SCROLL
   const [page, setPage] = useState(1); 
   const [itemsPerPage, setItemsPerPage] = useState(3);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -97,6 +218,7 @@ const HomePage = () => {
     if (node) observer.current.observe(node);
   }, [hasMore, isLoadingMore]);
 
+
   const nearbyData = [
     { name: "AEON Mall", dist: "2 Mnt", icon: <ShoppingBag size={14}/> },
     { name: "IKEA Sentul", dist: "5 Mnt", icon: <ShoppingBag size={14}/> },
@@ -134,17 +256,21 @@ const HomePage = () => {
       {/* NAVBAR */}
       <nav className={`fixed top-0 left-0 right-0 z-50 px-6 flex justify-between items-center transition-all duration-300 md:px-12 bg-gradient-to-b from-black/80 to-transparent ${scrolled ? 'py-4 md:py-3' : 'py-4 md:py-6'}`}>
         <div className="flex items-center gap-3">
-          <img src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" alt="Logo" className="h-14 w-auto object-contain drop-shadow-md" />
+          <img 
+            src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
+            alt="Logo Apartemen Sentul Tower - Sewa Harian" 
+            className="h-14 w-auto object-contain drop-shadow-md" 
+          />
           <div className="flex flex-col justify-center pl-1">
             <span className="font-black text-[10px] md:text-sm tracking-[0.2em] leading-tight uppercase drop-shadow-md text-white">APARTEMEN</span>
             <span className="font-black text-[11px] md:text-base text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-md">SENTUL TOWER</span>
           </div>
         </div>
         <div className="flex items-center gap-2 md:gap-3">
-          <button onClick={() => handleWaClick("chat")} className="p-2.5 rounded-full border shadow-lg active:scale-90 transition-all flex items-center justify-center bg-[#25D366]/90 backdrop-blur-md border-white/30 text-white hover:bg-[#25D366]">
+          <button onClick={() => handleWaClick("chat")} aria-label="Chat WhatsApp" className="p-2.5 rounded-full border shadow-lg active:scale-90 transition-all flex items-center justify-center bg-[#25D366]/90 backdrop-blur-md border-white/30 text-white hover:bg-[#25D366]">
              <MessageCircle size={20} />
           </button>
-          <a href={mapsLink} target="_blank" rel="noopener noreferrer" className="p-2.5 rounded-full border shadow-lg active:scale-90 transition-all flex items-center justify-center bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/30">
+          <a href={mapsLink} target="_blank" rel="noopener noreferrer" aria-label="Lokasi Google Maps" className="p-2.5 rounded-full border shadow-lg active:scale-90 transition-all flex items-center justify-center bg-white/20 backdrop-blur-md border-white/30 text-white hover:bg-white/30">
              <GoogleMapsLogo />
           </a>
         </div>
@@ -155,6 +281,7 @@ const HomePage = () => {
         <div className="absolute inset-0 w-full h-full">
            <ImageSlider images={heroImages} heightClass="h-full" roundedClass="rounded-none" altPrefix="Fasilitas & View Apartemen Sentul Tower" priority={true} />
         </div>
+
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent md:from-black/60 md:via-black/30 md:to-transparent flex flex-col justify-end p-6 pb-20 md:items-center md:justify-center md:text-center md:pb-0 pointer-events-none z-20">
           <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md border border-white/10 text-[#D4AF37] text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-5 md:py-2.5 rounded-full w-fit mb-3 md:mb-6 shadow-lg">
             <MapPin size={10} className="md:w-4 md:h-4" /> DEKAT AEON MALL SENTUL
@@ -165,7 +292,7 @@ const HomePage = () => {
       </header>
 
       {/* RINGKASAN HARGA */}
-      <section className="px-4 relative z-30 -mt-16 md:-mt-24 md:max-w-4xl md:mx-auto">
+      <section className="px-4 relative z-30 -mt-16 md:-mt-24 md:max-w-4xl md:mx-auto" aria-label="Ringkasan Harga">
         <div className="bg-slate-900/95 backdrop-blur-xl rounded-[24px] md:rounded-[32px] shadow-2xl shadow-[#D4AF37]/20 border border-[#D4AF37]/30 p-4 md:p-6 grid grid-cols-2 gap-3 md:gap-6">
           <div onClick={() => handleWaClick("tanya_transit")} className="cursor-pointer active:scale-95 bg-slate-800/80 p-4 md:p-8 rounded-2xl md:rounded-3xl flex flex-col items-center border border-slate-700 group hover:border-[#D4AF37] hover:bg-slate-800 transition-all">
             <Clock className="text-[#D4AF37] mb-1.5 md:mb-3 md:w-8 md:h-8 transition-transform group-hover:scale-110" size={18} />
@@ -180,8 +307,8 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* KATALOG UNIT */}
-      <section id="katalog-apartemen" className="px-4 py-8 md:max-w-6xl md:mx-auto md:px-6 md:py-16">
+      {/* KATALOG UNIT DENGAN INFINITE SCROLL */}
+      <section id="katalog-apartemen" className="px-4 py-8 md:max-w-6xl md:mx-auto md:px-6 md:py-16" aria-label="Daftar Unit Apartemen">
         <div className="flex flex-col gap-4 mb-8 md:mb-12 md:flex-row md:justify-between md:items-end">
           <div>
             <h2 className="text-lg md:text-3xl font-black text-slate-800 uppercase tracking-widest md:tracking-tighter md:mb-2">KATALOG APARTEMEN</h2>
@@ -190,8 +317,13 @@ const HomePage = () => {
           <div className="flex gap-2.5 overflow-x-auto no-scrollbar pb-2 md:pb-0 w-full md:w-auto">
             {['Semua', 'Studio', '1BR', '2BR'].map(f => (
               <button 
-                key={f} onClick={() => handleFilterChange(f)} 
-                className={`flex-1 md:flex-none flex justify-center items-center text-[11px] md:text-sm font-black px-4 py-3 md:px-8 md:py-3.5 rounded-full border-2 transition-all whitespace-nowrap ${activeFilter === f ? 'bg-slate-900 border-slate-900 text-[#D4AF37] shadow-xl scale-[1.03]' : 'bg-white border-slate-200 text-slate-600 shadow-sm hover:border-[#D4AF37] hover:text-[#D4AF37]'}`}
+                key={f} 
+                onClick={() => handleFilterChange(f)} 
+                className={`flex-1 md:flex-none flex justify-center items-center text-[11px] md:text-sm font-black px-4 py-3 md:px-8 md:py-3.5 rounded-full border-2 transition-all whitespace-nowrap ${
+                  activeFilter === f 
+                  ? 'bg-slate-900 border-slate-900 text-[#D4AF37] shadow-xl scale-[1.03]' 
+                  : 'bg-white border-slate-200 text-slate-600 shadow-sm hover:border-[#D4AF37] hover:text-[#D4AF37] hover:shadow-md'
+                }`}
               >
                 {f}
               </button>
@@ -204,17 +336,30 @@ const HomePage = () => {
             displayedRooms.map((room, index) => {
               const isLastItem = index === displayedRooms.length - 1;
               return (
-                <Link to={`/unit/${room.slug}`} key={room.id} ref={isLastItem ? lastElementRef : null} className="block bg-white rounded-[32px] md:rounded-[40px] overflow-hidden shadow-sm border border-slate-100 active:scale-[0.98] transition-all duration-500 cursor-pointer group md:hover:shadow-2xl md:hover:-translate-y-2 relative flex flex-col">
+                <Link 
+                  to={`/unit/${room.slug}`} 
+                  key={room.id} 
+                  ref={isLastItem ? lastElementRef : null} 
+                  className="block bg-white rounded-[32px] md:rounded-[40px] overflow-hidden shadow-sm border border-slate-100 active:scale-[0.98] transition-all duration-500 cursor-pointer group md:hover:shadow-2xl md:hover:-translate-y-2 animate-slide-up relative flex flex-col"
+                >
                   <div className="relative">
+                    {/* 👇 FIX: Desain Edge-to-Edge ala Bali Rentals 👇 */}
                     <ImageSlider images={room.images} heightClass="h-80 md:h-96" roundedClass="rounded-t-[32px] md:rounded-t-[40px]" altPrefix={room.altPrefix} />
+                    
                     <div className="absolute top-5 left-5 md:top-6 md:left-6 flex gap-2 pointer-events-none z-20">
                       <span className="bg-black/70 backdrop-blur-md text-[#D4AF37] text-[10px] font-bold px-3 py-1.5 rounded-xl uppercase tracking-widest shadow-sm">{room.type}</span>
                       {room.type === '2BR' && <span className="bg-[#D4AF37] text-white text-[10px] font-bold px-3 py-1.5 rounded-xl shadow-lg">PREMIUM</span>}
                     </div>
                     <div className="absolute top-5 right-5 md:top-6 md:right-6 pointer-events-none z-20">
-                      <span className="bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-black px-3 py-1.5 rounded-xl shadow-sm border border-slate-100 uppercase tracking-wider">{room.floorLevel}</span>
+                      <span className="bg-white/90 backdrop-blur-md text-slate-800 text-[10px] font-black px-3 py-1.5 rounded-xl shadow-sm border border-slate-100 uppercase tracking-wider">
+                        {room.floorLevel}
+                      </span>
                     </div>
+
+                    {/* Gradient Hitam untuk Memperjelas Lencana Fasilitas */}
                     <div className="absolute bottom-0 left-0 right-0 h-24 md:h-32 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none"></div>
+
+                    {/* 👇 FIX: Lencana Fasilitas Melayang (Tahan Bug Memelar/Rata Kiri) 👇 */}
                     <div className="absolute bottom-5 left-4 right-4 md:bottom-6 z-20 flex flex-nowrap justify-start items-center gap-1.5 text-white pointer-events-none overflow-hidden">
                        <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-xl border border-white/20 shrink-0 max-w-fit">
                           <Maximize size={12} className="text-[#D4AF37]" />
@@ -233,10 +378,12 @@ const HomePage = () => {
 
                   <div className="p-6 md:p-8 flex flex-col flex-1 relative">
                     <h3 className="text-xl md:text-2xl font-black text-slate-900 mb-2 uppercase tracking-tight group-hover:text-[#D4AF37] transition-colors">{room.name}</h3>
+                    
                     <div className="flex items-center gap-1.5 mb-4 md:mb-6">
                       <CheckCircle2 size={14} className="text-green-500" fill="currentColor" color="white" />
                       <span className="text-[10px] md:text-xs font-bold text-slate-500 tracking-tight">Verified • Higienis • Aman</span>
                     </div>
+
                     <div className="flex justify-between items-end mt-auto pt-6 border-t border-slate-50">
                       <div>
                         <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mb-1">Harga Mulai</p>
@@ -253,28 +400,35 @@ const HomePage = () => {
           )}
         </div>
 
+        {/* LOADING INDICATOR & END MESSAGE */}
         {isLoadingMore && (
-          <div className="flex justify-center mt-8 md:mt-12">
+          <div className="flex justify-center mt-8 md:mt-12 animate-slide-up">
             <div className="flex items-center gap-2 bg-white border border-slate-200 text-slate-700 px-6 py-3 rounded-full shadow-sm"><Loader2 size={16} className="animate-spin text-[#D4AF37]"/><span className="font-black text-[10px] md:text-xs uppercase tracking-widest">Memuat Unit...</span></div>
           </div>
         )}
         {!hasMore && displayedRooms.length > itemsPerPage && (
           <div className="text-center mt-8 md:mt-12 opacity-40"><p className="text-[10px] md:text-xs font-black uppercase tracking-widest">Akhir dari Daftar</p></div>
         )}
+
       </section>
 
       {/* FOOTER */}
       <footer className="bg-slate-900 text-white p-6 mx-4 rounded-[40px] mb-8 shadow-2xl relative overflow-hidden md:max-w-6xl md:mx-auto md:p-12 md:rounded-[48px] md:mb-12">
         <div className="relative z-10 md:grid md:grid-cols-12 md:gap-12 md:items-start">
+          
           <div className="mb-10 pb-8 border-b border-slate-800 md:col-span-5 md:border-b-0 md:mb-0 md:pb-0">
             <div className="flex items-center gap-2 mb-4">
               <HelpCircle className="text-[#D4AF37]" size={16} />
               <h3 className="text-xs font-black text-slate-300 uppercase tracking-widest">Tanya Jawab</h3>
             </div>
             <div className="bg-slate-800 rounded-2xl border border-slate-700 p-4">
-              {faqData.map((item, index) => <FaqItem key={index} question={item.q} answer={item.a} />)}
+              {faqData.map((item, index) => (
+                <FaqItem key={index} question={item.q} answer={item.a} />
+              ))}
               <div className="mt-4 pt-4 border-t border-slate-700 text-center">
-                <button onClick={() => handleWaClick("chat")} className="text-[10px] font-bold text-[#D4AF37] hover:underline uppercase tracking-widest">Chat Admin via WhatsApp</button>
+                <button onClick={() => handleWaClick("chat")} className="text-[10px] font-bold text-[#D4AF37] hover:underline uppercase tracking-widest">
+                    Chat Admin via WhatsApp
+                </button>
               </div>
             </div>
           </div>
@@ -289,11 +443,11 @@ const HomePage = () => {
                    <ShoppingBag className="text-[#D4AF37] mb-2" size={24} />
                    <span className="text-[10px] font-bold text-slate-300 uppercase text-center">1. Pilih Paket</span>
                 </div>
-                <div onClick={() => { alert("Pilih Unit & Paket di Katalog dulu ya."); document.getElementById('katalog-apartemen')?.scrollIntoView({behavior: 'smooth'}); }} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
+                <div onClick={() => { alert("Silakan Pilih Unit & Paket di Katalog terlebih dahulu."); document.getElementById('katalog-apartemen')?.scrollIntoView({behavior: 'smooth'}); }} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
                    <Calendar className="text-[#D4AF37] mb-2" size={24} />
                    <span className="text-[10px] font-bold text-slate-300 uppercase text-center">2. Tentukan Jam</span>
                 </div>
-                <div onClick={() => { alert("Pilih Unit, Paket, & Jam di Katalog dulu ya."); document.getElementById('katalog-apartemen')?.scrollIntoView({behavior: 'smooth'}); }} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
+                <div onClick={() => { alert("Silakan Pilih Unit, Paket, & Jam di Katalog terlebih dahulu."); document.getElementById('katalog-apartemen')?.scrollIntoView({behavior: 'smooth'}); }} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
                    <Wallet className="text-[#D4AF37] mb-2" size={24} />
                    <span className="text-[10px] font-bold text-slate-300 uppercase text-center">3. DP via QRIS</span>
                 </div>
@@ -320,12 +474,13 @@ const HomePage = () => {
           </div>
         </div>
 
+        {/* Garis Footer Bawah */}
         <div className="relative z-10 flex items-center justify-center gap-6 pt-6 mt-10 border-t border-slate-800 md:justify-between md:pt-8 md:mt-12">
           <div className="flex items-center gap-6">
-            <a href={mapsLink} target="_blank" rel="noopener noreferrer" className="bg-white p-2 rounded-xl hover:scale-110 active:scale-95 transition-all shadow-xl flex items-center justify-center">
+            <a href={mapsLink} target="_blank" rel="noopener noreferrer" aria-label="Buka Google Maps" className="bg-white p-2 rounded-xl hover:scale-110 active:scale-95 transition-all shadow-xl flex items-center justify-center">
               <GoogleMapsLogo />
             </a>
-            <button onClick={() => handleWaClick("general")} className="bg-[#25D366] p-2 rounded-xl hover:scale-110 active:scale-95 transition-all shadow-xl shadow-green-900/30">
+            <button onClick={() => handleWaClick("general")} aria-label="Chat WhatsApp" className="bg-[#25D366] p-2 rounded-xl hover:scale-110 active:scale-95 transition-all shadow-xl shadow-green-900/30">
               <MessageCircle className="text-white" size={20} />
             </button>
             <div className="h-5 w-[1px] bg-slate-700 md:hidden"></div>
@@ -336,16 +491,19 @@ const HomePage = () => {
           <div className="hidden md:flex items-center gap-4 text-[10px] text-slate-500 font-medium">
              <p>Melayani sewa apartemen harian Sentul City.</p>
              <div className="h-3 w-[1px] bg-slate-700"></div>
-             <button onClick={() => navigate('/admin')} className="hover:text-[#D4AF37] transition-colors"><Lock size={12}/></button>
+             {/* ⚙️ TOMBOL RAHASIA ADMIN PANEL */}
+             <button onClick={() => navigate('/admin')} aria-label="Admin Panel" className="hover:text-[#D4AF37] transition-colors"><Lock size={12}/></button>
           </div>
         </div>
         <div className="md:hidden mt-6 pt-4 border-t border-slate-800 flex flex-col items-center">
              <p className="text-[9px] text-slate-500 font-medium leading-relaxed text-center mb-3">
-               Melayani sewa apartemen harian Sentul City, transit 3 jam, 6 jam.
+               Melayani sewa apartemen harian Sentul City, transit 3 jam, 6 jam. Solusi penginapan murah alternatif hotel di Bogor.
              </p>
-             <button onClick={() => navigate('/admin')} className="text-slate-700 hover:text-[#D4AF37] transition-colors"><Lock size={12}/></button>
+             {/* ⚙️ TOMBOL RAHASIA ADMIN PANEL (MOBILE) */}
+             <button onClick={() => navigate('/admin')} aria-label="Admin Panel" className="text-slate-700 hover:text-[#D4AF37] transition-colors"><Lock size={12}/></button>
         </div>
       </footer>
+
     </div>
   );
 };
