@@ -15,8 +15,12 @@ const defaultFullday = [
   { label: 'Weekday (Sen-Kam)', price: 'Rp 300.000' },
   { label: 'Weekend (Jum-Min)', price: 'Rp 350.000' },
 ];
+// 👇 TAMBAHAN BARU: HARGA 24 JAM
+const default24Jam = [
+  { label: '24 Jam (Weekday)', price: 'Rp 400.000' },
+  { label: '24 Jam (Weekend)', price: 'Rp 450.000' },
+];
 
-// 👇 HARGA 2 BEDROOM SUDAH NAIK 50RB
 const specialTransit2BR = [
   { label: '3 Jam', price: 'Rp 250.000' },
   { label: '6 Jam', price: 'Rp 350.000' },
@@ -26,6 +30,11 @@ const specialTransit2BR = [
 const specialFullday2BR = [
   { label: 'Weekday (Sen-Kam)', price: 'Rp 700.000' },
   { label: 'Weekend (Jum-Min)', price: 'Rp 750.000' },
+];
+// 👇 TAMBAHAN BARU: HARGA 24 JAM KHUSUS 2BR
+const special24Jam2BR = [
+  { label: '24 Jam (Weekday)', price: 'Rp 1.000.000' },
+  { label: '24 Jam (Weekend)', price: 'Rp 1.100.000' },
 ];
 
 // --- BASE TEMPLATES ---
@@ -38,6 +47,7 @@ export const baseTemplates = {
     startFrom: '150rb', 
     transit: defaultTransit, 
     fullday: defaultFullday,
+    paket24Jam: default24Jam, // 👈 Injeksi 24 Jam
     specs: [
       { icon: <Bed size={16}/>, text: 'Queen Size Bed' }, { icon: <Wind size={16}/>, text: 'Full AC' },
       { icon: <Tv size={16}/>, text: 'Smart TV (Netflix)' }, { icon: <UtensilsCrossed size={16}/>, text: 'Resto 24jam Siap Antar' },
@@ -53,6 +63,7 @@ export const baseTemplates = {
     startFrom: '150rb', 
     transit: defaultTransit, 
     fullday: defaultFullday,
+    paket24Jam: default24Jam, // 👈 Injeksi 24 Jam
     specs: [
       { icon: <Bed size={16}/>, text: 'King Size Bed' }, { icon: <Wind size={16}/>, text: 'Full AC (Kamar & Ruang Tamu)' },
       { icon: <Tv size={16}/>, text: 'Smart TV 42" & Netflix' }, { icon: <Building size={16}/>, text: 'Ruang Tamu Terpisah' },
@@ -65,9 +76,10 @@ export const baseTemplates = {
     baseName: '2 BEDROOM',
     size: '56m²', beds: 2,
     description: 'Unit luas untuk staycation keluarga atau grup. Tersedia opsi transit 3 jam Sentul Tower yang fleksibel. Nikmati pemandangan gunung dan fasilitas lengkap.',
-    startFrom: '250rb', // 👇 START FROM JUGA SUDAH NAIK 50RB
+    startFrom: '250rb', 
     transit: specialTransit2BR, 
     fullday: specialFullday2BR,
+    paket24Jam: special24Jam2BR, // 👈 Injeksi 24 Jam 2BR
     specs: [
       { icon: <Bed size={16}/>, text: '1 Queen + 1 Single Bed' }, { icon: <Wind size={16}/>, text: 'Full AC di Setiap Kamar' },
       { icon: <Tv size={16}/>, text: 'Smart TV & Home Theater' }, { icon: <UtensilsCrossed size={16}/>, text: 'Resto 24jam Siap Antar' },
@@ -381,6 +393,7 @@ export const roomsData = realUnits.map((unit, index) => {
   // ⚙️ LOGIKA PINTAR: HARGA KHUSUS DELUXE (+ Rp 50.000)
   let finalTransit = template.transit;
   let finalFullday = template.fullday;
+  let final24Jam = template.paket24Jam; // 👈 Menampung data base 24 Jam
   let finalStartFrom = template.startFrom;
 
   // Jika nama lantainya mengandung kata "Deluxe"
@@ -406,6 +419,7 @@ export const roomsData = realUnits.map((unit, index) => {
     // Terapkan penambahan harga ke array baru agar template asli tidak rusak
     finalTransit = template.transit.map(item => ({ ...item, price: add50k(item.price) }));
     finalFullday = template.fullday.map(item => ({ ...item, price: add50k(item.price) }));
+    final24Jam = template.paket24Jam ? template.paket24Jam.map(item => ({ ...item, price: add50k(item.price) })) : []; // 👈 Ikut Nambah 50k
     finalStartFrom = add50kStart(template.startFrom);
   }
 
@@ -429,6 +443,7 @@ export const roomsData = realUnits.map((unit, index) => {
     // 👇 Timpa harga asli dengan harga hasil hitungan di atas
     startFrom: finalStartFrom,
     transit: finalTransit,
-    fullday: finalFullday
+    fullday: finalFullday,
+    paket24Jam: final24Jam // 👈 Kirim array terbaru ini ke UI
   };
 });
