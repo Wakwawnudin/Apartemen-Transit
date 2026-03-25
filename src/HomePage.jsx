@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet-async';
 import { 
   MapPin, Bed, Clock, Calendar, Shield, Building, ChevronLeft, ChevronRight, 
   CheckCircle2, MessageCircle, Utensils, HelpCircle, ChevronDown, ChevronUp,
-  ShoppingBag, Palmtree, Maximize, Search, Loader2, Lock
+  ShoppingBag, Palmtree, Maximize, Search, Loader2, Lock, Wallet
 } from 'lucide-react';
 import { roomsData } from './roomsData';
 
