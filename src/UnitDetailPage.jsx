@@ -1,4 +1,3 @@
-// UnitDetailPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
@@ -131,7 +130,7 @@ const UnitDetailPage = () => {
                <button 
                  key={timeStr} disabled={!isAvail}
                  onClick={() => { setSelectedTime(timeStr); setBookingFlow('qris'); }}
-                 className={`py-3 px-2 rounded-xl text-center font-bold text-sm border transition-all ${isAvail ? 'bg-white border-slate-200 text-slate-800 hover:border-[#D4AF37]' : 'bg-slate-100 border-slate-100 text-slate-400 opacity-50 cursor-not-allowed'}`}
+                 className={`py-3 px-2 rounded-xl text-center font-bold text-sm border transition-all ${isAvail ? 'bg-white border-slate-200 text-slate-800 hover:border-[#D4AF37] hover:shadow-md' : 'bg-slate-100 border-slate-100 text-slate-400 opacity-50 cursor-not-allowed'}`}
                >
                  {timeStr}
                </button>
@@ -176,12 +175,23 @@ const UnitDetailPage = () => {
           <div className="md:grid md:grid-cols-2 md:gap-12 md:items-start">
             <div className="relative mb-0 md:sticky md:top-0 group md:rounded-[40px] overflow-hidden md:shadow-sm md:border md:border-slate-100">
                <div className="absolute top-4 left-0 right-0 flex items-center justify-between px-4 z-30 md:static md:mb-6 md:px-0 md:bg-transparent">
-                 <button onClick={handleBack} className="flex items-center gap-1.5 text-slate-800 font-black text-[11px] md:text-sm uppercase tracking-widest bg-white/90 backdrop-blur-md md:bg-white w-10 h-10 md:w-auto md:h-auto justify-center md:px-6 md:py-3 rounded-full md:rounded-2xl active:scale-95 transition-all shadow-md border border-slate-200 hover:bg-slate-50">
+                 <button onClick={handleBack} className="flex items-center gap-1.5 text-slate-800 font-black text-[11px] md:text-sm uppercase tracking-widest bg-white/90 backdrop-blur-md md:bg-white w-10 h-10 md:w-auto md:h-auto justify-center md:px-6 md:py-3 rounded-full md:rounded-2xl active:scale-95 transition-all shadow-md border border-slate-200 hover:bg-slate-50 hover:border-[#D4AF37]/40">
                    <ChevronLeft size={20} className="md:w-5 md:h-5 text-[#D4AF37]" /> <span className="hidden md:inline">Kembali</span>
                  </button>
+                 
+                 <div onClick={() => { navigate('/', { replace: true }); }} className="hidden md:flex items-center gap-2 md:gap-3 bg-white/90 backdrop-blur-md md:bg-white px-3 py-1.5 md:px-4 md:py-2 rounded-full md:rounded-2xl border border-slate-200 shadow-md cursor-pointer active:scale-95 transition-all hover:border-[#D4AF37]/40">
+                   <img src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" alt="Logo" className="h-7 w-auto md:h-9 object-contain drop-shadow-sm" />
+                   <div className="flex flex-col justify-center text-left">
+                     <span className="font-black text-[8px] md:text-[10px] tracking-[0.2em] leading-tight uppercase text-slate-400">Apartemen</span>
+                     <span className="font-black text-[10px] md:text-xs text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-sm">Sentul Tower</span>
+                   </div>
+                 </div>
                </div>
+
                <ImageSlider images={selectedRoom.images} heightClass="h-[45vh] md:h-[450px]" roundedClass="rounded-none md:rounded-[40px]" altPrefix={`Detail ${selectedRoom.name} - ${selectedRoom.floorLevel}`} onImageClick={(idx) => setLightboxIndex(idx)} />
+               
                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none rounded-b-[32px] md:rounded-b-[40px]"></div>
+               
                <div className="absolute bottom-5 left-4 right-4 md:bottom-6 z-20 flex flex-nowrap justify-between items-end pointer-events-none overflow-hidden">
                    <div className="flex gap-1.5 overflow-hidden">
                        <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-xl border border-white/20 shrink-0 max-w-fit">
@@ -215,7 +225,7 @@ const UnitDetailPage = () => {
 
                 <div className="space-y-6 mb-8 md:space-y-8">
                   <div className="bg-slate-50 p-5 md:p-8 rounded-[32px] border border-slate-100 shadow-inner">
-                    <h4 className="text-[10px] md:text-xs font-black text-slate-400 flex items-center gap-2 mb-5 md:mb-6 uppercase tracking-[0.2em]"><Clock size={14} className="text-[#D4AF37]"/> Paket Transit</h4>
+                    <h4 className="text-[10px] md:text-xs font-black text-slate-400 flex items-center gap-2 mb-5 md:mb-6 uppercase tracking-[0.2em]"><Clock size={14} className="text-[#D4AF37] md:w-5 md:h-5"/> Paket Harga Transit</h4>
                     <div className="grid grid-cols-2 gap-3 md:gap-4">
                       {selectedRoom.transit.map((p, i) => (
                         <div key={i} onClick={() => { setSelectedPkg(p); setBookingFlow('date'); }} className="bg-white p-4 md:p-5 rounded-2xl md:rounded-3xl border border-slate-200/50 shadow-sm flex flex-col items-center hover:border-[#D4AF37] hover:shadow-md cursor-pointer transition-all active:scale-95">
@@ -227,7 +237,7 @@ const UnitDetailPage = () => {
                   </div>
 
                   <div className="bg-[#D4AF37]/10 p-5 md:p-8 rounded-[32px] border border-[#D4AF37]/20 shadow-sm">
-                    <h4 className="text-[10px] md:text-xs font-black text-[#D4AF37] flex items-center gap-2 mb-5 md:mb-6 uppercase tracking-[0.2em]"><Calendar size={14}/> Paket Fullday</h4>
+                    <h4 className="text-[10px] md:text-xs font-black text-[#D4AF37] flex items-center gap-2 mb-5 md:mb-6 uppercase tracking-[0.2em]"><Calendar size={14} className="md:w-5 md:h-5"/> Paket Harga Fullday</h4>
                     <div className="space-y-3 md:space-y-4">
                       {selectedRoom.fullday.map((p, i) => (
                         <div key={i} onClick={() => { setSelectedPkg(p); setBookingFlow('date'); }} className="flex justify-between items-center bg-white p-4 md:p-5 rounded-2xl md:rounded-3xl border border-[#D4AF37]/10 shadow-sm hover:border-[#D4AF37] hover:shadow-md cursor-pointer transition-all active:scale-95">
@@ -235,6 +245,12 @@ const UnitDetailPage = () => {
                           <p className="text-sm md:text-xl font-black text-slate-900 tracking-tight">{p.price}</p>
                         </div>
                       ))}
+                      <div className="pt-2 md:pt-4 pointer-events-none">
+                         <div className="bg-amber-50 p-3 md:p-4 rounded-xl md:rounded-2xl border border-amber-100 flex items-center justify-center gap-2">
+                            <Clock size={14} className="text-amber-600 md:w-5 md:h-5" />
+                            <p className="text-[10px] md:text-xs text-amber-700 font-black uppercase tracking-tighter">Checkout Fullday jam 12 Siang</p>
+                         </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -248,7 +264,7 @@ const UnitDetailPage = () => {
                   <div className="grid grid-cols-2 gap-y-5 gap-x-4 md:gap-y-6">
                     {selectedRoom.specs.map((spec, i) => (
                       <div key={i} className="flex items-center gap-3 md:gap-4">
-                        <div className="w-9 h-9 md:w-12 h-12 bg-slate-50 rounded-xl md:rounded-2xl flex items-center justify-center text-[#D4AF37] shadow-sm border border-slate-100">
+                        <div className="w-9 h-9 md:w-12 md:h-12 bg-slate-50 rounded-xl md:rounded-2xl flex items-center justify-center text-[#D4AF37] shadow-sm border border-slate-100">
                           {spec.icon}
                         </div>
                         <span className="text-[11px] md:text-xs font-bold text-slate-700 leading-tight tracking-tight uppercase">{spec.text}</span>
@@ -257,7 +273,32 @@ const UnitDetailPage = () => {
                   </div>
                 </div>
 
+                {/* 👇 BLOK CARA ORDER YANG KEMBALI DI MASUKKAN 👇 */}
                 <div className="mb-8 mt-10">
+                   <div className="flex items-center gap-3 mb-6">
+                      <div className="h-[2px] bg-slate-100 flex-1"></div>
+                      <h4 className="text-[11px] md:text-xs font-black text-slate-400 uppercase tracking-[0.3em]">Cara Order Mudah</h4>
+                      <div className="h-[2px] bg-slate-100 flex-1 md:hidden"></div>
+                   </div>
+                   <div className="grid grid-cols-2 gap-4 md:grid-cols-4 mb-8">
+                      <div onClick={() => document.getElementById('modal-scroll-container')?.scrollTo({ top: 0, behavior: 'smooth' })} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
+                         <ShoppingBag className="text-[#D4AF37] mb-2" size={24} />
+                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">1. Pilih Paket</span>
+                      </div>
+                      <div onClick={() => { alert("Silakan pilih salah satu Paket Harga di atas terlebih dahulu."); document.getElementById('modal-scroll-container')?.scrollTo({ top: 0, behavior: 'smooth' }); }} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
+                         <Calendar className="text-[#D4AF37] mb-2" size={24} />
+                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">2. Tentukan Jam</span>
+                      </div>
+                      <div onClick={() => { alert("Silakan selesaikan pemilihan paket dan jadwal di atas terlebih dahulu."); document.getElementById('modal-scroll-container')?.scrollTo({ top: 0, behavior: 'smooth' }); }} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
+                         <Wallet className="text-[#D4AF37] mb-2" size={24} />
+                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">3. DP via QRIS</span>
+                      </div>
+                      <div onClick={() => handleWaClick("chat", selectedRoom.name)} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
+                         <MessageCircle className="text-[#D4AF37] mb-2" size={24} />
+                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">4. Info ke WA</span>
+                      </div>
+                   </div>
+
                    <button onClick={() => handleWaClick("chat", selectedRoom.name)} className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-black py-5 md:py-6 rounded-[24px] flex items-center justify-center gap-3 shadow-lg active:scale-95 transition-all uppercase tracking-widest text-xs md:text-sm block">
                      <MessageCircle size={20} className="md:w-6 md:h-6" /> Hubungi Lewat WhatsApp
                    </button>
@@ -265,19 +306,26 @@ const UnitDetailPage = () => {
               </>
               )}
 
-              {/* FLOW 2 & 3: WAKTU & QRIS */}
               {(bookingFlow === 'date' || bookingFlow === 'time') && (
                 <div className="bg-white rounded-[32px] md:rounded-[40px] shadow-2xl border border-slate-100 p-6 md:p-8 animate-slide-up flex-1 flex flex-col">
-                   <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter mb-2 text-slate-900">Pilih Jadwal</h2>
-                   <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-100 pb-4">Paket: {selectedPkg.label}</p>
+                   <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter mb-2 text-slate-900">Pilih Jadwal Check-in</h2>
+                   <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-6 border-b border-slate-100 pb-4">Paket: {selectedPkg.label} ({selectedPkg.price})</p>
                    
                    <label className="text-[10px] font-black text-[#D4AF37] uppercase tracking-[0.2em] mb-2 block">Pilih Tanggal</label>
                    <input 
-                      type="date" min={new Date().toISOString().split('T')[0]} value={selectedDate}
+                      type="date" 
+                      min={new Date().toISOString().split('T')[0]}
+                      value={selectedDate}
                       onChange={(e) => { setSelectedDate(e.target.value); setBookingFlow('time'); }}
-                      className="w-full bg-slate-50 border border-slate-200 text-slate-800 font-bold p-4 rounded-2xl mb-6 outline-none focus:border-[#D4AF37]"
+                      className="w-full bg-slate-50 border border-slate-200 text-slate-800 font-bold p-4 rounded-2xl mb-6 outline-none focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/20 transition-all"
                    />
-                   {bookingFlow === 'time' && <>{renderTimeSlots()}</>}
+
+                   {bookingFlow === 'time' && (
+                     <>
+                       <label className="text-[10px] font-black text-[#D4AF37] uppercase tracking-[0.2em] mb-2 block">Pilih Waktu Check-in</label>
+                       {renderTimeSlots()}
+                     </>
+                   )}
                 </div>
               )}
 
@@ -285,9 +333,23 @@ const UnitDetailPage = () => {
                 <div className="bg-white rounded-[32px] md:rounded-[40px] shadow-2xl border border-[#D4AF37]/30 p-6 md:p-8 animate-slide-up text-center flex-1 flex flex-col items-center">
                    <div className="bg-slate-900 text-[#D4AF37] text-xs font-black px-4 py-2 rounded-full uppercase tracking-widest mb-4 inline-block shadow-lg">Pembayaran DP</div>
                    <h2 className="text-xl md:text-2xl font-black uppercase tracking-tighter mb-2">Scan QRIS Berikut</h2>
-                   <div className="relative w-48 h-48 md:w-56 md:h-56 bg-slate-100 rounded-[24px] mb-6 shadow-inner p-2 border border-slate-200 mx-auto">
-                      <img src="https://ik.imagekit.io/x06namgbin/QRIS/20260306_110148.jpg" alt="QRIS DP" className="w-full h-full object-cover rounded-[16px]" />
+                   <div className="bg-red-50 text-red-600 border border-red-200 text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-xl mb-6">DP 50K • TELAT 1 JAM HANGUS</div>
+                   
+                   <div className="relative w-48 h-48 md:w-56 md:h-56 bg-slate-100 rounded-[24px] mb-6 shadow-inner p-2 border border-slate-200 mx-auto group">
+                      <img src="https://ik.imagekit.io/x06namgbin/QRIS/20260306_110148.jpg?updatedAt=1772770929378" alt="QRIS DP Apartemen" className="w-full h-full object-cover rounded-[16px]" />
+                      <a href="https://ik.imagekit.io/x06namgbin/QRIS/20260306_110148.jpg?updatedAt=1772770929378" download="QRIS-DP-Sentul" className="absolute inset-0 bg-black/60 rounded-[16px] flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity text-white backdrop-blur-sm cursor-pointer">
+                         <Download size={32} className="mb-2" />
+                         <span className="text-[10px] font-bold uppercase tracking-widest">Simpan Gambar</span>
+                      </a>
                    </div>
+
+                   <div className="w-full bg-slate-50 border border-slate-100 rounded-2xl p-4 text-left mb-8 shadow-sm">
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 border-b border-slate-200 pb-2">Ringkasan Booking</p>
+                      <p className="text-xs font-bold text-slate-700 flex justify-between mb-1"><span>Tgl:</span> <span>{selectedDate}</span></p>
+                      <p className="text-xs font-bold text-slate-700 flex justify-between mb-1"><span>Jam Masuk:</span> <span>{selectedTime}</span></p>
+                      <p className="text-xs font-bold text-slate-700 flex justify-between"><span>Paket:</span> <span>{selectedPkg.label}</span></p>
+                   </div>
+
                    <button onClick={() => handleWaClick("booking", selectedRoom.name)} className="w-full bg-[#25D366] hover:bg-[#20bd5a] text-white font-black py-5 md:py-6 rounded-[24px] flex items-center justify-center gap-3 shadow-2xl shadow-green-200 active:scale-95 transition-all uppercase tracking-widest text-xs md:text-sm mt-auto">
                      <MessageCircle size={20} className="md:w-6 md:h-6" /> Kirim Bukti via WA
                    </button>
@@ -298,12 +360,63 @@ const UnitDetailPage = () => {
         </div>
 
         {lightboxIndex !== null && selectedRoom && (
-          <div className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-slide-up" onClick={() => setLightboxIndex(null)}>
+          <div 
+            className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-slide-up" 
+            onClick={() => setLightboxIndex(null)}
+            onTouchStart={(e) => setLbTouchStart(e.targetTouches[0].clientX)}
+            onTouchEnd={(e) => {
+              if (lbTouchStart === null) return;
+              const touchEnd = e.changedTouches[0].clientX;
+              const diff = lbTouchStart - touchEnd;
+              if (diff > 50) setLightboxIndex((prev) => (prev + 1) % selectedRoom.images.length); 
+              if (diff < -50) setLightboxIndex((prev) => (prev === 0 ? selectedRoom.images.length - 1 : prev - 1)); 
+              setLbTouchStart(null);
+            }}
+          >
+            <button onClick={() => setLightboxIndex(null)} className="absolute top-6 right-6 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all active:scale-90 z-50">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+
+            <button 
+              onClick={(e) => { e.stopPropagation(); setLightboxIndex((prev) => (prev === 0 ? selectedRoom.images.length - 1 : prev - 1)); }} 
+              className="absolute left-4 md:left-10 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all active:scale-90 z-50 hidden md:block"
+            >
+              <ChevronLeft size={24} />
+            </button>
+
             <div className="relative w-full h-full flex flex-col items-center justify-center p-4 md:p-12">
-               <img src={selectedRoom.images[lightboxIndex]} alt="Zoom" className="max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl z-50 relative" onClick={(e) => e.stopPropagation()} />
+               <img 
+                 src={selectedRoom.images[lightboxIndex].includes('imagekit.io') ? `${selectedRoom.images[lightboxIndex].split('?')[0]}?tr=w-1200,f-webp,q-95` : selectedRoom.images[lightboxIndex]} 
+                 alt={`Fullscreen Zoom ${lightboxIndex + 1}`} 
+                 className="max-w-full max-h-[80vh] md:max-h-full object-contain rounded-2xl shadow-2xl transition-all duration-300 z-50 relative" 
+                 onClick={(e) => e.stopPropagation()} 
+                 loading="lazy"
+               />
+               <div className="absolute bottom-10 bg-black/50 backdrop-blur-md text-[#D4AF37] text-xs font-black px-4 py-2 rounded-full border border-white/10 tracking-widest uppercase shadow-lg z-50">
+                 {lightboxIndex + 1} / {selectedRoom.images.length}
+               </div>
             </div>
+
+            <button 
+              onClick={(e) => { e.stopPropagation(); setLightboxIndex((prev) => (prev + 1) % selectedRoom.images.length); }} 
+              className="absolute right-4 md:right-10 bg-white/10 hover:bg-white/20 border border-white/20 backdrop-blur-md text-white p-3 rounded-full transition-all active:scale-90 z-50 hidden md:block"
+            >
+              <ChevronRight size={24} />
+            </button>
           </div>
         )}
+
+        {/* 👇 BLOK CSS YANG KEMBALI DIMASUKKAN 👇 */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          @keyframes slide-up { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+          @keyframes bounce-subtle { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+          .animate-slide-up { animation: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+          .animate-bounce-subtle { animation: bounce-subtle 4s infinite ease-in-out; }
+          .no-scrollbar::-webkit-scrollbar { display: none; }
+          .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+          .snap-mandatory { scroll-snap-type: x mandatory; }
+          .snap-center { scroll-snap-align: center; }
+        `}} />
       </div>
     </>
   );
