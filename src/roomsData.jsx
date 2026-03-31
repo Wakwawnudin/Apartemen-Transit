@@ -89,6 +89,15 @@ export const realUnits = [
       'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%206/IMG-20260308-WA0035.jpg?updatedAt=1773209739888'
     ]
   },
+    {
+    type: 'Studio', floor: 'Lantai 11 Deluxe',
+    images: [
+      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2011%20DELUXE/IMG-20260331-WA0005.jpg?updatedAt=1774958048710',
+      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2011%20DELUXE/IMG-20260331-WA0006.jpg?updatedAt=1774958048695',
+      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2011%20DELUXE/IMG-20260331-WA0007.jpg?updatedAt=1774958048381',
+      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2011%20DELUXE/IMG-20260331-WA0009.jpg?updatedAt=1774958048657'
+    ]
+  },
   {
     type: 'Studio', floor: 'Lantai 08',
     images: [
