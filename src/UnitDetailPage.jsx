@@ -95,14 +95,12 @@ const UnitDetailPage = () => {
       setBookingFlow('details');
       return;
     }
+    // Jika ada history (klik dari web kita), kembali ke halaman sebelumnya
     if (window.history.state && window.history.state.idx > 0) {
       navigate(-1);
     } else {
-      if (selectedRoom) {
-        navigate(`/?filter=${selectedRoom.type}`, { replace: true });
-      } else {
-        navigate('/', { replace: true });
-      }
+      // Jika dari link luar (WA, FB, dll), selalu arahkan ke Beranda dengan filter "Semua"
+      navigate('/', { replace: true });
     }
   };
 
