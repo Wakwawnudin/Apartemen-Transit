@@ -54,7 +54,6 @@ export const baseTemplates = {
     startFrom: '150rb', 
     transit: defaultTransit, 
     fullday: defaultFullday,
-    paket24Jam: default24Jam, // 👈 Injeksi 24 Jam
     specs: [
       { icon: <Bed size={16}/>, text: 'King Size Bed' }, { icon: <Wind size={16}/>, text: 'Full AC (Kamar & Ruang Tamu)' },
       { icon: <Tv size={16}/>, text: 'Smart TV 42" & Netflix' }, { icon: <Building size={16}/>, text: 'Ruang Tamu Terpisah' },
@@ -70,7 +69,6 @@ export const baseTemplates = {
     startFrom: '250rb', 
     transit: specialTransit2BR, 
     fullday: specialFullday2BR,
-    paket24Jam: special24Jam2BR, // 👈 Injeksi 24 Jam 2BR
     specs: [
       { icon: <Bed size={16}/>, text: '1 Queen + 1 Single Bed' }, { icon: <Wind size={16}/>, text: 'Full AC di Setiap Kamar' },
       { icon: <Tv size={16}/>, text: 'Smart TV & Home Theater' }, { icon: <UtensilsCrossed size={16}/>, text: 'Resto 24jam Siap Antar' },
@@ -82,7 +80,6 @@ export const baseTemplates = {
 
 // --- REAL UNIT DATA ---
 export const realUnits = [
-  // 👇 INI UNIT BARU YANG DITAMBAHKAN PALING ATAS
   {
     type: '1BR', floor: 'Lantai 06',
     images: [
@@ -100,8 +97,6 @@ export const realUnits = [
       'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%208../IMG-20260311-WA0010.jpg?updatedAt=1773209812799'
     ]
   },
-  // --- MULAI DATA LAMA DI BAWAH INI ---
-  // --- STUDIO ---
   {
     type: 'Studio', floor: 'Lantai 12',
     images: [
