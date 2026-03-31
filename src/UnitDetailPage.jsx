@@ -328,7 +328,13 @@ const UnitDetailPage = () => {
                     <h4 className="text-[10px] md:text-xs font-black text-slate-400 flex items-center gap-2 mb-5 md:mb-6 uppercase tracking-[0.2em]"><Clock size={14} className="text-[#D4AF37] md:w-5 md:h-5"/> Paket Harga Transit</h4>
                     <div className="grid grid-cols-2 gap-3 md:gap-4">
                       {selectedRoom.transit.map((p, i) => (
-                        <div key={i} onClick={() => { setSelectedPkg(p); setBookingFlow('date'); }} className="bg-white p-4 md:p-5 rounded-2xl md:rounded-3xl border border-slate-200/50 shadow-sm flex flex-col items-center hover:border-[#D4AF37] hover:shadow-md cursor-pointer transition-all active:scale-95">
+                        <div 
+                          key={i} 
+                          onClick={() => { setSelectedPkg(p); setBookingFlow('date'); }} 
+                          className={`bg-white p-4 md:p-5 rounded-2xl md:rounded-3xl border border-slate-200/50 shadow-sm flex flex-col items-center hover:border-[#D4AF37] hover:shadow-md cursor-pointer transition-all active:scale-95 ${
+                            selectedRoom.transit.length % 2 !== 0 && i === selectedRoom.transit.length - 1 ? 'col-span-2' : ''
+                          }`}
+                        >
                           <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase mb-1">{p.label}</p>
                           <p className="text-sm md:text-xl font-black text-slate-800 tracking-tight">{p.price}</p>
                         </div>
@@ -357,28 +363,6 @@ const UnitDetailPage = () => {
 
                     </div>
                   </div>
-
-                  {/* Harga 24 Jam */}
-                  {selectedRoom.paket24Jam && selectedRoom.paket24Jam.length > 0 && (
-                  <div className="bg-emerald-50 p-5 md:p-8 rounded-[32px] border border-emerald-100 shadow-sm">
-                    <h4 className="text-[10px] md:text-xs font-black text-emerald-600 flex items-center gap-2 mb-5 md:mb-6 uppercase tracking-[0.2em]"><Clock size={14} className="md:w-5 md:h-5"/> Paket Harga 24 Jam</h4>
-                    <div className="space-y-3 md:space-y-4">
-                      {selectedRoom.paket24Jam.map((p, i) => (
-                        <div key={i} onClick={() => { setSelectedPkg(p); setBookingFlow('date'); }} className="flex justify-between items-center bg-white p-4 md:p-5 rounded-2xl md:rounded-3xl border border-emerald-100 shadow-sm hover:border-emerald-400 hover:shadow-md cursor-pointer transition-all active:scale-95">
-                          <p className="text-[10px] md:text-xs font-black text-slate-600 uppercase tracking-tight">{p.label}</p>
-                          <p className="text-sm md:text-xl font-black text-slate-900 tracking-tight">{p.price}</p>
-                        </div>
-                      ))}
-                      <div className="pt-2 md:pt-4 pointer-events-none">
-                         <div className="bg-emerald-100/50 p-3 md:p-4 rounded-xl md:rounded-2xl border border-emerald-200 flex items-center justify-center gap-2">
-                            <Clock size={14} className="text-emerald-700 md:w-5 md:h-5 shrink-0" />
-                            <p className="text-[10px] md:text-xs text-emerald-800 font-black uppercase tracking-tighter">Bebas Checkout 24 Jam dari jam masuk</p>
-                         </div>
-                      </div>
-                    </div>
-                  </div>
-                  )}
-
                 </div>
 
                 {/* Spesifikasi Unit */}
