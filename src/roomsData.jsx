@@ -39,7 +39,6 @@ export const baseTemplates = {
     startFrom: '150rb', 
     transit: defaultTransit, 
     fullday: defaultFullday,
-    paket24Jam: default24Jam, // 👈 Injeksi 24 Jam
     specs: [
       { icon: <Bed size={16}/>, text: 'Queen Size Bed' }, { icon: <Wind size={16}/>, text: 'Full AC' },
       { icon: <Tv size={16}/>, text: 'Smart TV (Netflix)' }, { icon: <UtensilsCrossed size={16}/>, text: 'Resto 24jam Siap Antar' },
