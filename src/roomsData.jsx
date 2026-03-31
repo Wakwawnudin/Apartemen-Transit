@@ -8,33 +8,25 @@ import {
 const defaultTransit = [
   { label: '3 Jam', price: 'Rp 150.000' },
   { label: '6 Jam', price: 'Rp 200.000' },
-  { label: '9 Jam', price: 'Rp 250.000' },
   { label: '12 Jam', price: 'Rp 300.000' },
+  { label: '24 Jam (Weekday)', price: 'Rp 400.000' },
+  { label: '24 Jam (Weekend)', price: 'Rp 450.000' },
 ];
 const defaultFullday = [
   { label: 'Weekday (Sen-Kam)', price: 'Rp 300.000' },
   { label: 'Weekend (Jum-Min)', price: 'Rp 350.000' },
 ];
-// 👇 TAMBAHAN BARU: HARGA 24 JAM
-const default24Jam = [
-  { label: '24 Jam (Weekday)', price: 'Rp 400.000' },
-  { label: '24 Jam (Weekend)', price: 'Rp 450.000' },
-];
 
 const specialTransit2BR = [
   { label: '3 Jam', price: 'Rp 250.000' },
   { label: '6 Jam', price: 'Rp 350.000' },
-  { label: '9 Jam', price: 'Rp 400.000' },
   { label: '12 Jam', price: 'Rp 450.000' },
+  { label: '24 Jam (Weekday)', price: 'Rp 1.000.000' },
+  { label: '24 Jam (Weekend)', price: 'Rp 1.100.000' },
 ];
 const specialFullday2BR = [
   { label: 'Weekday (Sen-Kam)', price: 'Rp 700.000' },
   { label: 'Weekend (Jum-Min)', price: 'Rp 750.000' },
-];
-// 👇 TAMBAHAN BARU: HARGA 24 JAM KHUSUS 2BR
-const special24Jam2BR = [
-  { label: '24 Jam (Weekday)', price: 'Rp 1.000.000' },
-  { label: '24 Jam (Weekend)', price: 'Rp 1.100.000' },
 ];
 
 // --- BASE TEMPLATES ---
@@ -393,7 +385,6 @@ export const roomsData = realUnits.map((unit, index) => {
   // ⚙️ LOGIKA PINTAR: HARGA KHUSUS DELUXE (+ Rp 50.000)
   let finalTransit = template.transit;
   let finalFullday = template.fullday;
-  let final24Jam = template.paket24Jam; // 👈 Menampung data base 24 Jam
   let finalStartFrom = template.startFrom;
 
   // Jika nama lantainya mengandung kata "Deluxe"
@@ -419,14 +410,12 @@ export const roomsData = realUnits.map((unit, index) => {
     // Terapkan penambahan harga ke array baru agar template asli tidak rusak
     finalTransit = template.transit.map(item => ({ ...item, price: add50k(item.price) }));
     finalFullday = template.fullday.map(item => ({ ...item, price: add50k(item.price) }));
-    final24Jam = template.paket24Jam ? template.paket24Jam.map(item => ({ ...item, price: add50k(item.price) })) : []; // 👈 Ikut Nambah 50k
     finalStartFrom = add50kStart(template.startFrom);
   }
 
-  // 👇 OVERRIDE KHUSUS 2 BEDROOM DELUXE (9 Jam = 500k, 12 Jam = 600k)
+  // 👇 OVERRIDE KHUSUS 2 BEDROOM DELUXE (12 Jam = 600k)
   if (unit.type === '2BR' && unit.floor.toLowerCase().includes('deluxe')) {
     finalTransit = finalTransit.map(item => {
-      if (item.label === '9 Jam') return { ...item, price: 'Rp 500.000' };
       if (item.label === '12 Jam') return { ...item, price: 'Rp 600.000' };
       return item;
     });
@@ -443,7 +432,6 @@ export const roomsData = realUnits.map((unit, index) => {
     // 👇 Timpa harga asli dengan harga hasil hitungan di atas
     startFrom: finalStartFrom,
     transit: finalTransit,
-    fullday: finalFullday,
-    paket24Jam: final24Jam // 👈 Kirim array terbaru ini ke UI
+    fullday: finalFullday
   };
 });
