@@ -196,7 +196,13 @@ const HomePage = () => {
     window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
-  const filteredRooms = activeFilter === 'Semua' ? roomsData : roomsData.filter(r => r.type === activeFilter);
+  // ⚙️ Logika Filter Diperbarui: Bisa mendeteksi kategori "Deluxe" dari floorLevel
+  const filteredRooms = activeFilter === 'Semua' 
+    ? roomsData 
+    : activeFilter === 'Deluxe'
+      ? roomsData.filter(r => r.floorLevel && r.floorLevel.toLowerCase().includes('deluxe'))
+      : roomsData.filter(r => r.type === activeFilter);
+      
   const hasMore = (page * itemsPerPage) < filteredRooms.length;
   const displayedRooms = filteredRooms.slice(0, page * itemsPerPage);
 
@@ -315,7 +321,7 @@ const HomePage = () => {
             <p className="hidden md:block text-slate-500 font-medium">Pilih unit premium yang sesuai dengan kebutuhan Anda.</p>
           </div>
           <div className="flex gap-2.5 overflow-x-auto no-scrollbar pb-2 md:pb-0 w-full md:w-auto">
-            {['Semua', 'Studio', '1BR', '2BR'].map(f => (
+            {['Semua', 'Studio', '1BR', '2BR', 'Deluxe'].map(f => (
               <button 
                 key={f} 
                 onClick={() => handleFilterChange(f)} 
