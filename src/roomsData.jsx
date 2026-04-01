@@ -424,15 +424,6 @@ export const roomsData = realUnits.map((unit, index) => {
     });
   }
 
-  // 👇 OVERRIDE KHUSUS STUDIO & 1 BEDROOM DELUXE (3 Jam = 150k normal)
-  if ((unit.type === 'Studio' || unit.type === '1BR') && unit.floor.toLowerCase().includes('deluxe')) {
-    finalTransit = finalTransit.map(item => {
-      if (item.label === '3 Jam') return { ...item, price: 'Rp 150.000' }; 
-      return item;
-    });
-    finalStartFrom = '150rb'; 
-  }
-
   return {
     ...template,
     id: uniqueId,
