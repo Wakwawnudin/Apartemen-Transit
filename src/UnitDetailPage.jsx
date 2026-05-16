@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { 
   Clock, Calendar, Bed, Maximize, ChevronLeft, ChevronRight, 
-  MessageCircle, Download, ShoppingBag, Wallet
+  MessageCircle, Download, ShoppingBag, Wallet, Home
 } from 'lucide-react';
 import { roomsData } from './roomsData';
 import SEOStructuredData from './SEOStructuredData';
@@ -95,13 +95,8 @@ const UnitDetailPage = () => {
       setBookingFlow('details');
       return;
     }
-    // Jika ada history (klik dari web kita), kembali ke halaman sebelumnya
-    if (window.history.state && window.history.state.idx > 0) {
-      navigate(-1);
-    } else {
-      // Jika dari link luar (WA, FB, dll), selalu arahkan ke Beranda dengan filter "Semua"
-      navigate('/', { replace: true });
-    }
+    // Langsung arahkan ke Beranda
+    navigate('/', { replace: true });
   };
 
   const onTouchStart = (e) => {
@@ -246,7 +241,7 @@ const UnitDetailPage = () => {
                    onClick={handleBack} 
                    className="flex items-center gap-1.5 text-slate-800 font-black text-[11px] md:text-sm uppercase tracking-widest bg-white/90 backdrop-blur-md md:bg-white w-10 h-10 md:w-auto md:h-auto justify-center md:px-6 md:py-3 rounded-full md:rounded-2xl active:scale-95 transition-all shadow-md border border-slate-200 hover:bg-slate-50 hover:border-[#D4AF37]/40"
                  >
-                   <ChevronLeft size={20} className="md:w-5 md:h-5 text-[#D4AF37]" /> <span className="hidden md:inline">Kembali</span>
+                   <Home size={18} className="md:w-5 md:h-5 text-[#D4AF37]" /> <span className="hidden md:inline">Beranda</span>
                  </button>
                  
                  {/* LOGO BRAND MELAYANG (DISEMBUNYIKAN DI MOBILE -> hidden md:flex) */}
