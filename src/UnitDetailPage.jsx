@@ -450,11 +450,11 @@ const UnitDetailPage = () => {
                       </div>
                       <div onClick={() => { alert("Silakan selesaikan pemilihan paket dan jadwal di atas terlebih dahulu."); document.getElementById('modal-scroll-container')?.scrollTo({ top: 0, behavior: 'smooth' }); }} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
                          <Wallet className="text-[#D4AF37] mb-2" size={24} />
-                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">3. DP via QRIS</span>
+                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">3. Chat Whastapp</span>
                       </div>
                       <div onClick={() => handleWaClick("chat", selectedRoom.name)} className="bg-slate-800 p-4 rounded-2xl border border-slate-700 flex flex-col items-center justify-center cursor-pointer hover:bg-slate-700 active:scale-95 transition-all">
                          <MessageCircle className="text-[#D4AF37] mb-2" size={24} />
-                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">4. Info ke WA</span>
+                         <span className="text-[10px] font-bold text-slate-300 uppercase text-center">4. Bayar di tempat</span>
                       </div>
                    </div>
 
