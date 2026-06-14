@@ -193,16 +193,6 @@ export const realUnits = [
     ]
   },
   {
-    type: 'Studio', floor: 'Lantai 16',
-    images: [
-      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2016/20260207_214320.jpg?updatedAt=1770485568667&tr=w-800,q-80',
-      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2016/20260207_214310.jpg?updatedAt=1770485568572&tr=w-800,q-80',
-      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2016/20260207_214340.jpg?updatedAt=1770485568084&tr=w-800,q-80',
-      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2016/20260207_214330.jpg?updatedAt=1770485568115&tr=w-800,q-80',
-      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2016/20260207_214352.jpg?updatedAt=1770485568137&tr=w-800,q-80'
-    ]
-  },
-  {
     type: 'Studio', floor: 'Lantai 15', 
     images: [
       'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2015/20260207_213517.jpg?updatedAt=1770485516707&tr=w-800,q-80',
@@ -218,14 +208,6 @@ export const realUnits = [
       'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%2016./20260207_214633.jpg?updatedAt=1770484357117&tr=w-800,q-80',
       'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%2016./20260207_214644.jpg?updatedAt=1770484357077&tr=w-800,q-80',
       'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%2016./20260207_214653.jpg?updatedAt=1770484357159&tr=w-800,q-80'
-    ]
-  },
-  {
-    type: '1BR', floor: 'Lantai 10', 
-    images: [
-      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%2010..../20260207_221705.jpg?updatedAt=1770484226369&tr=w-800,q-80',
-      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%2010..../20260207_221655.jpg?updatedAt=1770484225920&tr=w-800,q-80',
-      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%2010..../20260207_221716.jpg?updatedAt=1770484225952&tr=w-800,q-80'
     ]
   },
   {
@@ -275,14 +257,6 @@ export const realUnits = [
       'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%2010/20260207_214506.jpg?updatedAt=1770483870805&tr=w-800,q-80',
       'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%2010/20260207_214517.jpg?updatedAt=1770483868606&tr=w-800,q-80',
       'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%2010/20260207_214527.jpg?updatedAt=1770483872672&tr=w-800,q-80'
-    ]
-  },
-  {
-    type: '1BR', floor: 'Lantai 05',
-    images: [
-      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%205/20260207_214812.jpg?updatedAt=1770483708565&tr=w-800,q-80',
-      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%205/20260207_214825.jpg?updatedAt=1770483707875&tr=w-800,q-80',
-      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%205/20260207_214758.jpg?updatedAt=1770483707887&tr=w-800,q-80'
     ]
   },
   {
