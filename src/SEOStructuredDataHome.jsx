@@ -2,7 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 const SEOStructuredDataHome = () => {
-  // 1. Schema untuk Identitas Bisnis (Lodging)
+  // Schema untuk Identitas Bisnis (Lodging)
   const lodgingSchema = {
     "@context": "https://schema.org",
     "@type": "LodgingBusiness",
@@ -37,24 +37,11 @@ const SEOStructuredDataHome = () => {
     ]
   };
 
-  // 2. 👇 INJEKSI BARU: Schema untuk Site Name Google
-  const websiteSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Apartemen Sentul Tower",
-    "url": "https://apartemensentultower.com/"
-  };
-
   return (
     <Helmet>
       {/* Script untuk Bisnis */}
       <script type="application/ld+json">
         {JSON.stringify(lodgingSchema)}
-      </script>
-
-      {/* Script untuk Site Name */}
-      <script type="application/ld+json">
-        {JSON.stringify(websiteSchema)}
       </script>
 
       {/* 👇 Injeksi Meta Tag untuk memperkuat Brand di Google & Medsos */}
