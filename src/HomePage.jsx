@@ -270,7 +270,7 @@ const HomePage = () => {
       <nav className={`fixed top-0 left-0 right-0 z-50 px-6 flex justify-between items-center transition-all duration-300 md:px-12 bg-gradient-to-b from-black/80 to-transparent ${scrolled ? 'py-4 md:py-3' : 'py-4 md:py-6'}`}>
         <div className="flex items-center gap-3">
           <img 
-            src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
+            src="/favicon.svg" 
             alt="Logo Apartemen Sentul Tower - Sewa Harian" 
             className="h-14 w-auto object-contain drop-shadow-md" 
           />
@@ -356,7 +356,6 @@ const HomePage = () => {
                   className="block bg-white rounded-[32px] md:rounded-[40px] overflow-hidden shadow-sm border border-slate-100 active:scale-[0.98] transition-all duration-500 cursor-pointer group md:hover:shadow-2xl md:hover:-translate-y-2 animate-slide-up relative flex flex-col"
                 >
                   <div className="relative">
-                    {/* 👇 FIX: Desain Edge-to-Edge ala Bali Rentals 👇 */}
                     <ImageSlider images={room.images} heightClass="h-80 md:h-96" roundedClass="rounded-t-[32px] md:rounded-t-[40px]" altPrefix={room.altPrefix} />
                     
                     <div className="absolute top-5 left-5 md:top-6 md:left-6 flex gap-2 pointer-events-none z-20">
@@ -369,10 +368,8 @@ const HomePage = () => {
                       </span>
                     </div>
 
-                    {/* Gradient Hitam untuk Memperjelas Lencana Fasilitas */}
                     <div className="absolute bottom-0 left-0 right-0 h-24 md:h-32 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none"></div>
 
-                    {/* 👇 FIX: Lencana Fasilitas Melayang (Tahan Bug Memelar/Rata Kiri) 👇 */}
                     <div className="absolute bottom-5 left-4 right-4 md:bottom-6 z-20 flex flex-nowrap justify-start items-center gap-1.5 text-white pointer-events-none overflow-hidden">
                        <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-xl border border-white/20 shrink-0 max-w-fit">
                           <Maximize size={12} className="text-[#D4AF37]" />
@@ -487,7 +484,6 @@ const HomePage = () => {
           </div>
         </div>
 
-        {/* Garis Footer Bawah */}
         <div className="relative z-10 flex items-center justify-center gap-6 pt-6 mt-10 border-t border-slate-800 md:justify-between md:pt-8 md:mt-12">
           <div className="flex items-center gap-6">
             <a href={mapsLink} target="_blank" rel="noopener noreferrer" aria-label="Buka Google Maps" className="bg-white p-2 rounded-xl hover:scale-110 active:scale-95 transition-all shadow-xl flex items-center justify-center">
@@ -504,7 +500,6 @@ const HomePage = () => {
           <div className="hidden md:flex items-center gap-4 text-[10px] text-slate-500 font-medium">
              <p>Melayani sewa apartemen harian Sentul City.</p>
              <div className="h-3 w-[1px] bg-slate-700"></div>
-             {/* ⚙️ TOMBOL RAHASIA ADMIN PANEL */}
              <button onClick={() => navigate('/admin')} aria-label="Admin Panel" className="hover:text-[#D4AF37] transition-colors"><Lock size={12}/></button>
           </div>
         </div>
@@ -512,7 +507,6 @@ const HomePage = () => {
              <p className="text-[9px] text-slate-500 font-medium leading-relaxed text-center mb-3">
                Melayani sewa apartemen harian Sentul City, transit 3 jam, 6 jam. Solusi penginapan murah alternatif hotel di Bogor.
              </p>
-             {/* ⚙️ TOMBOL RAHASIA ADMIN PANEL (MOBILE) */}
              <button onClick={() => navigate('/admin')} aria-label="Admin Panel" className="text-slate-700 hover:text-[#D4AF37] transition-colors"><Lock size={12}/></button>
         </div>
       </footer>
