@@ -26,7 +26,6 @@ export const saveBookings = (bookings) => {
   localStorage.setItem('sentul_bookings', JSON.stringify(bookings));
 };
 
-// Logika Pembulatan Jeda Cleaning Berdasarkan Skenario Bos
 export const calculateBufferEnd = (timestamp) => {
   const date = new Date(timestamp);
   const hours = date.getHours();
@@ -60,7 +59,7 @@ export const isSlotAvailable = (roomId, proposedIn, proposedOut) => {
   return true;
 };
 
-// --- HALAMAN DETAIL KAMAR (DIPERBARUI DENGAN DESAIN EDGE-TO-EDGE & FIX LIGHTBOX) ---
+// --- HALAMAN DETAIL KAMAR ---
 const UnitDetailPage = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
@@ -72,11 +71,9 @@ const UnitDetailPage = () => {
   const [touchStart, setTouchStart] = useState(null);
   const [pullY, setPullY] = useState(0);
 
-  // ⚙️ STATE FULLSCREEN IMAGE (LIGHTBOX)
   const [lightboxIndex, setLightboxIndex] = useState(null);
   const [lbTouchStart, setLbTouchStart] = useState(null);
 
-  // ⚙️ STATE BOOKING SYSTEM 
   const [bookingFlow, setBookingFlow] = useState('details'); 
   const [selectedPkg, setSelectedPkg] = useState(null);
   const [selectedDate, setSelectedDate] = useState('');
@@ -102,7 +99,6 @@ const UnitDetailPage = () => {
       setBookingFlow('details');
       return;
     }
-    // Langsung arahkan ke Beranda
     navigate('/', { replace: true });
   };
 
@@ -147,7 +143,6 @@ const UnitDetailPage = () => {
     
     let durationHours = 12; 
     
-    // 👇 FIX: Logika jam otomatis adaptasi jika paket 24 Jam 👇
     if (selectedPkg.label.includes('24 Jam')) {
        durationHours = 24;
     } else if (selectedPkg.label.includes('Jam')) {
@@ -158,7 +153,6 @@ const UnitDetailPage = () => {
     for(let h = 0; h < 24; h++) {
        for(let m = 0; m < 60; m+=30) {
           
-          // 👇 FIX: Paket Fullday dibatasi minimal jam 20:00, namun jika label mengandung "24 Jam" maka DIBEBASKAN 👇
           const isFulldayPackage = selectedPkg.label.includes('Fullday') || (!selectedPkg.label.includes('24 Jam') && (selectedPkg.label.includes('Weekday') || selectedPkg.label.includes('Weekend')));
           
           if (isFulldayPackage && h < 20) {
@@ -235,12 +229,11 @@ const UnitDetailPage = () => {
           onTouchEnd={onTouchEnd}
         >
           
-          {/* EFEK SHAPE BACKGROUND (Hanya Desktop yang butuh ini) */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-[#D4AF37]/15 to-transparent rounded-full blur-3xl pointer-events-none translate-x-1/3 -translate-y-1/4 hidden md:block"></div>
 
           <div className="md:grid md:grid-cols-2 md:gap-12 md:items-start">
             
-            {/* KOLOM KIRI (GAMBAR EDGE TO EDGE HORIZONTAL & VERTIKAL DI MOBILE) */}
+            {/* KOLOM KIRI */}
             <div className="relative mb-0 md:sticky md:top-0 group md:rounded-[40px] overflow-hidden md:shadow-sm md:border md:border-slate-100">
 
                <div className="absolute top-4 left-0 right-0 flex items-center justify-between px-4 z-30 md:static md:mb-6 md:px-0 md:bg-transparent">
@@ -251,19 +244,18 @@ const UnitDetailPage = () => {
                    <Home size={18} className="md:w-5 md:h-5 text-[#D4AF37]" /> <span className="hidden md:inline">Beranda</span>
                  </button>
                  
-                 {/* LOGO BRAND MELAYANG (DISEMBUNYIKAN DI MOBILE -> hidden md:flex) */}
                  <div 
                    onClick={() => { navigate('/', { replace: true }); }}
                    className="hidden md:flex items-center gap-2 md:gap-3 bg-white/90 backdrop-blur-md md:bg-white px-3 py-1.5 md:px-4 md:py-2 rounded-full md:rounded-2xl border border-slate-200 shadow-md cursor-pointer active:scale-95 transition-all hover:border-[#D4AF37]/40"
                  >
                    <img 
-                     src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
+                     src="/favicon.svg" 
                      alt="Logo Brand Sentul Tower" 
                      className="h-7 w-auto md:h-9 object-contain drop-shadow-sm" 
                    />
                    <div className="flex flex-col justify-center text-left">
                      <span className="font-black text-[8px] md:text-[10px] tracking-[0.2em] leading-tight uppercase text-slate-400">Apartemen</span>
-                     <span className="font-black text-[10px] md:text-xs text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-sm">Sentul Tower</span>
+                     <span className="font-black text-[10px] md:text-xs text-[#D4AF37] tracking-widest leading-tight uppercase -mt-0.5 drop-shadow-md">Sentul Tower</span>
                    </div>
                  </div>
                </div>
@@ -276,10 +268,8 @@ const UnitDetailPage = () => {
                  onImageClick={(idx) => setLightboxIndex(idx)} 
                />
 
-               {/* GRADIENT SHADOW BAWAH GAMBAR */}
                <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black/80 to-transparent z-10 pointer-events-none rounded-b-[32px] md:rounded-b-[40px]"></div>
 
-               {/* LENCANA FASILITAS MELAYANG */}
                <div className="absolute bottom-5 left-4 right-4 md:bottom-6 z-20 flex flex-nowrap justify-between items-end pointer-events-none overflow-hidden">
                    <div className="flex gap-1.5 overflow-hidden">
                        <div className="flex items-center gap-1 bg-black/50 backdrop-blur-md px-2 py-1.5 rounded-xl border border-white/20 shrink-0 max-w-fit">
@@ -297,16 +287,15 @@ const UnitDetailPage = () => {
                </div>
             </div>
             
-            {/* KOLOM KANAN (KONTEN) */}
+            {/* KOLOM KANAN */}
             <div className="flex flex-col px-6 md:px-0 md:pb-8">
               
-              {/* Sabuk Logo Khusus Mobile Tepat di Bawah Gambar Edge-to-Edge */}
               <div 
                 onClick={() => { navigate('/', { replace: true }); }}
                 className="md:hidden -mx-6 mb-6 bg-slate-50 border-b border-slate-200 py-3.5 flex items-center justify-center gap-3 cursor-pointer shadow-sm"
               >
                  <img 
-                   src="https://ik.imagekit.io/x06namgbin/Sentul%202%20bedroom/1770491932595.png" 
+                   src="/favicon.svg" 
                    alt="Logo Brand Sentul Tower" 
                    className="h-8 w-auto object-contain drop-shadow-sm" 
                  />
@@ -319,11 +308,10 @@ const UnitDetailPage = () => {
               {/* FLOW 1: DETAIL KAMAR */}
               {bookingFlow === 'details' && (
               <>
-                <h1 className="text-2xl md:text-4xl lg:text-5xl font-black text-slate-900 uppercase tracking-tighter mb-2 tracking-tight">{selectedRoom.name}</h1>
+                <h1 className="text-2xl md:text-4xl lg:text-5xl font-black text-slate-900 uppercase tracking-tight mb-2">{selectedRoom.name}</h1>
                 <p className="text-slate-500 text-sm md:text-base mb-8 leading-relaxed font-medium md:max-w-md">{selectedRoom.description}</p>
 
                 <div className="space-y-6 mb-8 md:space-y-8">
-                  {/* Harga Transit */}
                   <div className="bg-slate-50 p-5 md:p-8 rounded-[32px] border border-slate-100 shadow-inner">
                     <h4 className="text-[10px] md:text-xs font-black text-slate-400 flex items-center gap-2 mb-5 md:mb-6 uppercase tracking-[0.2em]"><Clock size={14} className="text-[#D4AF37] md:w-5 md:h-5"/> Paket Harga Transit</h4>
                     <div className="grid grid-cols-2 gap-3 md:gap-4">
@@ -342,7 +330,6 @@ const UnitDetailPage = () => {
                     </div>
                   </div>
 
-                  {/* Harga Fullday */}
                   <div className="bg-[#D4AF37]/10 p-5 md:p-8 rounded-[32px] border border-[#D4AF37]/20 shadow-sm">
                     <h4 className="text-[10px] md:text-xs font-black text-[#D4AF37] flex items-center gap-2 mb-5 md:mb-6 uppercase tracking-[0.2em]"><Calendar size={14} className="md:w-5 md:h-5"/> Paket Harga Fullday</h4>
                     <div className="space-y-3 md:space-y-4">
@@ -353,7 +340,6 @@ const UnitDetailPage = () => {
                         </div>
                       ))}
                       
-                      {/* 👇 INI BAGIAN YANG DIPERJELAS KONTEKSNYA 👇 */}
                       <div className="pt-2 md:pt-4 pointer-events-none">
                          <div className="bg-amber-50 p-3 md:p-4 rounded-xl md:rounded-2xl border border-amber-100 flex items-center justify-center gap-2 text-center">
                             <Clock size={14} className="text-amber-600 md:w-5 md:h-5 shrink-0" />
@@ -365,7 +351,6 @@ const UnitDetailPage = () => {
                   </div>
                 </div>
 
-                {/* Spesifikasi Unit */}
                 <div className="mb-10 px-1 md:px-0">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="h-[2px] bg-slate-100 flex-1"></div>
@@ -438,7 +423,7 @@ const UnitDetailPage = () => {
                 </div>
               )}
 
-              {/* TATA CARA CHECK-IN / ORDER MUDAH (HANYA TAMPIL DI DETAIL) */}
+              {/* TATA CARA ORDER */}
               {bookingFlow === 'details' && (
                 <div className="mb-8 mt-10">
                    <div className="flex items-center gap-3 mb-6">
@@ -474,7 +459,7 @@ const UnitDetailPage = () => {
           </div>
         </div>
 
-        {/* LIGHTBOX UNTUK ZOOM GAMBAR */}
+        {/* LIGHTBOX ZOOM GAMBAR */}
         {lightboxIndex !== null && selectedRoom && (
           <div 
             className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-xl flex items-center justify-center animate-slide-up" 
