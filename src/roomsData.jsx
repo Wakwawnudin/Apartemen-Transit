@@ -83,12 +83,12 @@ export const realUnits = [
   {
     type: '1BR', floor: 'Lantai 03 No 15',
     images: [
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3234.HEIC',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3226.HEIC',
       'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3224.HEIC',
       'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3218.HEIC',
       'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3221.HEIC',
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3234.HEIC',
       'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3235.HEIC',
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3226.HEIC',
       'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3223.HEIC',
     ]
   },
