@@ -336,4 +336,121 @@ export const realUnits = [
     type: '1BR', floor: 'Lantai 10', 
     images: [
       'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%2010/20260207_214455.jpg?updatedAt=1770483868598&tr=w-800,q-80',
-      'h
+      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%2010/20260207_214506.jpg?updatedAt=1770483870805&tr=w-800,q-80',
+      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%2010/20260207_214517.jpg?updatedAt=1770483868606&tr=w-800,q-80',
+      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%2010/20260207_214527.jpg?updatedAt=1770483872672&tr=w-800,q-80'
+    ]
+  },
+  {
+    type: '1BR', floor: 'Lantai 05',
+    images: [
+      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%205/20260207_214812.jpg?updatedAt=1770483708565&tr=w-800,q-80',
+      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%205/20260207_214825.jpg?updatedAt=1770483707875&tr=w-800,q-80',
+      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%205/20260207_214758.jpg?updatedAt=1770483707887&tr=w-800,q-80'
+    ]
+  },
+  {
+    type: '1BR', floor: 'Lantai 03',
+    images: [
+      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%203/20260207_221146.jpg?updatedAt=1770483439986&tr=w-800,q-80',
+      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%203/20260207_221117.jpg?updatedAt=1770483439884&tr=w-800,q-80',
+      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%203/20260207_221127.jpg?updatedAt=1770483439891&tr=w-800,q-80',
+      'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%203/20260207_221136.jpg?updatedAt=1770483439781&tr=w-800,q-80'
+    ]
+  },
+
+  // --- 2 BEDROOM ---
+  {
+    type: '2BR', floor: 'Lantai 11',
+    images: [
+      'https://ik.imagekit.io/x06namgbin/2%20BEDROOM%20LANTAI%2011/20260207_220039.jpg?updatedAt=1770484583428&tr=w-800,q-80',
+      'https://ik.imagekit.io/x06namgbin/2%20BEDROOM%20LANTAI%2011/20260207_220049.jpg?updatedAt=1770484583352&tr=w-800,q-80',
+      'https://ik.imagekit.io/x06namgbin/2%20BEDROOM%20LANTAI%2011/20260207_220059.jpg?updatedAt=1770484583340&tr=w-800,q-80',
+      'https://ik.imagekit.io/x06namgbin/2%20BEDROOM%20LANTAI%2011/20260207_220018.jpg?updatedAt=1770484582827&tr=w-800,q-80',
+      'https://ik.imagekit.io/x06namgbin/2%20BEDROOM%20LANTAI%2011/20260207_220029.jpg?updatedAt=1770484582846&tr=w-800,q-80'
+    ]
+  },
+  {
+    type: '2BR', floor: 'Deluxe',
+    images: [
+      'https://ik.imagekit.io/x06namgbin/2%20BEDROOM%20DELUXE/20260207_213310.jpg?updatedAt=1770484473278&tr=w-800,q-80',
+      'https://ik.imagekit.io/x06namgbin/2%20BEDROOM%20DELUXE/20260207_213255.jpg?updatedAt=1770484473060&tr=w-800,q-80',
+      'https://ik.imagekit.io/x06namgbin/2%20BEDROOM%20DELUXE/20260207_213334.jpg?updatedAt=1770484473214&tr=w-800,q-80',
+      'https://ik.imagekit.io/x06namgbin/2%20BEDROOM%20DELUXE/20260207_213321.jpg?updatedAt=1770484473185&tr=w-800,q-80',
+      'https://ik.imagekit.io/x06namgbin/2%20BEDROOM%20DELUXE/20260207_213345.jpg?updatedAt=1770484472834&tr=w-800,q-80'
+    ]
+  },
+  // 👇 INI DIA UNIT BARU BOS YANG BARU DITAMBAHKAN
+  {
+    type: '2BR', floor: 'Deluxe',
+    images: [
+      'https://ik.imagekit.io/x06namgbin/2%20Bedroom%20Deluxe../IMG-20260225-WA0019(1).jpg?updatedAt=1772010186340',
+      'https://ik.imagekit.io/x06namgbin/2%20Bedroom%20Deluxe../IMG-20260225-WA0017.jpg?updatedAt=1772010186259',
+      'https://ik.imagekit.io/x06namgbin/2%20Bedroom%20Deluxe../IMG-20260225-WA0020.jpg?updatedAt=1772010186148',
+      'https://ik.imagekit.io/x06namgbin/2%20Bedroom%20Deluxe../IMG-20260225-WA0018.jpg?updatedAt=1772010185118',
+      'https://ik.imagekit.io/x06namgbin/2%20Bedroom%20Deluxe../IMG-20260225-WA0021.jpg?updatedAt=1772010186301',
+      'https://ik.imagekit.io/x06namgbin/2%20Bedroom%20Deluxe../IMG-20260225-WA0016.jpg?updatedAt=1772010186257'
+    ]
+  }
+];
+
+// --- GENERATED FINAL DATA ---
+export const roomsData = realUnits.map((unit, index) => {
+  const template = baseTemplates[unit.type];
+  const uniqueId = index + 1;
+  const baseSlug = `${template.baseName.toLowerCase().replace(/\s+/g, '-')}-${unit.floor.toLowerCase().replace(/[\s.]+/g, '-')}`;
+  
+  // ⚙️ LOGIKA PINTAR: HARGA KHUSUS DELUXE (+ Rp 50.000)
+  let finalTransit = template.transit;
+  let finalFullday = template.fullday;
+  let finalStartFrom = template.startFrom;
+
+  // Jika nama lantainya mengandung kata "Deluxe"
+  if (unit.floor.toLowerCase().includes('deluxe')) {
+    
+    // Fungsi nambah 50.000 untuk format "Rp 150.000"
+    const add50k = (priceStr) => {
+      const numStr = priceStr.replace(/\D/g, ''); // Ambil angkanya saja (150000)
+      if (!numStr) return priceStr;
+      const newNum = parseInt(numStr, 10) + 50000;
+      // Kembalikan ke format "Rp 200.000"
+      return 'Rp ' + newNum.toLocaleString('id-ID').replace(/,/g, '.'); 
+    };
+
+    // Fungsi nambah 50 untuk format "150rb"
+    const add50kStart = (startStr) => {
+      const numStr = startStr.replace(/\D/g, ''); // Ambil angkanya saja (150)
+      if (!numStr) return startStr;
+      const newNum = parseInt(numStr, 10) + 50;
+      return newNum + 'rb';
+    };
+
+    // Terapkan penambahan harga ke array baru agar template asli tidak rusak
+    finalTransit = template.transit.map(item => ({ ...item, price: add50k(item.price) }));
+    finalFullday = template.fullday.map(item => ({ ...item, price: add50k(item.price) }));
+    finalStartFrom = add50kStart(template.startFrom);
+  }
+
+  // 👇 OVERRIDE KHUSUS 2 BEDROOM DELUXE (9 Jam = 500k, 12 Jam = 600k)
+  if (unit.type === '2BR' && unit.floor.toLowerCase().includes('deluxe')) {
+    finalTransit = finalTransit.map(item => {
+      if (item.label === '9 Jam') return { ...item, price: 'Rp 500.000' };
+      if (item.label === '12 Jam') return { ...item, price: 'Rp 600.000' };
+      return item;
+    });
+  }
+
+  return {
+    ...template,
+    id: uniqueId,
+    name: `${template.baseName} - ${unit.floor.toUpperCase()}`, 
+    floorLevel: unit.floor,
+    images: unit.images,
+    altPrefix: `Sewa Apartemen ${template.baseName} ${unit.floor} Sentul Tower - View Gunung & City`,
+    slug: `${baseSlug}-${uniqueId}`,
+    // 👇 Timpa harga asli dengan harga hasil hitungan di atas
+    startFrom: finalStartFrom,
+    transit: finalTransit,
+    fullday: finalFullday
+  };
+});
