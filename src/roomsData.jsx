@@ -79,7 +79,9 @@ export const baseTemplates = {
 // --- REAL UNIT DATA ---
 export const realUnits = [
   {
-    type: '1BR', floor: 'A06-18', // 1Bedroom Tower A Lantai 06 Unit 18
+    type: '1BR', 
+    floor: 'Lantai 06',        // Dikembalikan seperti aslinya agar logic lama tidak crash
+    unitCode: 'A06-18',        // Properti baru untuk kode detail
     images: [
       'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%206/IMG-20260308-WA0033.jpg?updatedAt=1773209739864',
       'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%206/IMG-20260308-WA0036.jpg?updatedAt=1773209739891',
@@ -88,7 +90,9 @@ export const realUnits = [
     ]
   },
   {
-    type: 'Studio', floor: 'A11-72 Deluxe', // Studio Tower A Lantai 11 Unit 72 Deluxe
+    type: 'Studio', 
+    floor: 'Lantai 11 Deluxe', // Dikembalikan seperti aslinya
+    unitCode: 'A11-72 Deluxe', // Properti baru untuk kode detail
     images: [
       'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2011%20DELUXE/IMG-20260331-WA0006.jpg?updatedAt=1774958048695',
       'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2011%20DELUXE/IMG-20260331-WA0007.jpg?updatedAt=1774958048381',
@@ -97,7 +101,9 @@ export const realUnits = [
     ]
   },
   {
-    type: 'Studio', floor: 'B05-58 Deluxe', // Studio Tower B Lantai 05 Unit 58 Deluxe
+    type: 'Studio', 
+    floor: 'Lantai 05 Deluxe', // Dikembalikan seperti aslinya (ditambah deluxe sesuai revisi pertama)
+    unitCode: 'B05-58 Deluxe', // Properti baru untuk kode detail
     images: [
       'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%205/20260207_205748.jpg?updatedAt=1770484692778&tr=w-800,q-80',
       'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%205/20260207_205822.jpg?updatedAt=1770484693527&tr=w-800,q-80',
