@@ -175,8 +175,9 @@ const HomePage = () => {
            <ImageSlider images={heroImages} heightClass="h-full" roundedClass="rounded-none" altPrefix="Fasilitas & View Apartemen Sentul Tower" priority={true} />
         </div>
 
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent md:from-black/60 md:via-black/30 md:to-transparent flex flex-col justify-end p-6 pb-20 md:items-center md:justify-center md:text-center md:pb-0 pointer-events-none z-20">
-          <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md border border-white/10 text-[#D4AF37] text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-5 md:py-2.5 rounded-full w-fit mb-3 md:mb-6 shadow-lg">
+        {/* 👇 DI SINI PERUBAHAN UTAMA: Ditambahkan items-center text-center agar posisi teks dan badge rata tengah */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent md:from-black/60 md:via-black/30 md:to-transparent flex flex-col justify-end p-6 pb-20 items-center text-center md:pb-0 pointer-events-none z-20">
+          <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md border border-white/10 text-[#D4AF37] text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-5 md:py-2.5 rounded-full w-fit mb-3 md:mb-6 shadow-lg mx-auto">
             <MapPin size={10} className="md:w-4 md:h-4" /> DEKAT AEON MALL SENTUL
           </div>
           <h1 className="text-3xl md:text-6xl lg:text-7xl font-black text-white leading-tight uppercase tracking-tight drop-shadow-lg mb-1 md:mb-4">Apartemen Sentul Tower</h1>
@@ -236,7 +237,6 @@ const HomePage = () => {
                   className="block bg-white rounded-[32px] md:rounded-[40px] overflow-hidden shadow-sm border border-slate-100 active:scale-[0.98] transition-all duration-500 cursor-pointer group md:hover:shadow-2xl md:hover:-translate-y-2 animate-slide-up relative flex flex-col"
                 >
                   <div className="relative">
-                    {/* ✅ DESAIN LAMA: gambar edge-to-edge tanpa padding, rounded hanya di atas */}
                     <ImageSlider images={room.images} heightClass="h-80 md:h-96" roundedClass="rounded-t-[32px] md:rounded-t-[40px]" altPrefix={room.altPrefix} />
                     
                     <div className="absolute top-5 left-5 md:top-6 md:left-6 flex gap-2 pointer-events-none z-20">
