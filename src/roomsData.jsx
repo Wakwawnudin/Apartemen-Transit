@@ -16,7 +16,6 @@ const defaultFullday = [
   { label: 'Weekend (Jum-Min)', price: 'Rp 350.000' },
 ];
 
-// 👇 HARGA 2 BEDROOM SUDAH NAIK 50RB
 const specialTransit2BR = [
   { label: '3 Jam', price: 'Rp 250.000' },
   { label: '6 Jam', price: 'Rp 350.000' },
@@ -65,7 +64,7 @@ export const baseTemplates = {
     baseName: '2 BEDROOM',
     size: '56m²', beds: 2,
     description: 'Unit luas untuk staycation keluarga atau grup. Tersedia opsi transit 3 jam Sentul Tower yang fleksibel. Nikmati pemandangan gunung dan fasilitas lengkap.',
-    startFrom: '250rb', // 👇 START FROM JUGA SUDAH NAIK 50RB
+    startFrom: '250rb', 
     transit: specialTransit2BR, 
     fullday: specialFullday2BR,
     specs: [
@@ -80,7 +79,7 @@ export const baseTemplates = {
 // --- REAL UNIT DATA ---
 export const realUnits = [
   {
-    type: '1BR', floor: 'Lantai 03 No 15',
+    type: '1BR', floor: 'Lantai A03-15',
     images: [
       'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3234.HEIC',
       'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3226.HEIC',
@@ -92,7 +91,7 @@ export const realUnits = [
     ]
   },
   {
-    type: '1BR', floor: 'Lantai 06',
+    type: '1BR', floor: 'Lantai A06-18',
     images: [
       'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%206/IMG-20260308-WA0033.jpg?updatedAt=1773209739864',
       'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%206/IMG-20260308-WA0036.jpg?updatedAt=1773209739891',
@@ -101,7 +100,7 @@ export const realUnits = [
     ]
   },
   {
-    type: 'Studio', floor: 'Lantai 11 Deluxe',
+    type: 'Studio', floor: 'Lantai A11-72 Deluxe',
     images: [
       'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2011%20DELUXE/IMG-20260331-WA0006.jpg?updatedAt=1774958048695',
       'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2011%20DELUXE/IMG-20260331-WA0007.jpg?updatedAt=1774958048381',
@@ -110,7 +109,7 @@ export const realUnits = [
     ]
   },
   {
-    type: 'Studio', floor: 'Lantai 05',
+    type: 'Studio', floor: 'Lantai B05-58 Deluxe',
     images: [
       'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%205/20260207_205748.jpg?updatedAt=1770484692778&tr=w-800,q-80',
       'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%205/20260207_205822.jpg?updatedAt=1770484693527&tr=w-800,q-80',
@@ -131,33 +130,27 @@ export const roomsData = realUnits.map((unit, index) => {
   let finalFullday = template.fullday;
   let finalStartFrom = template.startFrom;
 
-  // Jika nama lantainya mengandung kata "Deluxe"
   if (unit.floor.toLowerCase().includes('deluxe')) {
     
-    // Fungsi nambah 50.000 untuk format "Rp 150.000"
     const add50k = (priceStr) => {
-      const numStr = priceStr.replace(/\D/g, ''); // Ambil angkanya saja (150000)
+      const numStr = priceStr.replace(/\D/g, ''); 
       if (!numStr) return priceStr;
       const newNum = parseInt(numStr, 10) + 50000;
-      // Kembalikan ke format "Rp 200.000"
       return 'Rp ' + newNum.toLocaleString('id-ID').replace(/,/g, '.'); 
     };
 
-    // Fungsi nambah 50 untuk format "150rb"
     const add50kStart = (startStr) => {
-      const numStr = startStr.replace(/\D/g, ''); // Ambil angkanya saja (150)
+      const numStr = startStr.replace(/\D/g, ''); 
       if (!numStr) return startStr;
       const newNum = parseInt(numStr, 10) + 50;
       return newNum + 'rb';
     };
 
-    // Terapkan penambahan harga ke array baru agar template asli tidak rusak
     finalTransit = template.transit.map(item => ({ ...item, price: add50k(item.price) }));
     finalFullday = template.fullday.map(item => ({ ...item, price: add50k(item.price) }));
     finalStartFrom = add50kStart(template.startFrom);
   }
 
-  // 👇 OVERRIDE KHUSUS 2 BEDROOM DELUXE (9 Jam = 500k, 12 Jam = 600k)
   if (unit.type === '2BR' && unit.floor.toLowerCase().includes('deluxe')) {
     finalTransit = finalTransit.map(item => {
       if (item.label === '9 Jam') return { ...item, price: 'Rp 500.000' };
@@ -174,7 +167,6 @@ export const roomsData = realUnits.map((unit, index) => {
     images: unit.images,
     altPrefix: `Sewa Apartemen ${template.baseName} ${unit.floor} Sentul Tower - View Gunung & City`,
     slug: `${baseSlug}-${uniqueId}`,
-    // 👇 Timpa harga asli dengan harga hasil hitungan di atas
     startFrom: finalStartFrom,
     transit: finalTransit,
     fullday: finalFullday
