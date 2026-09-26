@@ -78,9 +78,32 @@ export const baseTemplates = {
 
 // --- REAL UNIT DATA ---
 export const realUnits = [
-  // --- KELOMPOK 1 BEDROOM ---
+  // --- 2 TERATAS (11-72 Deluxe & 03-15) ---
   {
-    type: '1BR', floor: 'Lantai A11-28',
+    type: 'Studio', floor: 'Lantai A11-72 Deluxe',
+    images: [
+      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2011%20DELUXE/IMG-20260331-WA0006.jpg?updatedAt=1774958048695',
+      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2011%20DELUXE/IMG-20260331-WA0007.jpg?updatedAt=1774958048381',
+      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2011%20DELUXE/IMG-20260331-WA0005.jpg?updatedAt=1774958048710',
+      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2011%20DELUXE/IMG-20260331-WA0009.jpg?updatedAt=1774958048657'
+    ]
+  },
+  {
+    type: '1BR', floor: 'Lantai A03-15',
+    images: [
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3226.HEIC.heif?updatedAt=1790333021316',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3234.HEIC.heif?updatedAt=1790333020985',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3230.HEIC.heif?updatedAt=1790333021426',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3225.HEIC.heif?updatedAt=1790333025819',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3238.HEIC.heif?updatedAt=1790333020460',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3221.HEIC.heif?updatedAt=1790333021724',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3218.HEIC.heif?updatedAt=1790333020719'
+    ]
+  },
+
+  // --- UNIT LAINNYA ---
+  {
+    type: '1BR', floor: 'Lantai A11-28 Deluxe',
     images: [
       'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A11-28/IMG_3041.HEIC.heif?updatedAt=1790333104511',
       'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A11-28/IMG_3044.HEIC.heif?updatedAt=1790333104986',
@@ -102,28 +125,7 @@ export const realUnits = [
     ]
   },
   {
-    type: '1BR', floor: 'Lantai A03-15',
-    images: [
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3226.HEIC.heif?updatedAt=1790333021316',
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3234.HEIC.heif?updatedAt=1790333020985',
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3230.HEIC.heif?updatedAt=1790333021426',
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3225.HEIC.heif?updatedAt=1790333025819',
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3238.HEIC.heif?updatedAt=1790333020460',
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3221.HEIC.heif?updatedAt=1790333021724',
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3218.HEIC.heif?updatedAt=1790333020719'
-    ]
-  },
-  {
-    type: '1BR', floor: 'Lantai A15-08',
-    images: [
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1bedroom%20A15-08/IMG_3158.HEIC.heif?updatedAt=1790333162962',
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1bedroom%20A15-08/IMG_3162.HEIC.heif?updatedAt=1790333162604',
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1bedroom%20A15-08/IMG_3166.HEIC.heif?updatedAt=1790333162986',
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1bedroom%20A15-08/IMG_3163.HEIC.heif?updatedAt=1790333162931'
-    ]
-  },
-  {
-    type: '1BR', floor: 'Lantai B12-27',
+    type: '1BR', floor: 'Lantai B12-27 Deluxe',
     images: [
       'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20B12-27/IMG_2957.HEIC.heif?updatedAt=1790333186227',
       'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20B12-27/IMG_2966.HEIC.heif?updatedAt=1790333187212',
@@ -143,8 +145,6 @@ export const realUnits = [
       'https://ik.imagekit.io/x06namgbin/1%20BEDROOM%20LANTAI%206/IMG-20260308-WA0035.jpg?updatedAt=1773209739888'
     ]
   },
-
-  // --- KELOMPOK 2 BEDROOM ---
   {
     type: '2BR', floor: 'Lantai B01-11',
     images: [
@@ -170,8 +170,6 @@ export const realUnits = [
       'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/2Bedroom%20B15-50/IMG_2934.HEIC.heif?updatedAt=1790333256422'
     ]
   },
-
-  // --- KELOMPOK STUDIO ---
   {
     type: 'Studio', floor: 'Lantai A06-72',
     images: [
@@ -223,21 +221,23 @@ export const realUnits = [
     ]
   },
   {
-    type: 'Studio', floor: 'Lantai A11-72 Deluxe',
-    images: [
-      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2011%20DELUXE/IMG-20260331-WA0006.jpg?updatedAt=1774958048695',
-      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2011%20DELUXE/IMG-20260331-WA0007.jpg?updatedAt=1774958048381',
-      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2011%20DELUXE/IMG-20260331-WA0005.jpg?updatedAt=1774958048710',
-      'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%2011%20DELUXE/IMG-20260331-WA0009.jpg?updatedAt=1774958048657'
-    ]
-  },
-  {
     type: 'Studio', floor: 'Lantai B05-58 Deluxe',
     images: [
       'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%205/20260207_205748.jpg?updatedAt=1770484692778&tr=w-800,q-80',
       'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%205/20260207_205822.jpg?updatedAt=1770484693527&tr=w-800,q-80',
       'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%205/20260207_205809.jpg?updatedAt=1770484693522&tr=w-800,q-80',
       'https://ik.imagekit.io/x06namgbin/STUDIO%20LANTAI%205/20260207_205836.jpg?updatedAt=1770484693623&tr=w-800,q-80'
+    ]
+  },
+
+  // --- PALING BAWAH (15-08) ---
+  {
+    type: '1BR', floor: 'Lantai A15-08',
+    images: [
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1bedroom%20A15-08/IMG_3158.HEIC.heif?updatedAt=1790333162962',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1bedroom%20A15-08/IMG_3162.HEIC.heif?updatedAt=1790333162604',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1bedroom%20A15-08/IMG_3166.HEIC.heif?updatedAt=1790333162986',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1bedroom%20A15-08/IMG_3163.HEIC.heif?updatedAt=1790333162931'
     ]
   }
 ];
