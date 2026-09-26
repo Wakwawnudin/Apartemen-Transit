@@ -18,9 +18,9 @@ const defaultFullday = [
 
 const specialTransit2BR = [
   { label: '3 Jam', price: 'Rp 250.000' },
-  { label: '6 Jam', price: 'Rp 350.000' },
-  { label: '9 Jam', price: 'Rp 400.000' },
-  { label: '12 Jam', price: 'Rp 450.000' },
+  { label: '6 Jam', price: 'Rp 400.000' },
+  { label: '9 Jam', price: 'Rp 550.000' },
+  { label: '12 Jam', price: 'Rp 700.000' },
 ];
 const specialFullday2BR = [
   { label: 'Weekday (Sen-Kam)', price: 'Rp 700.000' },
@@ -272,14 +272,6 @@ export const roomsData = realUnits.map((unit, index) => {
     finalTransit = template.transit.map(item => ({ ...item, price: add50k(item.price) }));
     finalFullday = template.fullday.map(item => ({ ...item, price: add50k(item.price) }));
     finalStartFrom = add50kStart(template.startFrom);
-  }
-
-  if (unit.type === '2BR' && unit.floor.toLowerCase().includes('deluxe')) {
-    finalTransit = finalTransit.map(item => {
-      if (item.label === '9 Jam') return { ...item, price: 'Rp 500.000' };
-      if (item.label === '12 Jam') return { ...item, price: 'Rp 600.000' };
-      return item;
-    });
   }
 
   return {
