@@ -79,15 +79,25 @@ export const baseTemplates = {
 // --- REAL UNIT DATA ---
 export const realUnits = [
   {
+    type: '1BR', floor: 'Lantai A07-39',
+    images: [
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A07-39/IMG-20260924-WA0051.jpg?updatedAt=1790332955402',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A07-39/IMG-20260924-WA0054.jpg?updatedAt=1790332955371',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A07-39/IMG-20260924-WA0040.jpg?updatedAt=1790332955410',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A07-39/IMG-20260924-WA0042.jpg?updatedAt=1790332955363',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A07-39/IMG-20260924-WA0044.jpg?updatedAt=1790332955512'
+    ]
+  },
+  {
     type: '1BR', floor: 'Lantai A03-15',
     images: [
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3234.HEIC',
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3226.HEIC',
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3224.HEIC',
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3218.HEIC',
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3221.HEIC',
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3235.HEIC',
-      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1%20BEDROOM%20LANTAI%2003%20NO%2015/IMG_3223.HEIC',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3226.HEIC.heif?updatedAt=1790333021316',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3234.HEIC.heif?updatedAt=1790333020985',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3230.HEIC.heif?updatedAt=1790333021426',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3225.HEIC.heif?updatedAt=1790333025819',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3238.HEIC.heif?updatedAt=1790333020460',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3221.HEIC.heif?updatedAt=1790333021724',
+      'https://ik.imagekit.io/x06namgbin/SENTUL%20TOWER/1Bedroom%20A03-15/IMG_3218.HEIC.heif?updatedAt=1790333020719'
     ]
   },
   {
