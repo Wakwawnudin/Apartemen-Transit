@@ -169,13 +169,12 @@ const HomePage = () => {
         </div>
       </nav>
 
-      {/* HERO */}
-      <header className="relative h-[600px] md:h-[75vh] w-full overflow-hidden">
+      {/* HERO (TINGGI DISESUAIKAN MENJADI h-[420px]) */}
+      <header className="relative h-[420px] md:h-[60vh] w-full overflow-hidden">
         <div className="absolute inset-0 w-full h-full">
            <ImageSlider images={heroImages} heightClass="h-full" roundedClass="rounded-none" altPrefix="Fasilitas & View Apartemen Sentul Tower" priority={true} />
         </div>
 
-        {/* 👇 DI SINI PERUBAHAN UTAMA: Ditambahkan items-center text-center agar posisi teks dan badge rata tengah */}
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-transparent to-transparent md:from-black/60 md:via-black/30 md:to-transparent flex flex-col justify-end p-6 pb-20 items-center text-center md:pb-0 pointer-events-none z-20">
           <div className="flex items-center gap-1.5 bg-black/60 backdrop-blur-md border border-white/10 text-[#D4AF37] text-[10px] md:text-xs font-bold px-3 py-1.5 md:px-5 md:py-2.5 rounded-full w-fit mb-3 md:mb-6 shadow-lg mx-auto">
             <MapPin size={10} className="md:w-4 md:h-4" /> DEKAT AEON MALL SENTUL
