@@ -1,19 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react';
-
-// =========================================================
-// SCROLL TO TOP
-// =========================================================
-export const ScrollToTop = () => {
-  const { pathname } = useLocation();
-  useEffect(() => {
-    if (pathname.includes('unit')) {
-        window.scrollTo(0, 0);
-    }
-  }, [pathname]);
-  return null;
-};
 
 // =========================================================
 // HELPER: Deteksi video dan optimasi media via ImageKit
@@ -21,15 +8,17 @@ export const ScrollToTop = () => {
 // =========================================================
 export const isVideoUrl = (url) => /\.(mp4|mov|webm)(\?|#|$)/i.test(url.split('?')[0]);
 
-export const optimizeMedia = (url) => {
+export const optimizeMedia = (url, customWidth = 800, customQuality = 82) => {
   if (!url.includes('imagekit.io')) return url;
-  const base = url.split('?')[0];
+  
+  // Pisahkan parameter asli (seperti updatedAt) agar tidak hilang
+  const [base, query] = url.split('?');
+  const existingParams = query ? `&${query}` : '';
+  
   if (isVideoUrl(url)) {
-    // Video iPhone (MOV/MP4) → WebM, quality 60, lebar 720px
-    return `${base}?tr=f-webm,q-60,w-720`;
+    return `${base}?tr=f-webm,q-60,w-720${existingParams}`;
   }
-  // Foto (termasuk HEIC iPhone) → WebP, quality 82, lebar 800px
-  return `${base}?tr=f-webp,q-82,w-800`;
+  return `${base}?tr=f-webp,q-${customQuality},w-${customWidth}${existingParams}`;
 };
 
 // =========================================================
@@ -37,7 +26,7 @@ export const optimizeMedia = (url) => {
 // Otomatis pilih <video> atau <img> sesuai jenis file.
 // Fitur: skeleton shimmer, error fallback, fade-in smooth
 // =========================================================
-export const MediaWithFallback = ({ src, alt, loading, fetchpriority, onImageClick }) => {
+export const MediaWithFallback = ({ src, alt, loading, fetchPriority, onImageClick }) => {
   const [status, setStatus] = useState('loading'); // 'loading' | 'loaded' | 'error'
   const isVideo = isVideoUrl(src);
 
@@ -86,7 +75,7 @@ export const MediaWithFallback = ({ src, alt, loading, fetchpriority, onImageCli
           src={src}
           alt={alt}
           loading={loading || 'lazy'}
-          fetchpriority={fetchpriority || 'auto'}
+          fetchPriority={fetchPriority || 'auto'}
           onClick={() => onImageClick && onImageClick()}
           onLoad={() => setStatus('loaded')}
           onError={() => setStatus('error')}
@@ -159,7 +148,7 @@ export const ImageSlider = ({ images, heightClass = "h-56", roundedClass = "roun
             src={optimizeMedia(media)}
             alt={`${dynamicAlt} - ${idx + 1}`}
             loading={priority && idx === 0 ? "eager" : "lazy"}
-            fetchpriority={priority && idx === 0 ? "high" : "auto"}
+            fetchPriority={priority && idx === 0 ? "high" : "auto"}
             onImageClick={onImageClick ? () => onImageClick(idx) : undefined}
           />
         ))}
