@@ -7,14 +7,6 @@ import {
 } from 'lucide-react';
 import { ImageSlider, optimizeMedia } from './SharedComponents';
 
-// --- KOMPONEN SCROLL TO TOP ---
-const ScrollToTop = () => {
-  React.useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-  return null;
-};
-
 // --- KOMPONEN UTAMA ---
 const DynamicLandingPage = () => {
   const { seoSlug } = useParams(); 
@@ -72,7 +64,6 @@ const DynamicLandingPage = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 pb-24">
-      <ScrollToTop />
       <Helmet>
         <title>{pageTitle} | Apartemen Sentul Tower</title>
         <meta name="description" content={dynamicDesc} />
