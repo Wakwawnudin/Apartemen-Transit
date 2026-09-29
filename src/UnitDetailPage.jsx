@@ -487,8 +487,9 @@ const UnitDetailPage = () => {
             </button>
 
             <div className="relative w-full h-full flex flex-col items-center justify-center p-4 md:p-12">
+               {/* PERBAIKAN: Pemanggilan fungsi optimizeMedia dengan parameter aman */}
                <img 
-                 src={optimizeMedia(selectedRoom.images[lightboxIndex]).replace('q-82', 'q-95').replace('w-800', 'w-1200')} 
+                 src={optimizeMedia(selectedRoom.images[lightboxIndex], 1200, 95)} 
                  alt={`Fullscreen Zoom ${lightboxIndex + 1}`} 
                  className="max-w-full max-h-[80vh] md:max-h-full object-contain rounded-2xl shadow-2xl transition-all duration-300 z-50 relative" 
                  onClick={(e) => e.stopPropagation()} 
