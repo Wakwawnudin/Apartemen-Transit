@@ -4,40 +4,43 @@ import { ChevronLeft, ChevronRight, ChevronUp, ChevronDown } from 'lucide-react'
 
 // =========================================================
 // HELPER: Deteksi video dan optimasi media via ImageKit
-// Mendukung format iPhone: .mov, .mp4 / Foto iPhone .heic → WebP
 // =========================================================
 export const isVideoUrl = (url) => /\.(mp4|mov|webm)(\?|#|$)/i.test(url.split('?')[0]);
 
-export const optimizeMedia = (url, customWidth = 800, customQuality = 82) => {
+export const optimizeMedia = (url, customWidth = 800, customQuality = 70) => {
   if (!url.includes('imagekit.io')) return url;
   
-  // Pisahkan parameter asli (seperti updatedAt) agar tidak hilang
   const [base, query] = url.split('?');
-  const existingParams = query ? `&${query}` : '';
+  let cleanQuery = '';
   
-  if (isVideoUrl(url)) {
-    return `${base}?tr=f-webm,q-60,w-720${existingParams}`;
+  // Penyaring cerdas: Ambil hanya parameter updatedAt, buang tr bawaan yang bikin error
+  if (query) {
+    const params = new URLSearchParams(query);
+    const updatedAt = params.get('updatedAt');
+    if (updatedAt) {
+      cleanQuery = `&updatedAt=${updatedAt}`;
+    }
   }
-  return `${base}?tr=f-webp,q-${customQuality},w-${customWidth}${existingParams}`;
+  
+  if (isVideoUrl(base)) {
+    return `${base}?tr=f-webm,q-60,w-720${cleanQuery}`;
+  }
+  return `${base}?tr=f-webp,q-${customQuality},w-${customWidth}${cleanQuery}`;
 };
 
 // =========================================================
 // KOMPONEN: MediaWithFallback
-// Otomatis pilih <video> atau <img> sesuai jenis file.
-// Fitur: skeleton shimmer, error fallback, fade-in smooth
 // =========================================================
 export const MediaWithFallback = ({ src, alt, loading, fetchPriority, onImageClick }) => {
-  const [status, setStatus] = useState('loading'); // 'loading' | 'loaded' | 'error'
+  const [status, setStatus] = useState('loading'); 
   const isVideo = isVideoUrl(src);
 
   return (
     <div className="relative w-full h-full shrink-0 snap-center overflow-hidden">
-      {/* SKELETON: shimmer abu-abu saat media loading */}
       {status === 'loading' && (
         <div className="absolute inset-0 bg-gradient-to-r from-slate-200 via-slate-100 to-slate-200 animate-pulse" />
       )}
 
-      {/* FALLBACK: muncul jika media gagal load (ImageKit down / bandwidth habis) */}
       {status === 'error' && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-100 gap-2">
           <div className="w-14 h-14 rounded-2xl bg-slate-200 flex items-center justify-center">
@@ -49,7 +52,6 @@ export const MediaWithFallback = ({ src, alt, loading, fetchPriority, onImageCli
         </div>
       )}
 
-      {/* VIDEO: autoplay tanpa suara, loop — seperti Instagram Reels */}
       {isVideo ? (
         <>
           <video
@@ -70,7 +72,6 @@ export const MediaWithFallback = ({ src, alt, loading, fetchPriority, onImageCli
           )}
         </>
       ) : (
-        /* FOTO: termasuk HEIC iPhone yang sudah dikonversi ke WebP oleh ImageKit */
         <img
           src={src}
           alt={alt}
@@ -88,7 +89,6 @@ export const MediaWithFallback = ({ src, alt, loading, fetchPriority, onImageCli
 
 // =========================================================
 // KOMPONEN: ImageSlider
-// Mendukung campuran foto (HEIC iPhone) dan video (MOV/MP4) dalam satu slider.
 // =========================================================
 export const ImageSlider = ({ images, heightClass = "h-56", roundedClass = "rounded-[32px]", altPrefix = "Apartemen Sentul Tower", priority = false, onImageClick }) => {
 
@@ -147,8 +147,8 @@ export const ImageSlider = ({ images, heightClass = "h-56", roundedClass = "roun
             key={idx}
             src={optimizeMedia(media)}
             alt={`${dynamicAlt} - ${idx + 1}`}
-            loading={priority && idx === 0 ? "eager" : "lazy"}
-            fetchPriority={priority && idx === 0 ? "high" : "auto"}
+            loading={idx === 0 ? "eager" : "lazy"}
+            fetchPriority={idx === 0 ? "high" : "auto"}
             onImageClick={onImageClick ? () => onImageClick(idx) : undefined}
           />
         ))}
